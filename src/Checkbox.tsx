@@ -2,6 +2,7 @@ import React, { Fragment, HTMLAttributes } from 'react';
 
 export interface Props extends HTMLAttributes<HTMLInputElement> {
   checked: boolean;
+  disabled: boolean;
   id: string;
   label?: string;
   onChange?: () => void;
@@ -9,6 +10,7 @@ export interface Props extends HTMLAttributes<HTMLInputElement> {
 
 export const Checkbox = ({
   checked = false,
+  disabled = false,
   id,
   label = '',
   ...props
@@ -18,7 +20,8 @@ export const Checkbox = ({
       <input
         aria-label={id}
         checked={checked}
-        className="filter -hue-rotate-90"
+        className={`filter -hue-rotate-90 ${!disabled && 'cursor-pointer'}`}
+        disabled={disabled}
         id={id}
         title={id}
         type="checkbox"
