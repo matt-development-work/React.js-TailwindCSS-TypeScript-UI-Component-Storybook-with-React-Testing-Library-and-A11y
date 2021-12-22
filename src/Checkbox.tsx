@@ -27,7 +27,9 @@ export const Checkbox = ({
         type="checkbox"
         {...props}
       />
-      <label htmlFor={id}>{` ${label}`}</label>
+      <label className="ml-1" htmlFor={id}>
+        {label}
+      </label>
     </Fragment>
   );
 };
