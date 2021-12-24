@@ -24,6 +24,12 @@ Checked.args = {
   checked: true,
 };
 
+export const Indeterminate = Template.bind({});
+
+Indeterminate.args = {
+  indeterminate: true,
+};
+
 export const Disabled = Template.bind({});
 
 Disabled.args = {
