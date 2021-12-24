@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.focus-visible:focus-visible {
+  outline: 2px solid lightskyblue;
+  outline-offset: 1px;
+}
