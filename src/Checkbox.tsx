@@ -43,9 +43,9 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
     return (
       <Fragment>
         <span
-          className={`absolute flex justify-center items-center h-4 w-4 m-1 rounded border border-green-500 ${
+          className={`absolute flex justify-center items-center h-4 w-4 m-1 rounded border border-green-500 focus:outline-none focus-visible filter hover:brightness-105 hover:shadow-sm ${
             !disabled && 'cursor-pointer'
-          } ${hasValue && 'bg-green-500'} focus:outline-none focus-visible`}
+          } ${hasValue && 'bg-green-500'} `}
           onClick={handleChange}
           onKeyDown={(e) => handleKeyDown(e.code)}
           tabIndex={0}
@@ -71,7 +71,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
           type="checkbox"
           {...props}
         />
-        <label className="ml-6" htmlFor={id}>
+        <label className="ml-6 select-none" htmlFor={id}>
           {label}
         </label>
       </Fragment>
