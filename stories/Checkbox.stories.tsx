@@ -19,28 +19,28 @@ const Template: Story<Props> = (args) => <Checkbox {...args} />;
 export const Default = Template.bind({});
 
 Default.args = {
-  label: 'Checkbox',
+  label: 'Default',
 };
 
 export const Checked = Template.bind({});
 
 Checked.args = {
   checked: true,
-  label: 'Checkbox',
+  label: 'Checked',
 };
 
 export const Indeterminate = Template.bind({});
 
 Indeterminate.args = {
   indeterminate: true,
-  label: 'Checkbox',
+  label: 'Indeterminate',
 };
 
 export const Disabled = Template.bind({});
 
 Disabled.args = {
   disabled: true,
-  label: 'Checkbox',
+  label: 'Disabled',
 };
 
 export const Error = Template.bind({});
@@ -48,6 +48,7 @@ export const Error = Template.bind({});
 Error.args = {
   checked: true,
   error: true,
+  label: 'Error',
 };
 
 const MultiLineTemplate: Story<Props> = (args) => (
