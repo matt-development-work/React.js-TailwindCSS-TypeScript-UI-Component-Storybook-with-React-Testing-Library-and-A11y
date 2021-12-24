@@ -29,6 +29,12 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
       !disabled && onChange();
     };
 
+    const handleKeyDown = (code: string): void => {
+      if (!disabled && ['Space', 'Enter'].includes(code)) {
+        handleChange();
+      }
+    };
+
     const hasValue: boolean = useMemo(
       () => checked || indeterminate,
       [checked, indeterminate]
@@ -41,6 +47,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
             !disabled && 'cursor-pointer'
           } ${hasValue && 'bg-green-500'} focus:outline-none focus-visible`}
           onClick={handleChange}
+          onKeyDown={(e) => handleKeyDown(e.code)}
           tabIndex={0}
         >
           {hasValue && (
