@@ -19,6 +19,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
       indeterminate = false,
       label = '',
       onChange,
+      title,
       ...props
     },
     ref
@@ -53,7 +54,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
           id={id}
           ref={ref}
           tabIndex={-1}
-          title={id}
+          title={title}
           type="checkbox"
           {...props}
         />
