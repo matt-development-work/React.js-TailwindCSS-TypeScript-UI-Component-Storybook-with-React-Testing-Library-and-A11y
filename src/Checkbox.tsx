@@ -71,9 +71,11 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
           type="checkbox"
           {...props}
         />
-        <label className="ml-6 select-none" htmlFor={id}>
-          {label}
-        </label>
+        <div className="ml-6">
+          <label className="select-none" htmlFor={id}>
+            {label}
+          </label>
+        </div>
       </Fragment>
     );
   }
