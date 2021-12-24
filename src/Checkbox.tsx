@@ -5,6 +5,7 @@ import { faCheck, faMinus } from '@fortawesome/free-solid-svg-icons';
 export interface Props extends HTMLAttributes<HTMLInputElement> {
   checked?: boolean;
   disabled?: boolean;
+  error?: boolean;
   id: string;
   indeterminate?: boolean;
   label?: string;
@@ -16,6 +17,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
     {
       checked = false,
       disabled = false,
+      error = false,
       id,
       indeterminate = false,
       label = '',
@@ -25,6 +27,8 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
     },
     ref
   ) => {
+    const color: string = useMemo(() => (error ? 'red' : 'green'), [error]);
+
     const handleChange = (): void => {
       !disabled && onChange();
     };
@@ -45,8 +49,8 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
         <span
           className={`absolute flex justify-center items-center h-4 w-4 m-1 rounded border border-gray-500 focus:outline-none focus-visible transition duration-100 ease-in-out filter ${
             !disabled &&
-            'border-green-500 cursor-pointer hover:brightness-110 hover:shadow-sm'
-          } ${hasValue && 'bg-green-500'} `}
+            `border-${color}-500 cursor-pointer hover:brightness-110 hover:shadow-sm`
+          } ${hasValue && `bg-${color}-500`} `}
           onClick={handleChange}
           onKeyDown={(e) => handleKeyDown(e.code)}
           tabIndex={0}

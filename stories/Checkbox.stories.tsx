@@ -43,6 +43,13 @@ Disabled.args = {
   label: 'Checkbox',
 };
 
+export const Error = Template.bind({});
+
+Error.args = {
+  checked: true,
+  error: true,
+};
+
 const MultiLineTemplate: Story<Props> = (args) => (
   <div className="w-96">
     <Checkbox {...args} />
