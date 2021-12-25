@@ -1,11 +1,19 @@
 import React, { forwardRef, Fragment, HTMLAttributes, useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+
+interface icon {
+  checked: IconProp;
+  unChecked: IconProp;
+  className: string | undefined;
+}
 
 export interface Props extends HTMLAttributes<HTMLInputElement> {
   checked?: boolean;
   disabled?: boolean;
   error?: boolean;
+  icon?: icon;
   id: string;
   indeterminate?: boolean;
   label?: string;
@@ -18,6 +26,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
       checked = false,
       disabled = false,
       error = false,
+      icon = { checked: faCheck, unChecked: undefined },
       id,
       indeterminate = false,
       label = '',
@@ -47,18 +56,29 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
     return (
       <Fragment>
         <span
-          className={`absolute flex justify-center items-center h-4 w-4 m-1 rounded border border-gray-500 focus:outline-none focus-visible transition duration-100 ease-in-out filter ${
+          className={`absolute flex justify-center items-center h-4 w-4 m-1 rounded focus:outline-none focus-visible transition duration-100 ease-in-out filter ${
+            !icon.unChecked && 'border border-gray-500 hover:shadow-sm'
+          } ${
             !disabled &&
-            `border-${color}-500 cursor-pointer hover:brightness-110 hover:shadow-sm`
-          } ${hasValue && `bg-${color}-500`} `}
+            `${
+              !icon.unChecked && `border-${color}-500`
+            } cursor-pointer hover:brightness-110`
+          } ${hasValue && `${!icon.unChecked && `bg-${color}-500`}`} `}
           onClick={handleChange}
           onKeyDown={(e) => handleKeyDown(e.code)}
           tabIndex={0}
         >
+          {icon.unChecked && (
+            <FontAwesomeIcon
+              className={`absolute ${icon.className ?? 'text-green-500'}`}
+              icon={icon.unChecked}
+              size="sm"
+            />
+          )}
           {hasValue && (
             <FontAwesomeIcon
-              className="absolute text-white"
-              icon={indeterminate ? faMinus : faCheck}
+              className={`absolute ${icon.className ?? 'text-white'}`}
+              icon={indeterminate ? faMinus : icon.checked}
               size="sm"
             />
           )}

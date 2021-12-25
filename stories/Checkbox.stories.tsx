@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Meta, Story } from '@storybook/react';
 import { Checkbox, Props } from '../src/Checkbox';
+import { faHeart as faSolidHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
 
 const meta: Meta = {
   title: 'Checkbox',
   component: Checkbox,
   argTypes: {
-    onChange: { action: 'changed' },
     id: { defaultValue: 'checkbox' },
     title: { defaultValue: 'Checkbox' },
   },
@@ -65,4 +66,27 @@ MultiLine.args = {
     const label = 'Multi-line Checkbox ';
     return label.repeat(8);
   })(),
+};
+
+const TemplateCustom: Story<Props> = (args) => {
+  const [checked, setChecked] = useState<boolean>(false);
+  args = {
+    ...args,
+    checked: checked,
+    onChange: (): void => {
+      setChecked(!checked);
+    },
+  };
+  return <Checkbox {...args} />;
+};
+
+export const Custom = TemplateCustom.bind({});
+
+Custom.args = {
+  icon: {
+    checked: faSolidHeart,
+    unChecked: faRegularHeart,
+    className: 'text-pink-400',
+  },
+  label: 'Custom',
 };
