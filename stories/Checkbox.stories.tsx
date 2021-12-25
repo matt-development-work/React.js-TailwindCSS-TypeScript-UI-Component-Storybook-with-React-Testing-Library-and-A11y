@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Meta, Story } from '@storybook/react';
 import { Checkbox, Props } from '../src/Checkbox';
 import { faHeart as faSolidHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
+import { faPlay } from '@fortawesome/free-solid-svg-icons';
+import { faPause } from '@fortawesome/free-solid-svg-icons';
 
 const meta: Meta = {
   title: 'Checkbox',
@@ -89,4 +91,15 @@ Custom.args = {
     className: 'text-pink-400',
   },
   label: 'Custom',
+};
+
+export const Toggle = TemplateCustom.bind({});
+
+Toggle.args = {
+  icon: {
+    checked: faPause,
+    unChecked: faPlay,
+    className: 'text-green-500',
+  },
+  label: 'Toggle',
 };
