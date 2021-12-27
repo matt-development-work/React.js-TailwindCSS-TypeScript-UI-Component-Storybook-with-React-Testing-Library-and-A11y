@@ -82,24 +82,24 @@ const TemplateCustom: Story<Props> = (args) => {
   return <Checkbox {...args} />;
 };
 
-export const Custom = TemplateCustom.bind({});
+export const Custom1 = TemplateCustom.bind({});
 
-Custom.args = {
+Custom1.args = {
   icon: {
     checked: faSolidHeart,
     unChecked: faRegularHeart,
     className: 'text-pink-400',
   },
-  label: 'Custom',
+  label: 'Custom 1',
 };
 
-export const Toggle = TemplateCustom.bind({});
+export const Custom2 = TemplateCustom.bind({});
 
-Toggle.args = {
+Custom2.args = {
   icon: {
     checked: faPause,
     unChecked: faPlay,
     className: 'text-green-500',
   },
-  label: 'Toggle',
+  label: 'Custom 2',
 };
