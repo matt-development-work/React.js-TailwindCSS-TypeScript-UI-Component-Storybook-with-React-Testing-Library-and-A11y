@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { Meta, Story } from '@storybook/react';
 import { Backdrop, Props } from '../src/Backdrop';
 import { Button } from '../src/Button';
@@ -23,7 +23,7 @@ const Template: Story<Props> = (args) => {
     open: open,
     onClose: () => setOpen(false),
   };
-  const handleClick = () => {
+  const handleClick: () => void = () => {
     setOpen(true);
   };
   return (
@@ -34,21 +34,17 @@ const Template: Story<Props> = (args) => {
       <Modal {...args}>
         <div className="flex items-end justify-end p-4">
           <div className="w-80 h-40">
-            <Checkbox
-              id="Option 1"
-              label="Option 1"
-              onChange={() => undefined}
-            />
-            <Checkbox
-              id="Option 2"
-              label="Option 2"
-              onChange={() => undefined}
-            />
-            <Checkbox
-              id="Option 3"
-              label="Option 3"
-              onChange={() => undefined}
-            />
+            {[...Array(3).keys()].map((el) => {
+              const val = `Option ${el + 1}`;
+              return (
+                <Checkbox
+                  id={val}
+                  key={val}
+                  label={val}
+                  onChange={() => undefined}
+                />
+              );
+            })}
           </div>
           <Button variant="outlined" onClick={() => undefined}>
             Submit
