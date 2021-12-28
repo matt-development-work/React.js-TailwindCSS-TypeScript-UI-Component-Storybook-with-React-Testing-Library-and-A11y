@@ -4,7 +4,7 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   elevation?: string;
   hoverElevation?: string;
-  square: boolean;
+  square?: boolean;
 }
 
 export const Card = forwardRef<HTMLDivElement, Props>(
