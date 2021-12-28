@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Meta, Story } from '@storybook/react';
-import { Backdrop, Props } from '../src/Backdrop';
 import { Button } from '../src/Button';
-import { Modal } from '../src/Modal';
+import { Modal, Props } from '../src/Modal';
 import { Checkbox } from '../src/Checkbox';
 
 const meta: Meta = {
