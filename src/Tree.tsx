@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 interface TreeNode {
+  children?: NodeList;
   id: number;
   value: string;
-  children?: NodeList;
 }
 
 type NodeList = TreeNode[];
@@ -27,11 +27,11 @@ const NodeElement = forwardRef<HTMLLIElement, NodeElementProps>(
             2. Move styling parameters to stories file.
            */
             <span
-              onClick={() => setOpen(!open)}
               className={`cursor-pointer ${
                 open &&
                 'transform rotate-90 transition-transform ease-in-out duration-100'
               }`}
+              onClick={() => setOpen(!open)}
             >
               {
                 <FontAwesomeIcon
@@ -66,9 +66,9 @@ export interface TreeProps extends HTMLAttributes<HTMLUListElement> {
 export const Tree = forwardRef<HTMLUListElement, TreeProps>(
   ({ className, data }, ref) => {
     return (
-      <ul ref={ref} className={`${className} flex flex-col`}>
+      <ul className={`${className} flex flex-col`} ref={ref}>
         {data.map((n) => (
-          <NodeElement node={n} key={n['value']} />
+          <NodeElement key={n['value']} node={n} />
         ))}
       </ul>
     );
