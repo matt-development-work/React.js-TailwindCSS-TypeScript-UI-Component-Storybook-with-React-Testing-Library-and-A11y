@@ -51,9 +51,7 @@ const Node = forwardRef<HTMLDivElement, NodeProps>(({ node }, ref) => {
       </div>
       <ul className="flex flex-col ml-4">
         {open &&
-          node['children']?.map((n) => {
-            return <Node node={n} />;
-          })}
+          node['children']?.map((n) => <Node node={n} key={n['value']} />)}
       </ul>
     </div>
   );
@@ -66,9 +64,9 @@ export interface TreeProps extends HTMLAttributes<HTMLUListElement> {
 export const Tree = forwardRef<HTMLUListElement, TreeProps>(({ data }, ref) => {
   return (
     <ul ref={ref} className="flex flex-col">
-      {data.map((n) => {
-        return <Node node={n} />;
-      })}
+      {data.map((n) => (
+        <Node node={n} key={n['value']} />
+      ))}
     </ul>
   );
 });
