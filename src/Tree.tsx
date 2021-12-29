@@ -59,6 +59,7 @@ const NodeElement = forwardRef<HTMLLIElement, NodeElementProps>(
 );
 
 export interface TreeProps extends HTMLAttributes<HTMLUListElement> {
+  className: string;
   data: NodeList;
 }
 
