@@ -14,10 +14,10 @@ interface NodeProps {
   node: TreeNode;
 }
 
-const Node = forwardRef<HTMLDivElement, NodeProps>(({ node }, ref) => {
+const Node = forwardRef<HTMLLIElement, NodeProps>(({ node }, ref) => {
   const [open, setOpen] = useState(false);
   return (
-    <div ref={ref}>
+    <li ref={ref}>
       <div className="flex">
         {node['children'] && (
           /* 
@@ -41,19 +41,19 @@ const Node = forwardRef<HTMLDivElement, NodeProps>(({ node }, ref) => {
             }
           </span>
         )}
-        <li
+        <span
           className={`text-white hover:text-gray-800 select-none hover:bg-green-100 transition ease-in-out duration-75 ml-${
             node['children'] ? '2' : '4'
           }`}
         >
           {node['value']}
-        </li>
+        </span>
       </div>
       <ul className="flex flex-col ml-4">
         {open &&
           node['children']?.map((n) => <Node node={n} key={n['value']} />)}
       </ul>
-    </div>
+    </li>
   );
 });
 
