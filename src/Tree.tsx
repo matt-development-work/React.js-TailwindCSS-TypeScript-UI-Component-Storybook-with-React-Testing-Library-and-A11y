@@ -2,11 +2,19 @@ import React, { forwardRef, HTMLAttributes, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
-interface NodeItemProps {
-  node: TreeItem;
+interface TreeNode {
+  id: number;
+  value: string;
+  children?: NodeList;
 }
 
-const NodeItem = forwardRef<HTMLDivElement, NodeItemProps>(({ node }, ref) => {
+type NodeList = TreeNode[];
+
+interface NodeItemProps {
+  node: TreeNode;
+}
+
+const Node = forwardRef<HTMLDivElement, NodeItemProps>(({ node }, ref) => {
   const [open, setOpen] = useState(false);
   return (
     <div ref={ref}>
@@ -44,7 +52,7 @@ const NodeItem = forwardRef<HTMLDivElement, NodeItemProps>(({ node }, ref) => {
       <ul className="flex flex-col ml-4">
         {open &&
           node['children']?.map((n) => {
-            return <NodeItem node={n} />;
+            return <Node node={n} />;
           })}
       </ul>
     </div>
@@ -55,22 +63,12 @@ export interface TreeProps extends HTMLAttributes<HTMLUListElement> {
   data: NodeList;
 }
 
-interface TreeItem {
-  id: number;
-  value: string;
-  children?: NodeList;
-}
-
-type NodeList = TreeItem[];
-
-export const Tree = forwardRef<HTMLDivElement, TreeProps>(({ data }, ref) => {
+export const Tree = forwardRef<HTMLUListElement, TreeProps>(({ data }, ref) => {
   return (
-    <div ref={ref}>
-      <ul className="flex flex-col">
-        {data.map((n) => {
-          return <NodeItem node={n} />;
-        })}
-      </ul>
-    </div>
+    <ul ref={ref} className="flex flex-col">
+      {data.map((n) => {
+        return <Node node={n} />;
+      })}
+    </ul>
   );
 });
