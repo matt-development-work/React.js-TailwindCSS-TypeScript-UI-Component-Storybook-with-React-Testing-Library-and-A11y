@@ -21,6 +21,7 @@ export const Modal = forwardRef<HTMLDivElement, Props>(
           onClick={(e) => e.stopPropagation()}
           role="dialog"
           ref={ref}
+          {...props}
         >
           {children}
         </div>
