@@ -10,11 +10,11 @@ interface TreeNode {
 
 type NodeList = TreeNode[];
 
-interface NodeItemProps {
+interface NodeProps {
   node: TreeNode;
 }
 
-const Node = forwardRef<HTMLDivElement, NodeItemProps>(({ node }, ref) => {
+const Node = forwardRef<HTMLDivElement, NodeProps>(({ node }, ref) => {
   const [open, setOpen] = useState(false);
   return (
     <div ref={ref}>
