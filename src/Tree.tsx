@@ -10,63 +10,66 @@ interface TreeNode {
 
 type NodeList = TreeNode[];
 
-interface NodeProps {
+interface NodeElementProps {
   node: TreeNode;
 }
 
-const Node = forwardRef<HTMLLIElement, NodeProps>(({ node }, ref) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <li ref={ref}>
-      <div className="flex">
-        {node['children'] && (
-          /* 
+const NodeElement = forwardRef<HTMLLIElement, NodeElementProps>(
+  ({ node }, ref) => {
+    const [open, setOpen] = useState(false);
+    return (
+      <li ref={ref}>
+        <div className="flex">
+          {node['children'] && (
+            /* 
           TODO:
             1. Allow custom icons to be passed as props.
             2. Move styling parameters to stories file.
            */
+            <span
+              onClick={() => setOpen(!open)}
+              className={`cursor-pointer ${
+                open &&
+                'transform rotate-90 transition-transform ease-in-out duration-100'
+              }`}
+            >
+              {
+                <FontAwesomeIcon
+                  className={'text-green-400'}
+                  icon={faChevronRight}
+                  size="sm"
+                />
+              }
+            </span>
+          )}
           <span
-            onClick={() => setOpen(!open)}
-            className={`cursor-pointer ${
-              open &&
-              'transform rotate-90 transition-transform ease-in-out duration-100'
+            className={`text-white hover:text-gray-800 select-none hover:bg-green-100 transition ease-in-out duration-75 ml-${
+              node['children'] ? '2' : '4'
             }`}
           >
-            {
-              <FontAwesomeIcon
-                className={'text-green-400'}
-                icon={faChevronRight}
-                size="sm"
-              />
-            }
+            {node['value']}
           </span>
+        </div>
+        {node['children'] && open && (
+          <Tree className={'ml-4'} data={node['children']} />
         )}
-        <span
-          className={`text-white hover:text-gray-800 select-none hover:bg-green-100 transition ease-in-out duration-75 ml-${
-            node['children'] ? '2' : '4'
-          }`}
-        >
-          {node['value']}
-        </span>
-      </div>
-      <ul className="flex flex-col ml-4">
-        {open &&
-          node['children']?.map((n) => <Node node={n} key={n['value']} />)}
-      </ul>
-    </li>
-  );
-});
+      </li>
+    );
+  }
+);
 
 export interface TreeProps extends HTMLAttributes<HTMLUListElement> {
   data: NodeList;
 }
 
-export const Tree = forwardRef<HTMLUListElement, TreeProps>(({ data }, ref) => {
-  return (
-    <ul ref={ref} className="flex flex-col">
-      {data.map((n) => (
-        <Node node={n} key={n['value']} />
-      ))}
-    </ul>
-  );
-});
+export const Tree = forwardRef<HTMLUListElement, TreeProps>(
+  ({ className, data }, ref) => {
+    return (
+      <ul ref={ref} className={`${className} flex flex-col`}>
+        {data.map((n) => (
+          <NodeElement node={n} key={n['value']} />
+        ))}
+      </ul>
+    );
+  }
+);
