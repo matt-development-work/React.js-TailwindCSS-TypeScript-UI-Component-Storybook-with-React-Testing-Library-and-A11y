@@ -1,4 +1,4 @@
-import React, { forwardRef, HTMLAttributes, useState } from 'react';
+import React, { forwardRef, HTMLAttributes, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
@@ -8,7 +8,7 @@ interface TreeNode {
   value: string;
 }
 
-type NodeList = TreeNode[];
+type NodeList = TreeNode[] | undefined;
 
 interface NodeElementProps {
   node: TreeNode;
@@ -16,6 +16,7 @@ interface NodeElementProps {
 
 const NodeElement = forwardRef<HTMLLIElement, NodeElementProps>(
   ({ node }, ref) => {
+    const hasChildren: boolean = useMemo(() => 'children' in node, [node]);
     const [open, setOpen] = useState(false);
     return (
       <li ref={ref}>
@@ -44,13 +45,13 @@ const NodeElement = forwardRef<HTMLLIElement, NodeElementProps>(
           )}
           <span
             className={`text-white hover:text-gray-800 select-none hover:bg-green-100 transition ease-in-out duration-75 ml-${
-              node['children'] ? '2' : '4'
+              hasChildren ? '2' : '4'
             }`}
           >
             {node['value']}
           </span>
         </div>
-        {node['children'] && open && (
+        {hasChildren && open && (
           <Tree className={'ml-4'} data={node['children']} />
         )}
       </li>
@@ -67,7 +68,7 @@ export const Tree = forwardRef<HTMLUListElement, TreeProps>(
   ({ className, data }, ref) => {
     return (
       <ul className={`${className} flex flex-col`} ref={ref}>
-        {data.map((n) => (
+        {data?.map((n) => (
           <NodeElement key={n['value']} node={n} />
         ))}
       </ul>
