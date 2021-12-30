@@ -51,7 +51,7 @@ const NodeElement = forwardRef<HTMLLIElement, NodeElementProps>(
             </i>
           )}
           <p
-            className={`text-white hover:text-gray-800 select-none hover:bg-green-100 flex transition ease-in-out duration-75 ml-${
+            className={`text-white select-none hover:bg-gray-100 hover:bg-opacity-20 flex transition ease-in-out duration-75 px-1 ml-${
               hasChildren ? '2' : '4'
             } ${hasIcon && 'gap-x-2'}`}
           >
