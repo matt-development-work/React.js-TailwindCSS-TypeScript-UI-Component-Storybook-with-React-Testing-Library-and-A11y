@@ -18,7 +18,7 @@ export default meta;
 const Template: Story<TreeProps> = (args) => {
   return (
     <div className="absolute h-5/6">
-      <Card className="bg-gray-800 px-4 relative max-h-full overflow-y-scroll">
+      <Card className="bg-gray-800 px-4 relative max-h-full overflow-y-scroll shadow-lg">
         <Tree {...args} />
       </Card>
     </div>
