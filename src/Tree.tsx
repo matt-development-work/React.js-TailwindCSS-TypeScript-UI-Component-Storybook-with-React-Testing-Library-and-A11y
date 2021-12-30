@@ -1,9 +1,16 @@
-import React, { forwardRef, HTMLAttributes, useMemo, useState } from 'react';
+import React, {
+  forwardRef,
+  HTMLAttributes,
+  ReactNode,
+  useMemo,
+  useState,
+} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 interface TreeNode {
   children?: NodeList;
+  icon?: ReactNode;
   id: number;
   value: string;
 }
@@ -17,17 +24,17 @@ interface NodeElementProps {
 const NodeElement = forwardRef<HTMLLIElement, NodeElementProps>(
   ({ node }, ref) => {
     const hasChildren: boolean = useMemo(() => 'children' in node, [node]);
+    const hasIcon: boolean = useMemo(() => 'icon' in node, [node]);
     const [open, setOpen] = useState(false);
     return (
       <li ref={ref}>
         <div className="flex">
-          {node['children'] && (
+          {hasChildren && (
             /* 
           TODO:
-            1. Allow custom icons to be passed as props.
-            2. Move styling parameters to stories file.
+            1. Move styling parameters to stories file and/or theme.
            */
-            <span
+            <i
               className={`cursor-pointer ${
                 open &&
                 'transform rotate-90 transition-transform ease-in-out duration-100'
@@ -41,15 +48,16 @@ const NodeElement = forwardRef<HTMLLIElement, NodeElementProps>(
                   size="sm"
                 />
               }
-            </span>
+            </i>
           )}
-          <span
-            className={`text-white hover:text-gray-800 select-none hover:bg-green-100 transition ease-in-out duration-75 ml-${
+          <p
+            className={`text-white hover:text-gray-800 select-none hover:bg-green-100 flex transition ease-in-out duration-75 ml-${
               hasChildren ? '2' : '4'
-            }`}
+            } ${hasIcon && 'gap-x-2'}`}
           >
-            {node['value']}
-          </span>
+            <i>{node.icon}</i>
+            <span>{node['value']}</span>
+          </p>
         </div>
         {hasChildren && open && (
           <Tree className={'ml-4'} data={node['children']} />
