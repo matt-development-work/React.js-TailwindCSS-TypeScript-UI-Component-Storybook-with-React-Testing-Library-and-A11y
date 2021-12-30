@@ -123,6 +123,16 @@ Default.args = {
                   ),
                 },
                 {
+                  value: 'index.js',
+                  icon: (
+                    <FontAwesomeIcon
+                      icon={faJsSquare}
+                      className={'text-yellow-300'}
+                      size="sm"
+                    />
+                  ),
+                },
+                {
                   value: 'README.md',
                   icon: (
                     <FontAwesomeIcon
@@ -160,6 +170,16 @@ Default.args = {
                     <FontAwesomeIcon
                       icon={faFileCode}
                       className={'text-green-100'}
+                      size="sm"
+                    />
+                  ),
+                },
+                {
+                  value: 'index.js',
+                  icon: (
+                    <FontAwesomeIcon
+                      icon={faJsSquare}
+                      className={'text-yellow-300'}
                       size="sm"
                     />
                   ),
@@ -207,6 +227,16 @@ Default.args = {
                   ),
                 },
                 {
+                  value: 'index.js',
+                  icon: (
+                    <FontAwesomeIcon
+                      icon={faJsSquare}
+                      className={'text-yellow-300'}
+                      size="sm"
+                    />
+                  ),
+                },
+                {
                   value: 'README.md',
                   icon: (
                     <FontAwesomeIcon
@@ -249,6 +279,16 @@ Default.args = {
                   ),
                 },
                 {
+                  value: 'index.js',
+                  icon: (
+                    <FontAwesomeIcon
+                      icon={faJsSquare}
+                      className={'text-yellow-300'}
+                      size="sm"
+                    />
+                  ),
+                },
+                {
                   value: 'README.md',
                   icon: (
                     <FontAwesomeIcon
@@ -259,6 +299,16 @@ Default.args = {
                   ),
                 },
               ],
+            },
+            {
+              value: 'index.js',
+              icon: (
+                <FontAwesomeIcon
+                  icon={faJsSquare}
+                  className={'text-yellow-300'}
+                  size="sm"
+                />
+              ),
             },
           ],
         },
