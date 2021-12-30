@@ -4,6 +4,7 @@ import React, {
   ReactNode,
   useEffect,
   useState,
+  useCallback,
   useMemo,
 } from 'react';
 import { createPortal } from 'react-dom';
@@ -29,12 +30,12 @@ export const Backdrop = forwardRef<HTMLDivElement, Props>(
       }
     }, [backdropIsRenderable]);
 
-    const handleClose = (): void => {
+    const handleClose = useCallback((): void => {
       setOpacity(0);
       setTimeout(() => {
         onClose();
       }, transitionDuration);
-    };
+    }, [transitionDuration]);
 
     return backdropIsRenderable
       ? createPortal(
