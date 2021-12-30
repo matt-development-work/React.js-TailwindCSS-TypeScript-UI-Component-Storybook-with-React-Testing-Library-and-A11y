@@ -1,4 +1,10 @@
-import React, { forwardRef, Fragment, HTMLAttributes, useMemo } from 'react';
+import React, {
+  forwardRef,
+  Fragment,
+  HTMLAttributes,
+  useCallback,
+  useMemo,
+} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
@@ -38,17 +44,20 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
   ) => {
     const color: string = useMemo(() => (error ? 'red' : 'green'), [error]);
 
-    const handleChange = (): void => {
+    const handleChange = useCallback((): void => {
       !disabled && onChange();
-    };
+    }, [disabled]);
 
-    const handleKeyDown = (code: string): void => {
-      if (!disabled && ['Space', 'Enter'].includes(code)) {
-        handleChange();
-      }
-    };
+    const handleKeyDown = useCallback(
+      (code: string): void => {
+        if (!disabled && ['Space', 'Enter'].includes(code)) {
+          handleChange();
+        }
+      },
+      [disabled]
+    );
 
-    const hasValue: boolean = useMemo(
+    const hasValue = useMemo<boolean>(
       () => checked || indeterminate,
       [checked, indeterminate]
     );
