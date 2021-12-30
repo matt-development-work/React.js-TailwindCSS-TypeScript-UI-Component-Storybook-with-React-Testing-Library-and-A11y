@@ -28,7 +28,12 @@ const NodeElement = forwardRef<HTMLLIElement, NodeElementProps>(
     const [open, setOpen] = useState<boolean>(false);
     return (
       <li ref={ref}>
-        <div className="flex">
+        <div
+          className={`flex hover:bg-gray-100 hover:bg-opacity-20 px-2 ${
+            hasChildren && 'cursor-pointer'
+          }`}
+          onClick={() => hasChildren && setOpen(!open)}
+        >
           {hasChildren && (
             /* 
           TODO:
@@ -53,10 +58,9 @@ const NodeElement = forwardRef<HTMLLIElement, NodeElementProps>(
             </i>
           )}
           <p
-            className={`text-white select-none hover:bg-gray-100 hover:bg-opacity-20 flex transition ease-in-out duration-75 px-1 ${
-              hasChildren ? 'ml-1 cursor-pointer' : 'ml-3'
+            className={`text-white select-none flex transition ease-in-out duration-75 px-1 ml-${
+              hasChildren ? '1' : '3'
             } ${hasIcon && 'gap-x-2'}`}
-            onClick={() => hasChildren && setOpen(!open)}
           >
             <i className="flex items-center">{node.icon}</i>
             <span className="">{node['value']}</span>
