@@ -14,6 +14,7 @@ import {
   faGitAlt,
   faJsSquare,
   faNpm,
+  faReact,
   faYarn,
 } from '@fortawesome/free-brands-svg-icons';
 
@@ -46,11 +47,7 @@ Default.args = {
     {
       value: 'Root',
       icon: (
-        <FontAwesomeIcon
-          icon={faFolder}
-          className={'text-yellow-200'}
-          size="sm"
-        />
+        <FontAwesomeIcon icon={faReact} className={'text-blue-400'} size="sm" />
       ),
       children: [
         {
