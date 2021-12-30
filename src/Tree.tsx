@@ -43,7 +43,9 @@ const NodeElement = forwardRef<HTMLLIElement, NodeElementProps>(
             >
               {
                 <FontAwesomeIcon
-                  className={'text-green-400 mb-px'}
+                  className={
+                    'text-green-400 hover:text-green-500 transition ease-in-out duration-200 mb-px'
+                  }
                   icon={faAngleRight}
                   size="sm"
                 />
