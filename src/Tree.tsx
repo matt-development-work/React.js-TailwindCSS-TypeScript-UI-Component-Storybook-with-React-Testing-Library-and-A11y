@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 interface TreeNode {
   children?: NodeList;
@@ -43,8 +43,8 @@ const NodeElement = forwardRef<HTMLLIElement, NodeElementProps>(
             >
               {
                 <FontAwesomeIcon
-                  className={'text-green-400'}
-                  icon={faChevronRight}
+                  className={'text-green-400 mb-px'}
+                  icon={faAngleRight}
                   size="sm"
                 />
               }
@@ -56,8 +56,8 @@ const NodeElement = forwardRef<HTMLLIElement, NodeElementProps>(
             } ${hasIcon && 'gap-x-2'}`}
             onClick={() => hasChildren && setOpen(!open)}
           >
-            <i>{node.icon}</i>
-            <span>{node['value']}</span>
+            <i className="flex items-center">{node.icon}</i>
+            <span className="">{node['value']}</span>
           </p>
         </div>
         {hasChildren && open && (
