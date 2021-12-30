@@ -4,6 +4,7 @@ import { Tree, TreeProps } from '../src/Tree';
 import { Card } from '../src/Card';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faCog,
   faFileAlt,
   faFileCode,
   faFlask,
@@ -31,9 +32,11 @@ export default meta;
 
 const Template: Story<TreeProps> = (args) => {
   return (
-    <Card className="bg-gray-800">
-      <Tree {...args} />
-    </Card>
+    <div className="absolute h-5/6">
+      <Card className="bg-gray-800 px-4 relative max-h-full overflow-y-scroll">
+        <Tree {...args} />
+      </Card>
+    </div>
   );
 };
 
@@ -83,6 +86,28 @@ Default.args = {
           ],
         },
         {
+          value: 'dist',
+          icon: (
+            <FontAwesomeIcon
+              icon={faFolder}
+              className={'text-yellow-200'}
+              size="sm"
+            />
+          ),
+          children: [
+            {
+              value: 'index.js',
+              icon: (
+                <FontAwesomeIcon
+                  icon={faJsSquare}
+                  className={'text-yellow-300'}
+                  size="sm"
+                />
+              ),
+            },
+          ],
+        },
+        {
           value: 'components',
           icon: (
             <FontAwesomeIcon
@@ -103,6 +128,16 @@ Default.args = {
               ),
               children: [
                 {
+                  value: 'chip.css',
+                  icon: (
+                    <FontAwesomeIcon
+                      icon={faCss3}
+                      className={'text-blue-400'}
+                      size="sm"
+                    />
+                  ),
+                },
+                {
                   value: 'Chip.tsx',
                   icon: (
                     <FontAwesomeIcon
@@ -112,16 +147,7 @@ Default.args = {
                     />
                   ),
                 },
-                {
-                  value: 'Chip.stories.tsx',
-                  icon: (
-                    <FontAwesomeIcon
-                      icon={faFileCode}
-                      className={'text-green-100'}
-                      size="sm"
-                    />
-                  ),
-                },
+
                 {
                   value: 'index.js',
                   icon: (
@@ -155,6 +181,16 @@ Default.args = {
               ),
               children: [
                 {
+                  value: 'drawer.css',
+                  icon: (
+                    <FontAwesomeIcon
+                      icon={faCss3}
+                      className={'text-blue-400'}
+                      size="sm"
+                    />
+                  ),
+                },
+                {
                   value: 'Drawer.tsx',
                   icon: (
                     <FontAwesomeIcon
@@ -164,16 +200,7 @@ Default.args = {
                     />
                   ),
                 },
-                {
-                  value: 'Drawer.stories.tsx',
-                  icon: (
-                    <FontAwesomeIcon
-                      icon={faFileCode}
-                      className={'text-green-100'}
-                      size="sm"
-                    />
-                  ),
-                },
+
                 {
                   value: 'index.js',
                   icon: (
@@ -207,6 +234,16 @@ Default.args = {
               ),
               children: [
                 {
+                  value: 'table.css',
+                  icon: (
+                    <FontAwesomeIcon
+                      icon={faCss3}
+                      className={'text-blue-400'}
+                      size="sm"
+                    />
+                  ),
+                },
+                {
                   value: 'Table.tsx',
                   icon: (
                     <FontAwesomeIcon
@@ -216,16 +253,7 @@ Default.args = {
                     />
                   ),
                 },
-                {
-                  value: 'Table.stories.tsx',
-                  icon: (
-                    <FontAwesomeIcon
-                      icon={faFileCode}
-                      className={'text-green-100'}
-                      size="sm"
-                    />
-                  ),
-                },
+
                 {
                   value: 'index.js',
                   icon: (
@@ -259,6 +287,16 @@ Default.args = {
               ),
               children: [
                 {
+                  value: 'textfield.css',
+                  icon: (
+                    <FontAwesomeIcon
+                      icon={faCss3}
+                      className={'text-blue-400'}
+                      size="sm"
+                    />
+                  ),
+                },
+                {
                   value: 'TextField.tsx',
                   icon: (
                     <FontAwesomeIcon
@@ -268,16 +306,7 @@ Default.args = {
                     />
                   ),
                 },
-                {
-                  value: 'TextField.stories.tsx',
-                  icon: (
-                    <FontAwesomeIcon
-                      icon={faFileCode}
-                      className={'text-green-100'}
-                      size="sm"
-                    />
-                  ),
-                },
+
                 {
                   value: 'index.js',
                   icon: (
@@ -306,6 +335,58 @@ Default.args = {
                 <FontAwesomeIcon
                   icon={faJsSquare}
                   className={'text-yellow-300'}
+                  size="sm"
+                />
+              ),
+            },
+          ],
+        },
+        {
+          value: 'stories',
+          icon: (
+            <FontAwesomeIcon
+              icon={faFolder}
+              className={'text-yellow-200'}
+              size="sm"
+            />
+          ),
+          children: [
+            {
+              value: 'Chip.stories.tsx',
+              icon: (
+                <FontAwesomeIcon
+                  icon={faFileCode}
+                  className={'text-green-100'}
+                  size="sm"
+                />
+              ),
+            },
+            {
+              value: 'Drawer.stories.tsx',
+              icon: (
+                <FontAwesomeIcon
+                  icon={faFileCode}
+                  className={'text-green-100'}
+                  size="sm"
+                />
+              ),
+            },
+            {
+              value: 'Table.stories.tsx',
+              icon: (
+                <FontAwesomeIcon
+                  icon={faFileCode}
+                  className={'text-green-100'}
+                  size="sm"
+                />
+              ),
+            },
+            {
+              value: 'TextField.stories.tsx',
+              icon: (
+                <FontAwesomeIcon
+                  icon={faFileCode}
+                  className={'text-green-100'}
                   size="sm"
                 />
               ),
@@ -413,6 +494,16 @@ Default.args = {
             <FontAwesomeIcon
               icon={faFileCode}
               className={'text-green-100'}
+              size="sm"
+            />
+          ),
+        },
+        {
+          value: 'tsconfig.json',
+          icon: (
+            <FontAwesomeIcon
+              icon={faCog}
+              className={'text-blue-400'}
               size="sm"
             />
           ),
