@@ -23,9 +23,9 @@ interface NodeElementProps {
 
 const NodeElement = forwardRef<HTMLLIElement, NodeElementProps>(
   ({ node }, ref) => {
-    const hasChildren: boolean = useMemo(() => 'children' in node, [node]);
-    const hasIcon: boolean = useMemo(() => 'icon' in node, [node]);
-    const [open, setOpen] = useState(false);
+    const hasChildren = useMemo<boolean>(() => 'children' in node, [node]);
+    const hasIcon = useMemo<boolean>(() => 'icon' in node, [node]);
+    const [open, setOpen] = useState<boolean>(false);
     return (
       <li ref={ref}>
         <div className="flex">
@@ -51,9 +51,10 @@ const NodeElement = forwardRef<HTMLLIElement, NodeElementProps>(
             </i>
           )}
           <p
-            className={`text-white select-none hover:bg-gray-100 hover:bg-opacity-20 flex transition ease-in-out duration-75 px-1 ml-${
-              hasChildren ? '2' : '4'
+            className={`text-white select-none hover:bg-gray-100 hover:bg-opacity-20 flex transition ease-in-out duration-75 px-1 ${
+              hasChildren ? 'ml-1 cursor-pointer' : 'ml-3'
             } ${hasIcon && 'gap-x-2'}`}
+            onClick={() => hasChildren && setOpen(!open)}
           >
             <i>{node.icon}</i>
             <span>{node['value']}</span>
