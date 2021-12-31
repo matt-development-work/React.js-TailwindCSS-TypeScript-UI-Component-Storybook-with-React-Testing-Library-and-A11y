@@ -9,13 +9,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 interface TreeNode {
-  children?: NodeList;
+  children?: TreeNode[];
   icon?: ReactNode;
   id: number;
   value: string;
 }
-
-type NodeList = TreeNode[] | undefined;
 
 interface NodeElementProps {
   node: TreeNode;
@@ -67,10 +65,7 @@ const NodeElement = forwardRef<HTMLLIElement, NodeElementProps>(
           </p>
         </div>
         {hasChildren && open && (
-          <Tree
-            className={'ml-4 border-l border-gray-700'}
-            data={node['children']}
-          />
+          <Tree className={'ml-4 border-l border-gray-700'} data={node} />
         )}
       </li>
     );
@@ -79,14 +74,14 @@ const NodeElement = forwardRef<HTMLLIElement, NodeElementProps>(
 
 export interface TreeProps extends HTMLAttributes<HTMLUListElement> {
   className: string;
-  data: NodeList;
+  data: TreeNode;
 }
 
 export const Tree = forwardRef<HTMLUListElement, TreeProps>(
   ({ className, data }, ref) => {
     return (
       <ul className={`${className} flex flex-col`} ref={ref}>
-        {data?.map((n) => (
+        {data.children?.map((n) => (
           <NodeElement key={n['value']} node={n} />
         ))}
       </ul>
