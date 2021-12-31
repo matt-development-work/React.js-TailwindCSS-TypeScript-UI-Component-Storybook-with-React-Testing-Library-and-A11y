@@ -67,7 +67,10 @@ const NodeElement = forwardRef<HTMLLIElement, NodeElementProps>(
           </p>
         </div>
         {hasChildren && open && (
-          <Tree className={'ml-4'} data={node['children']} />
+          <Tree
+            className={'ml-4 border-l border-gray-700'}
+            data={node['children']}
+          />
         )}
       </li>
     );
