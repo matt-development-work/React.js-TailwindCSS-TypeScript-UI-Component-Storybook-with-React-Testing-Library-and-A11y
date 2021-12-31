@@ -15,8 +15,24 @@ import {
   faYarn,
 } from '@fortawesome/free-brands-svg-icons';
 
+const addIdAttributesToTreeNodes = (data) => {
+  let newId = 0;
+  const traverseTreeNodes = (obj) => {
+    obj['id'] = newId;
+    newId += 1;
+    if (obj['children'] != null) {
+      let result = null;
+      for (let i = 0; result == null && i < obj['children'].length; i++) {
+        result = traverseTreeNodes(obj['children'][i]);
+      }
+    }
+  };
+  traverseTreeNodes(data);
+  return data;
+};
+
 /* TODO: Refactor and add 'id' attributes. */
-export const customTreeData = {
+export const customTreeData = addIdAttributesToTreeNodes({
   value: 'Root',
   icon: (
     <FontAwesomeIcon icon={faReact} className={'text-blue-400'} size="sm" />
@@ -472,4 +488,4 @@ export const customTreeData = {
       ),
     },
   ],
-};
+});
