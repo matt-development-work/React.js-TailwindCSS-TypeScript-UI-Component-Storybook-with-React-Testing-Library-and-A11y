@@ -31,7 +31,6 @@ const addIdAttributesToTreeNodes = (data) => {
   return data;
 };
 
-/* TODO: Refactor and add 'id' attributes. */
 export const customTreeData = addIdAttributesToTreeNodes({
   value: 'Root',
   icon: (
