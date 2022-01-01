@@ -19,7 +19,7 @@ interface ContextProps {
   selectedNode: TreeNode | undefined;
   setSelectedNode: Dispatch<SetStateAction<TreeNode | undefined>>;
   openedNodes: number[];
-  setOpenedNodes: Dispatch<SetStateAction<number[]>>;
+  toggleNodeOpenState: (id: number, open: boolean) => void;
 }
 
 const SelectedNodeContext = createContext({} as ContextProps);
@@ -34,6 +34,22 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   const [selectedNode, setSelectedNode] = useState<TreeNode | undefined>(
     undefined
   );
+  const toggleNodeOpenState = useCallback(
+    (id: number, open: boolean): void => {
+      const openedNodesCopy = [...openedNodes];
+      switch (open) {
+        case true:
+          openedNodesCopy.splice(openedNodesCopy.indexOf(id), 1);
+          setOpenedNodes(openedNodesCopy);
+          break;
+        case false:
+          openedNodesCopy.push(id);
+          setOpenedNodes(openedNodesCopy);
+          break;
+      }
+    },
+    [openedNodes]
+  );
   return (
     <SelectedNodeContext.Provider
       value={{
@@ -42,7 +58,7 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         mouseEntered: mouseEntered,
         setMouseEntered: setMouseEntered,
         openedNodes: openedNodes,
-        setOpenedNodes: setOpenedNodes,
+        toggleNodeOpenState: toggleNodeOpenState,
       }}
     >
       {children}
@@ -71,7 +87,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
     setSelectedNode,
     mouseEntered,
     openedNodes,
-    setOpenedNodes,
+    toggleNodeOpenState,
   } = useSelectedNodeContext();
   const hasChildren = useMemo<boolean>(() => 'children' in node, [node]);
   const hasIcon = useMemo<boolean>(() => 'icon' in node, [node]);
@@ -90,22 +106,6 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
         node.children?.map((n) => n.id).includes(selectedNode?.id || NaN)),
     [node, selectedNode]
   );
-  const handleClick = useCallback(
-    (id: number, open: boolean): void => {
-      const openedNodesCopy = [...openedNodes];
-      switch (open) {
-        case true:
-          openedNodesCopy.splice(openedNodesCopy.indexOf(id), 1);
-          setOpenedNodes(openedNodesCopy);
-          break;
-        case false:
-          openedNodesCopy.push(id);
-          setOpenedNodes(openedNodesCopy);
-          break;
-      }
-    },
-    [isOpen, node, openedNodes]
-  );
   return (
     <li className="hover:bg-gray-100 hover:bg-opacity-10 transition ease-in-out duration-100">
       <div
@@ -114,7 +114,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
         }`}
         onClick={() => {
           setSelectedNode(node);
-          hasChildren && handleClick(node['id'], isOpen);
+          hasChildren && toggleNodeOpenState(node['id'], isOpen);
         }}
       >
         {hasChildren && (
@@ -127,7 +127,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
               isOpen &&
               'transform rotate-90 transition-transform ease-in-out duration-100'
             }`}
-            onClick={() => handleClick(node['id'], isOpen)}
+            onClick={() => toggleNodeOpenState(node['id'], isOpen)}
           >
             {
               <FontAwesomeIcon
