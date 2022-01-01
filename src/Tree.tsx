@@ -91,8 +91,9 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
   } = useSelectedNodeContext();
   const hasChildren = useMemo<boolean>(() => 'children' in node, [node]);
   const hasIcon = useMemo<boolean>(() => 'icon' in node, [node]);
+  const id = useMemo<number>(() => node['id'], [node]);
   const isOpen = useMemo<boolean>(
-    () => openedNodes.includes(node['id']),
+    () => openedNodes.includes(id),
     [openedNodes, node]
   );
   const isSelected = useMemo<boolean>(
@@ -114,7 +115,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
         }`}
         onClick={() => {
           setSelectedNode(node);
-          hasChildren && toggleNodeOpenState(node['id'], isOpen);
+          hasChildren && toggleNodeOpenState(id, isOpen);
         }}
       >
         {hasChildren && (
@@ -127,7 +128,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
               isOpen &&
               'transform rotate-90 transition-transform ease-in-out duration-100'
             }`}
-            onClick={() => toggleNodeOpenState(node['id'], isOpen)}
+            onClick={() => toggleNodeOpenState(id, isOpen)}
           >
             {
               <FontAwesomeIcon
