@@ -77,11 +77,11 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
   );
   const [open, setOpen] = useState<boolean>(false);
   return (
-    <li>
+    <li className="hover:bg-gray-100 hover:bg-opacity-10 transition ease-in-out duration-100">
       <div
-        className={`flex hover:bg-gray-100 hover:bg-opacity-20 px-2 ${
-          hasChildren && 'cursor-pointer'
-        } ${isSelected && 'bg-gray-100 bg-opacity-20'}`}
+        className={`flex px-2 ${hasChildren && 'cursor-pointer'} ${
+          isSelected && 'bg-gray-100 bg-opacity-20'
+        }`}
         onClick={() => {
           setSelectedNode(node);
           hasChildren && setOpen(!open);
