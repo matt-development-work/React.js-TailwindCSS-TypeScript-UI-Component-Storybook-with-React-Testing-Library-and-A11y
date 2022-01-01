@@ -24,7 +24,7 @@ interface ContextWrapperProps {
 }
 
 const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
-  const [selectedNodeId, setSelectedNodeId] = useState<number>(-1);
+  const [selectedNodeId, setSelectedNodeId] = useState<number>(NaN);
 
   return (
     <SelectedNodeContext.Provider
