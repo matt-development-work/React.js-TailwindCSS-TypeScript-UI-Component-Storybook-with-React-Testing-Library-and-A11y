@@ -5,6 +5,7 @@ import React, {
   HTMLAttributes,
   ReactNode,
   SetStateAction,
+  useCallback,
   useContext,
   useMemo,
   useState,
@@ -13,10 +14,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 interface ContextProps {
-  selectedNode: TreeNode | undefined;
-  setSelectedNode: Dispatch<SetStateAction<TreeNode | undefined>>;
   mouseEntered: boolean;
   setMouseEntered: Dispatch<SetStateAction<boolean>>;
+  selectedNode: TreeNode | undefined;
+  setSelectedNode: Dispatch<SetStateAction<TreeNode | undefined>>;
+  openedNodes: number[];
+  toggleNodeOpenState: (id: number, open: boolean) => void;
 }
 
 const SelectedNodeContext = createContext({} as ContextProps);
@@ -26,10 +29,29 @@ interface ContextWrapperProps {
 }
 
 const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
+  const [mouseEntered, setMouseEntered] = useState<boolean>(false);
+  const [openedNodes, setOpenedNodes] = useState<number[]>([]);
   const [selectedNode, setSelectedNode] = useState<TreeNode | undefined>(
     undefined
   );
-  const [mouseEntered, setMouseEntered] = useState<boolean>(false);
+  const openNode = (id: number): void => {
+    setOpenedNodes([...openedNodes, id]);
+  };
+  const closeNode = (id: number): void => {
+    const openedNodesCopy = [...openedNodes];
+    openedNodesCopy.splice(openedNodesCopy.indexOf(id), 1);
+    setOpenedNodes(openedNodesCopy);
+  };
+  const toggleNodeOpenState = (id: number, open: boolean): void => {
+    switch (open) {
+      case true:
+        closeNode(id);
+        break;
+      case false:
+        openNode(id);
+        break;
+    }
+  };
   return (
     <SelectedNodeContext.Provider
       value={{
@@ -37,6 +59,8 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         setSelectedNode: setSelectedNode,
         mouseEntered: mouseEntered,
         setMouseEntered: setMouseEntered,
+        openedNodes: openedNodes,
+        toggleNodeOpenState: toggleNodeOpenState,
       }}
     >
       {children}
@@ -60,22 +84,33 @@ interface NodeElementProps {
 }
 
 const NodeElement: FC<NodeElementProps> = ({ node }) => {
-  const { selectedNode, setSelectedNode, mouseEntered } =
-    useSelectedNodeContext();
+  const {
+    selectedNode,
+    setSelectedNode,
+    mouseEntered,
+    openedNodes,
+    toggleNodeOpenState,
+  } = useSelectedNodeContext();
   const hasChildren = useMemo<boolean>(() => 'children' in node, [node]);
+  const hasIcon = useMemo<boolean>(() => 'icon' in node, [node]);
+  const isOpen = useMemo<boolean>(
+    () => openedNodes.includes(node['id']),
+    [openedNodes, node]
+  );
+  const isSelected = useMemo<boolean>(
+    () => node.id === selectedNode?.id,
+    [node, selectedNode]
+  );
   const nodeAndChildrenAreWithinSelectedScope = useMemo<boolean | undefined>(
     () =>
       (!!selectedNode?.children && node.id === selectedNode?.id) ||
       (!selectedNode?.children &&
         node.children?.map((n) => n.id).includes(selectedNode?.id || NaN)),
-    [selectedNode]
-  );
-  const hasIcon = useMemo<boolean>(() => 'icon' in node, [node]);
-  const isSelected = useMemo<boolean>(
-    () => node.id === selectedNode?.id,
     [node, selectedNode]
   );
-  const [open, setOpen] = useState<boolean>(false);
+  const handleClick = useCallback((): void => {
+    toggleNodeOpenState(node['id'], isOpen);
+  }, [isOpen, node]);
   return (
     <li className="hover:bg-gray-100 hover:bg-opacity-10 transition ease-in-out duration-100">
       <div
@@ -84,7 +119,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
         }`}
         onClick={() => {
           setSelectedNode(node);
-          hasChildren && setOpen(!open);
+          hasChildren && handleClick();
         }}
       >
         {hasChildren && (
@@ -94,10 +129,10 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
            */
           <i
             className={`cursor-pointer ${
-              open &&
+              isOpen &&
               'transform rotate-90 transition-transform ease-in-out duration-100'
             }`}
-            onClick={() => setOpen(!open)}
+            onClick={() => handleClick()}
           >
             {
               <FontAwesomeIcon
@@ -119,7 +154,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
           <span>{node['value']}</span>
         </p>
       </div>
-      {hasChildren && open && (
+      {hasChildren && isOpen && (
         <NodeList
           className={`ml-4 border-l transition ease-in-out duration-150 ${
             nodeAndChildrenAreWithinSelectedScope
