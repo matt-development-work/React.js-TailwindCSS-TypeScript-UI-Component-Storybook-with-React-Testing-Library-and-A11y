@@ -123,7 +123,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
         <NodeList
           className={`ml-4 border-l transition ease-in-out duration-150 ${
             nodeAndChildrenAreWithinSelectedScope
-              ? 'border-gray-500'
+              ? 'border-gray-400'
               : mouseEntered
               ? 'border-gray-500 border-opacity-50'
               : 'border-opacity-0'
