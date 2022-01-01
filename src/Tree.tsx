@@ -13,8 +13,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 interface ContextProps {
-  selectedNodeId: number;
-  setSelectedNodeId: Dispatch<SetStateAction<number>>;
+  selectedNode: TreeNode | undefined;
+  setSelectedNode: Dispatch<SetStateAction<TreeNode | undefined>>;
 }
 
 const SelectedNodeContext = createContext({} as ContextProps);
@@ -24,13 +24,14 @@ interface ContextWrapperProps {
 }
 
 const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
-  const [selectedNodeId, setSelectedNodeId] = useState<number>(NaN);
-
+  const [selectedNode, setSelectedNode] = useState<TreeNode | undefined>(
+    undefined
+  );
   return (
     <SelectedNodeContext.Provider
       value={{
-        selectedNodeId: selectedNodeId,
-        setSelectedNodeId: setSelectedNodeId,
+        selectedNode: selectedNode,
+        setSelectedNode: setSelectedNode,
       }}
     >
       {children}
@@ -54,12 +55,19 @@ interface NodeElementProps {
 }
 
 const NodeElement: FC<NodeElementProps> = ({ node }) => {
+  const { selectedNode, setSelectedNode } = useSelectedNodeContext();
   const hasChildren = useMemo<boolean>(() => 'children' in node, [node]);
+  const nodeAndChildrenAreWithinSelectedRange = useMemo<boolean | undefined>(
+    () =>
+      (!!selectedNode?.children && node.id === selectedNode?.id) ||
+      (!selectedNode?.children &&
+        node.children?.map((n) => n.id).includes(selectedNode?.id || NaN)),
+    [selectedNode]
+  );
   const hasIcon = useMemo<boolean>(() => 'icon' in node, [node]);
-  const { selectedNodeId, setSelectedNodeId } = useSelectedNodeContext();
   const isSelected = useMemo<boolean>(
-    () => node['id'] === selectedNodeId,
-    [node, selectedNodeId]
+    () => node.id === selectedNode?.id,
+    [node, selectedNode]
   );
   const [open, setOpen] = useState<boolean>(false);
   return (
@@ -69,7 +77,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
           hasChildren && 'cursor-pointer'
         } ${isSelected && 'bg-gray-100 bg-opacity-20'}`}
         onClick={() => {
-          setSelectedNodeId(node['id']);
+          setSelectedNode(node);
           hasChildren && setOpen(!open);
         }}
       >
@@ -102,11 +110,16 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
           } ${hasIcon && 'gap-x-2'}`}
         >
           <i className="flex items-center">{node.icon}</i>
-          <span className="">{node['value']}</span>
+          <span>{node['value']}</span>
         </p>
       </div>
       {hasChildren && open && (
-        <NodeList className={'ml-4 border-l border-gray-700'} data={node} />
+        <NodeList
+          className={`ml-4 ${
+            nodeAndChildrenAreWithinSelectedRange && 'border-l border-gray-600'
+          }`}
+          data={node}
+        />
       )}
     </li>
   );
