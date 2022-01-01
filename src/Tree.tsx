@@ -15,6 +15,8 @@ import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 interface ContextProps {
   selectedNode: TreeNode | undefined;
   setSelectedNode: Dispatch<SetStateAction<TreeNode | undefined>>;
+  mouseEntered: boolean;
+  setMouseEntered: Dispatch<SetStateAction<boolean>>;
 }
 
 const SelectedNodeContext = createContext({} as ContextProps);
@@ -27,11 +29,14 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   const [selectedNode, setSelectedNode] = useState<TreeNode | undefined>(
     undefined
   );
+  const [mouseEntered, setMouseEntered] = useState<boolean>(false);
   return (
     <SelectedNodeContext.Provider
       value={{
         selectedNode: selectedNode,
         setSelectedNode: setSelectedNode,
+        mouseEntered: mouseEntered,
+        setMouseEntered: setMouseEntered,
       }}
     >
       {children}
@@ -55,9 +60,10 @@ interface NodeElementProps {
 }
 
 const NodeElement: FC<NodeElementProps> = ({ node }) => {
-  const { selectedNode, setSelectedNode } = useSelectedNodeContext();
+  const { selectedNode, setSelectedNode, mouseEntered } =
+    useSelectedNodeContext();
   const hasChildren = useMemo<boolean>(() => 'children' in node, [node]);
-  const nodeAndChildrenAreWithinSelectedRange = useMemo<boolean | undefined>(
+  const nodeAndChildrenAreWithinSelectedScope = useMemo<boolean | undefined>(
     () =>
       (!!selectedNode?.children && node.id === selectedNode?.id) ||
       (!selectedNode?.children &&
@@ -84,7 +90,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
         {hasChildren && (
           /* 
           TODO:
-            1. Move styling parameters to stories file and/or theme.
+            1. Move all color styling parameters to stories file and/or theme.
            */
           <i
             className={`cursor-pointer ${
@@ -115,8 +121,12 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
       </div>
       {hasChildren && open && (
         <NodeList
-          className={`ml-4 ${
-            nodeAndChildrenAreWithinSelectedRange && 'border-l border-gray-600'
+          className={`ml-4 border-l transition ease-in-out duration-150 ${
+            nodeAndChildrenAreWithinSelectedScope
+              ? 'border-gray-500'
+              : mouseEntered
+              ? 'border-gray-500 border-opacity-50'
+              : 'border-opacity-0'
           }`}
           data={node}
         />
@@ -140,10 +150,22 @@ const NodeList: FC<TreeProps> = ({ className, data }) => {
   );
 };
 
+export const NodeListContainer: FC<TreeProps> = ({ ...props }) => {
+  const { setMouseEntered } = useSelectedNodeContext();
+  return (
+    <div
+      onMouseEnter={(): void => setMouseEntered(true)}
+      onMouseLeave={(): void => setMouseEntered(false)}
+    >
+      <NodeList {...props} />
+    </div>
+  );
+};
+
 export const Tree: FC<TreeProps> = ({ ...props }) => {
   return (
     <SelectedNodeContextWrapper>
-      <NodeList {...props} />
+      <NodeListContainer {...props} />
     </SelectedNodeContextWrapper>
   );
 };
