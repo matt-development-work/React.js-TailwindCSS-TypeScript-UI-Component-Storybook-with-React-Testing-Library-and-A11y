@@ -16,14 +16,14 @@ import {
 } from '@fortawesome/free-brands-svg-icons';
 
 const addIdAttributesToTreeNodes = (data) => {
-  let newId = 0;
-  const traverseTreeNodes = (obj) => {
-    obj['id'] = newId;
-    newId += 1;
-    if (obj['children'] != null) {
+  let uniqueId = 0;
+  const traverseTreeNodes = (node) => {
+    node['id'] = uniqueId;
+    uniqueId += 1;
+    if (node['children'] != null) {
       let result = null;
-      for (let i = 0; result == null && i < obj['children'].length; i++) {
-        result = traverseTreeNodes(obj['children'][i]);
+      for (let i = 0; result == null && i < node['children'].length; i++) {
+        result = traverseTreeNodes(node['children'][i]);
       }
     }
   };
