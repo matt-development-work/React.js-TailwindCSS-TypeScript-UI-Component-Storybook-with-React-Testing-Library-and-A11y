@@ -114,10 +114,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
     [node, selectedNode]
   );
   return (
-    <li
-      className="hover:bg-gray-100 hover:bg-opacity-10 transition ease-in-out duration-100"
-      tabIndex={id}
-    >
+    <li className="hover:bg-gray-100 hover:bg-opacity-10 transition ease-in-out duration-100">
       <div
         className={`flex px-2 ${hasChildren && 'cursor-pointer'} ${
           isSelected &&
@@ -129,6 +126,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
           setSelectedNode(node);
           hasChildren && toggleNodeOpenState(id, isOpen);
         }}
+        tabIndex={0}
       >
         {hasChildren && (
           /* 
@@ -202,7 +200,6 @@ export const NodeListContainer: FC<TreeProps> = (props) => {
       onBlur={(): void => setFocused(false)}
       onMouseEnter={(): void => setMouseEntered(true)}
       onMouseLeave={(): void => setMouseEntered(false)}
-      tabIndex={0}
     >
       <NodeList {...props} />
     </div>
