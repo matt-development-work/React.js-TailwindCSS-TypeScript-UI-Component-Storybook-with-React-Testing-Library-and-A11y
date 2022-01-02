@@ -94,14 +94,14 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
     setSelectedNode,
     toggleNodeOpenState,
   } = useSelectedNodeContext();
-  const hasChildren = useMemo<boolean>(() => 'children' in node, [node]);
-  const hasIcon = useMemo<boolean>(() => 'icon' in node, [node]);
+  const children = useMemo<boolean>(() => 'children' in node, [node]);
+  const icon = useMemo<boolean>(() => 'icon' in node, [node]);
   const id = useMemo<number>(() => node['id'], [node]);
-  const isOpen = useMemo<boolean>(
+  const open = useMemo<boolean>(
     () => openNodes.includes(id),
     [openNodes, node]
   );
-  const isSelected = useMemo<boolean>(
+  const selected = useMemo<boolean>(
     () => node === selectedNode,
     [node, selectedNode]
   );
@@ -119,19 +119,19 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>): void => {
       if (['Enter', 'Space'].includes(e.code)) {
-        hasChildren && toggleNodeOpenState(id, isOpen);
+        children && toggleNodeOpenState(id, open);
         setSelectedNode(node);
       }
     },
-    [hasChildren, id, isOpen, node, selectedNode]
+    [children, id, open, node, selectedNode]
   );
   return (
     <li className="hover:bg-gray-100 hover:bg-opacity-10 transition ease-in-out duration-100">
       <div
         className={`flex px-2 focus:outline-none tree-node-focus-visible ${
-          hasChildren && 'cursor-pointer'
+          children && 'cursor-pointer'
         } ${
-          isSelected &&
+          selected &&
           `bg-gray-100 bg-opacity-20 border border-opacity-0 ${
             nodeListContainerIsFocused && 'border-opacity-100 border-blue-500'
           }`
@@ -141,21 +141,21 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
         }}
         onClick={(): void => {
           setSelectedNode(node);
-          hasChildren && toggleNodeOpenState(id, isOpen);
+          children && toggleNodeOpenState(id, open);
         }}
         tabIndex={0}
       >
-        {hasChildren && (
+        {children && (
           /* 
           TODO:
             1. Move all color styling parameters to stories file and/or theme.
            */
           <i
             className={`cursor-pointer ${
-              isOpen &&
+              open &&
               'transform rotate-90 transition-transform ease-in-out duration-100'
             }`}
-            onClick={() => toggleNodeOpenState(id, isOpen)}
+            onClick={() => toggleNodeOpenState(id, open)}
           >
             {
               <FontAwesomeIcon
@@ -170,14 +170,14 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
         )}
         <p
           className={`text-white select-none flex transition ease-in-out duration-75 px-1 ml-${
-            hasChildren ? '1' : '3'
-          } ${hasIcon && 'gap-x-2'}`}
+            children ? '1' : '3'
+          } ${icon && 'gap-x-2'}`}
         >
           <i className="flex items-center">{node.icon}</i>
           <span>{node['value']}</span>
         </p>
       </div>
-      {hasChildren && isOpen && (
+      {children && open && (
         <NodeList
           className={`ml-4 border-l transition ease-in-out duration-150 ${
             currentDirectory
