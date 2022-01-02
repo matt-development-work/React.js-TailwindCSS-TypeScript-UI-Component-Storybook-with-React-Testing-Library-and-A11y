@@ -130,8 +130,6 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
     <li className="hover:bg-gray-100 hover:bg-opacity-10 transition ease-in-out duration-100">
       <div
         className={`flex px-2 focus:outline-none tree-node-focus-visible ${
-          children && 'cursor-pointer'
-        } ${
           selected &&
           `bg-gray-100 bg-opacity-20 border border-opacity-0 ${
             nodeListContainerIsFocused && 'border-opacity-100 border-blue-500'
@@ -214,6 +212,7 @@ export const NodeListContainer: FC<TreeProps> = (props) => {
     useSelectedNodeContext();
   return (
     <div
+      className="cursor-pointer"
       onFocus={(): void => setNodeListContainerFocusedState(true)}
       onBlur={(): void => setNodeListContainerFocusedState(false)}
       onMouseEnter={(): void => setMouseEntered(true)}
