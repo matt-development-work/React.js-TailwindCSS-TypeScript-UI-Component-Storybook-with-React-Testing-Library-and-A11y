@@ -18,7 +18,7 @@ interface ContextProps {
   setMouseEntered: Dispatch<SetStateAction<boolean>>;
   selectedNode: TreeNode | undefined;
   setSelectedNode: Dispatch<SetStateAction<TreeNode | undefined>>;
-  openedNodes: number[];
+  openNodes: number[];
   toggleNodeOpenState: (id: number, open: boolean) => void;
 }
 
@@ -30,25 +30,25 @@ interface ContextWrapperProps {
 
 const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   const [mouseEntered, setMouseEntered] = useState<boolean>(false);
-  const [openedNodes, setOpenedNodes] = useState<number[]>([]);
+  const [openNodes, setopenNodes] = useState<number[]>([]);
   const [selectedNode, setSelectedNode] = useState<TreeNode | undefined>(
     undefined
   );
   const toggleNodeOpenState = useCallback(
     (id: number, open: boolean): void => {
-      const openedNodesCopy = [...openedNodes];
+      const openNodesCopy = [...openNodes];
       switch (open) {
         case true:
-          openedNodesCopy.splice(openedNodesCopy.indexOf(id), 1);
-          setOpenedNodes(openedNodesCopy);
+          openNodesCopy.splice(openNodesCopy.indexOf(id), 1);
+          setopenNodes(openNodesCopy);
           break;
         case false:
-          openedNodesCopy.push(id);
-          setOpenedNodes(openedNodesCopy);
+          openNodesCopy.push(id);
+          setopenNodes(openNodesCopy);
           break;
       }
     },
-    [openedNodes]
+    [openNodes]
   );
   return (
     <SelectedNodeContext.Provider
@@ -57,7 +57,7 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         setSelectedNode: setSelectedNode,
         mouseEntered: mouseEntered,
         setMouseEntered: setMouseEntered,
-        openedNodes: openedNodes,
+        openNodes: openNodes,
         toggleNodeOpenState: toggleNodeOpenState,
       }}
     >
@@ -86,15 +86,15 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
     selectedNode,
     setSelectedNode,
     mouseEntered,
-    openedNodes,
+    openNodes,
     toggleNodeOpenState,
   } = useSelectedNodeContext();
   const hasChildren = useMemo<boolean>(() => 'children' in node, [node]);
   const hasIcon = useMemo<boolean>(() => 'icon' in node, [node]);
   const id = useMemo<number>(() => node['id'], [node]);
   const isOpen = useMemo<boolean>(
-    () => openedNodes.includes(id),
-    [openedNodes, node]
+    () => openNodes.includes(id),
+    [openNodes, node]
   );
   const isSelected = useMemo<boolean>(
     () => node === selectedNode,
