@@ -107,7 +107,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
     () => node === selectedNode,
     [node, selectedNode]
   );
-  const nodeAndChildrenAreWithinSelectedScope = useMemo<boolean | undefined>(
+  const currentDirectory = useMemo<boolean | undefined>(
     () =>
       (!!selectedNode?.children && node.id === selectedNode?.id) ||
       (!selectedNode?.children &&
@@ -178,7 +178,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
       {hasChildren && isOpen && (
         <NodeList
           className={`ml-4 border-l transition ease-in-out duration-150 ${
-            nodeAndChildrenAreWithinSelectedScope
+            currentDirectory
               ? 'border-gray-400'
               : mouseEntered
               ? 'border-gray-500 border-opacity-50'
