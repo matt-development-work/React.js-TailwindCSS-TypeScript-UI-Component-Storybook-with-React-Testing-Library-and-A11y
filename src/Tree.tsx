@@ -97,7 +97,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
     [openedNodes, node]
   );
   const isSelected = useMemo<boolean>(
-    () => node.id === selectedNode?.id,
+    () => node === selectedNode,
     [node, selectedNode]
   );
   const nodeAndChildrenAreWithinSelectedScope = useMemo<boolean | undefined>(
@@ -111,7 +111,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
     <li className="hover:bg-gray-100 hover:bg-opacity-10 transition ease-in-out duration-100">
       <div
         className={`flex px-2 ${hasChildren && 'cursor-pointer'} ${
-          isSelected && 'bg-gray-100 bg-opacity-20'
+          isSelected && 'bg-gray-100 bg-opacity-20 border border-blue-500'
         }`}
         onClick={() => {
           setSelectedNode(node);
