@@ -113,6 +113,15 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
         node.children?.map((n) => n.id).includes(selectedNode?.id || NaN)),
     [node, selectedNode]
   );
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>): void => {
+      if (['Enter', 'Space'].includes(e.code)) {
+        hasChildren && toggleNodeOpenState(id, isOpen);
+        setSelectedNode(node);
+      }
+    },
+    [hasChildren, id, isOpen, node]
+  );
   return (
     <li className="hover:bg-gray-100 hover:bg-opacity-10 transition ease-in-out duration-100">
       <div
@@ -122,7 +131,10 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
             focused && 'border-opacity-100 border-blue-500'
           }`
         }`}
-        onClick={() => {
+        onKeyDown={(e): void => {
+          handleKeyDown(e);
+        }}
+        onClick={(): void => {
           setSelectedNode(node);
           hasChildren && toggleNodeOpenState(id, isOpen);
         }}
