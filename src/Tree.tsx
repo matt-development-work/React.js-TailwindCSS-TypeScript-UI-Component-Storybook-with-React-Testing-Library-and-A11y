@@ -14,8 +14,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 interface ContextProps {
-  focused: boolean;
-  setFocused: Dispatch<SetStateAction<boolean>>;
+  nodeListContainerIsFocused: boolean;
+  setNodeListContainerFocusedState: Dispatch<SetStateAction<boolean>>;
   mouseEntered: boolean;
   setMouseEntered: Dispatch<SetStateAction<boolean>>;
   selectedNode: TreeNode | undefined;
@@ -31,7 +31,8 @@ interface ContextWrapperProps {
 }
 
 const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
-  const [focused, setFocused] = useState<boolean>(false);
+  const [nodeListContainerIsFocused, setNodeListContainerFocusedState] =
+    useState<boolean>(false);
   const [mouseEntered, setMouseEntered] = useState<boolean>(false);
   const [openNodes, setOpenNodes] = useState<number[]>([]);
   const [selectedNode, setSelectedNode] = useState<TreeNode | undefined>(
@@ -56,8 +57,8 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   return (
     <SelectedNodeContext.Provider
       value={{
-        focused: focused,
-        setFocused: setFocused,
+        nodeListContainerIsFocused: nodeListContainerIsFocused,
+        setNodeListContainerFocusedState: setNodeListContainerFocusedState,
         selectedNode: selectedNode,
         setSelectedNode: setSelectedNode,
         mouseEntered: mouseEntered,
@@ -88,7 +89,7 @@ interface NodeElementProps {
 
 const NodeElement: FC<NodeElementProps> = ({ node }) => {
   const {
-    focused,
+    nodeListContainerIsFocused,
     mouseEntered,
     openNodes,
     selectedNode,
@@ -130,7 +131,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
         } ${
           isSelected &&
           `bg-gray-100 bg-opacity-20 border border-opacity-0 ${
-            focused && 'border-opacity-100 border-blue-500'
+            nodeListContainerIsFocused && 'border-opacity-100 border-blue-500'
           }`
         }`}
         onKeyDown={(e): void => {
@@ -206,11 +207,12 @@ const NodeList: FC<TreeProps> = ({ className, data }) => {
 };
 
 export const NodeListContainer: FC<TreeProps> = (props) => {
-  const { setMouseEntered, setFocused } = useSelectedNodeContext();
+  const { setMouseEntered, setNodeListContainerFocusedState } =
+    useSelectedNodeContext();
   return (
     <div
-      onFocus={(): void => setFocused(true)}
-      onBlur={(): void => setFocused(false)}
+      onFocus={(): void => setNodeListContainerFocusedState(true)}
+      onBlur={(): void => setNodeListContainerFocusedState(false)}
       onMouseEnter={(): void => setMouseEntered(true)}
       onMouseLeave={(): void => setMouseEntered(false)}
     >
