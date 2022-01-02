@@ -14,6 +14,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 interface ContextProps {
+  focused: boolean;
+  setFocused: Dispatch<SetStateAction<boolean>>;
   mouseEntered: boolean;
   setMouseEntered: Dispatch<SetStateAction<boolean>>;
   selectedNode: TreeNode | undefined;
@@ -29,6 +31,7 @@ interface ContextWrapperProps {
 }
 
 const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
+  const [focused, setFocused] = useState<boolean>(false);
   const [mouseEntered, setMouseEntered] = useState<boolean>(false);
   const [openNodes, setOpenNodes] = useState<number[]>([]);
   const [selectedNode, setSelectedNode] = useState<TreeNode | undefined>(
@@ -53,6 +56,8 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   return (
     <SelectedNodeContext.Provider
       value={{
+        focused: focused,
+        setFocused: setFocused,
         selectedNode: selectedNode,
         setSelectedNode: setSelectedNode,
         mouseEntered: mouseEntered,
@@ -83,10 +88,11 @@ interface NodeElementProps {
 
 const NodeElement: FC<NodeElementProps> = ({ node }) => {
   const {
-    selectedNode,
-    setSelectedNode,
+    focused,
     mouseEntered,
     openNodes,
+    selectedNode,
+    setSelectedNode,
     toggleNodeOpenState,
   } = useSelectedNodeContext();
   const hasChildren = useMemo<boolean>(() => 'children' in node, [node]);
@@ -108,10 +114,16 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
     [node, selectedNode]
   );
   return (
-    <li className="hover:bg-gray-100 hover:bg-opacity-10 transition ease-in-out duration-100">
+    <li
+      className="hover:bg-gray-100 hover:bg-opacity-10 transition ease-in-out duration-100"
+      tabIndex={id}
+    >
       <div
         className={`flex px-2 ${hasChildren && 'cursor-pointer'} ${
-          isSelected && 'bg-gray-100 bg-opacity-20 border border-blue-500'
+          isSelected &&
+          `bg-gray-100 bg-opacity-20 border border-opacity-0 ${
+            focused && 'border-opacity-100 border-blue-500'
+          }`
         }`}
         onClick={() => {
           setSelectedNode(node);
@@ -182,10 +194,12 @@ const NodeList: FC<TreeProps> = ({ className, data }) => {
 };
 
 export const NodeListContainer: FC<TreeProps> = (props) => {
-  const { setMouseEntered } = useSelectedNodeContext();
+  const { setMouseEntered, setFocused } = useSelectedNodeContext();
   return (
     <div
       className="focus:outline-none focus-visible"
+      onFocus={(): void => setFocused(true)}
+      onBlur={(): void => setFocused(false)}
       onMouseEnter={(): void => setMouseEntered(true)}
       onMouseLeave={(): void => setMouseEntered(false)}
       tabIndex={0}
