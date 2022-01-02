@@ -187,6 +187,7 @@ export const NodeListContainer: FC<TreeProps> = ({ ...props }) => {
     <div
       onMouseEnter={(): void => setMouseEntered(true)}
       onMouseLeave={(): void => setMouseEntered(false)}
+      tabIndex={0}
     >
       <NodeList {...props} />
     </div>
