@@ -120,7 +120,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
         setSelectedNode(node);
       }
     },
-    [hasChildren, id, isOpen, node]
+    [hasChildren, id, isOpen, node, selectedNode]
   );
   return (
     <li className="hover:bg-gray-100 hover:bg-opacity-10 transition ease-in-out duration-100">
