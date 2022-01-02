@@ -3,6 +3,6 @@
 @tailwind utilities;
 
 .focus-visible:focus-visible {
-  outline: 2px solid lightskyblue;
+  outline: 2px solid #38bdf8;
   outline-offset: 1px;
 }
