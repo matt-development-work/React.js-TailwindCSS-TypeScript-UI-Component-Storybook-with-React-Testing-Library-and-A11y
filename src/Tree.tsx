@@ -181,7 +181,7 @@ const NodeList: FC<TreeProps> = ({ className, data }) => {
   );
 };
 
-export const NodeListContainer: FC<TreeProps> = ({ ...props }) => {
+export const NodeListContainer: FC<TreeProps> = (props) => {
   const { setMouseEntered } = useSelectedNodeContext();
   return (
     <div
@@ -195,7 +195,7 @@ export const NodeListContainer: FC<TreeProps> = ({ ...props }) => {
   );
 };
 
-export const Tree: FC<TreeProps> = ({ ...props }) => {
+export const Tree: FC<TreeProps> = (props) => {
   return (
     <SelectedNodeContextWrapper>
       <NodeListContainer {...props} />
