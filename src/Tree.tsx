@@ -108,8 +108,9 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
   const currentDirectory = useMemo<boolean>(
     () =>
       /* 
-        Returns true if selectedNode has children and is equal to the mode prop,
-        or if selectedNode does not have children is a child of the node prop.
+        Returns true if either:
+          a. selectedNode has children and is equal to the node prop.
+          b. selectedNode does not have children and is a child of the node prop.
       */
       (!!selectedNode?.children && node === selectedNode) ||
       (!selectedNode?.children && node.children?.includes(selectedNode)) ||
