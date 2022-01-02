@@ -30,7 +30,7 @@ interface ContextWrapperProps {
 
 const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   const [mouseEntered, setMouseEntered] = useState<boolean>(false);
-  const [openNodes, setopenNodes] = useState<number[]>([]);
+  const [openNodes, setOpenNodes] = useState<number[]>([]);
   const [selectedNode, setSelectedNode] = useState<TreeNode | undefined>(
     undefined
   );
@@ -40,11 +40,11 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
       switch (open) {
         case true:
           openNodesCopy.splice(openNodesCopy.indexOf(id), 1);
-          setopenNodes(openNodesCopy);
+          setOpenNodes(openNodesCopy);
           break;
         case false:
           openNodesCopy.push(id);
-          setopenNodes(openNodesCopy);
+          setOpenNodes(openNodesCopy);
           break;
       }
     },
