@@ -18,8 +18,8 @@ interface ContextProps {
   setNodeListContainerFocusedState: Dispatch<SetStateAction<boolean>>;
   mouseEntered: boolean;
   setMouseEntered: Dispatch<SetStateAction<boolean>>;
-  selectedNode: TreeNode | undefined;
-  setSelectedNode: Dispatch<SetStateAction<TreeNode | undefined>>;
+  selectedNode: TreeNode;
+  setSelectedNode: Dispatch<SetStateAction<TreeNode>>;
   openNodes: number[];
   toggleNodeOpenState: (id: number, open: boolean) => void;
 }
@@ -35,9 +35,7 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
     useState<boolean>(false);
   const [mouseEntered, setMouseEntered] = useState<boolean>(false);
   const [openNodes, setOpenNodes] = useState<number[]>([]);
-  const [selectedNode, setSelectedNode] = useState<TreeNode | undefined>(
-    undefined
-  );
+  const [selectedNode, setSelectedNode] = useState<TreeNode>({} as TreeNode);
   const toggleNodeOpenState = useCallback(
     (id: number, open: boolean): void => {
       const openNodesCopy = [...openNodes];
@@ -107,11 +105,15 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
     () => node === selectedNode,
     [node, selectedNode]
   );
-  const currentDirectory = useMemo<boolean | undefined>(
+  const currentDirectory = useMemo<boolean>(
     () =>
-      (!!selectedNode?.children && node.id === selectedNode?.id) ||
-      (!selectedNode?.children &&
-        node.children?.map((n) => n.id).includes(selectedNode?.id || NaN)),
+      /* 
+        Returns true if selectedNode has children and is equal to the mode prop,
+        or if selectedNode does not have children is a child of the node prop.
+      */
+      (!!selectedNode?.children && node === selectedNode) ||
+      (!selectedNode?.children && node.children?.includes(selectedNode)) ||
+      false,
     [node, selectedNode]
   );
   const handleKeyDown = useCallback(
