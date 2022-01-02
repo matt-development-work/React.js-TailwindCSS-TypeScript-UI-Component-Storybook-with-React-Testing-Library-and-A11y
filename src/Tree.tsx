@@ -185,6 +185,7 @@ export const NodeListContainer: FC<TreeProps> = ({ ...props }) => {
   const { setMouseEntered } = useSelectedNodeContext();
   return (
     <div
+      className="focus:outline-none focus-visible"
       onMouseEnter={(): void => setMouseEntered(true)}
       onMouseLeave={(): void => setMouseEntered(false)}
       tabIndex={0}
