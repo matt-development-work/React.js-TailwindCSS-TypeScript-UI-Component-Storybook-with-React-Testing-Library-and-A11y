@@ -26,7 +26,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
       <button
         className={`${classes[variant]} rounded${
           rounded && '-full h-8 w-8'
-        } p-2 transition ease-in-out duration-300 filter cursor-pointer flex justify-center items-center select-none`}
+        } p-2 transition ease-in-out duration-300 filter cursor-pointer flex justify-center items-center select-none focus:outline-none focus-visible`}
         onClick={onClick}
         ref={ref}
         {...props}
