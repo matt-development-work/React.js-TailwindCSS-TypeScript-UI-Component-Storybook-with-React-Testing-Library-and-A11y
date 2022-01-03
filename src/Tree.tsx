@@ -262,10 +262,10 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
       <div
         className={`flex px-2 focus:outline-none tree-node-focus-visible z-20 ${
           selected &&
-          `bg-gray-100 bg-opacity-20 border border-opacity-0 ${
-            nodeListContainerIsFocused && 'border-opacity-100 border-blue-500'
+          `bg-blue-300 bg-opacity-30 border border-opacity-0 ${
+            nodeListContainerIsFocused && 'border-opacity-50 border-blue-400'
           }`
-        } ${navigated && 'bg-green-300 bg-opacity-50'}`}
+        } ${navigated && 'bg-green-300 bg-opacity-20'}`}
         id={`${id}`}
         onClick={(): void => {
           setSelectedNode(node);
