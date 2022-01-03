@@ -2,7 +2,6 @@ import React, {
   createContext,
   Dispatch,
   FC,
-  FocusEvent,
   HTMLAttributes,
   KeyboardEvent,
   ReactNode,
@@ -21,17 +20,14 @@ interface ContextProps {
   setData: Dispatch<SetStateAction<TreeNode>>;
   nodeListContainerIsFocused: boolean;
   setNodeListContainerFocusedState: Dispatch<SetStateAction<boolean>>;
-  handleNodeListContainerFocusedState: (
-    e: FocusEvent<HTMLDivElement>,
-    focused: boolean
-  ) => void;
+  handleNodeListContainerFocusedState: (focused: boolean) => void;
   mouseEntered: boolean;
   setMouseEntered: Dispatch<SetStateAction<boolean>>;
   selectedNode: TreeNode;
   setSelectedNode: Dispatch<SetStateAction<TreeNode>>;
   openNodes: number[];
   toggleNodeOpenState: (id: number, open: boolean) => void;
-  handleKeyDown: (e: KeyboardEvent<HTMLDivElement>, id: any, node: any) => void;
+  handleKeyDown: (e: KeyboardEvent<HTMLDivElement>) => void;
   navigatedId: number;
   setNavigatedId: Dispatch<SetStateAction<number>>;
 }
@@ -81,7 +77,7 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   };
 
   const handleKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLDivElement>, id, node): void => {
+    (e: KeyboardEvent<HTMLDivElement>): void => {
       const { code } = e;
       if (['Enter', 'Space'].includes(code)) {
         const navigatedNode = getNodeAtSpecifiedId(data, navigatedId);
@@ -153,7 +149,7 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   );
 
   const handleNodeListContainerFocusedState = useCallback(
-    (e: FocusEvent<HTMLDivElement>, focused: boolean) => {
+    (focused: boolean) => {
       setNodeListContainerFocusedState(focused);
       const nodeListContainer: HTMLElement | null =
         document.getElementById('node-list-0');
@@ -275,7 +271,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
           }`
         } ${navigated && 'bg-green-300 bg-opacity-50'}`}
         onKeyDown={(e): void => {
-          handleKeyDown(e, id, node);
+          handleKeyDown(e);
         }}
         onClick={(): void => {
           setSelectedNode(node);
@@ -358,12 +354,8 @@ export const NodeListContainer: FC<TreeProps> = (props) => {
   return (
     <div
       className="cursor-pointer"
-      onFocus={(e: FocusEvent<HTMLDivElement>): void =>
-        handleNodeListContainerFocusedState(e, true)
-      }
-      onBlur={(e: FocusEvent<HTMLDivElement>): void =>
-        handleNodeListContainerFocusedState(e, false)
-      }
+      onFocus={(): void => handleNodeListContainerFocusedState(true)}
+      onBlur={(): void => handleNodeListContainerFocusedState(false)}
       onMouseEnter={(): void => setMouseEntered(true)}
       onMouseLeave={(): void => setMouseEntered(false)}
     >
