@@ -168,16 +168,9 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
       const activeElementId: number = parseInt(activeElement?.id);
       switch (activeElementId) {
         case 1:
-          const firstFocusedNode = getNodeAtSpecifiedId(data, 1);
-          setSelectedNode(firstFocusedNode);
           setNavigatedId(1);
           break;
         case focusableNodeElementsIds[focusableNodeElementsIds.length - 1]:
-          const lastFocusedNode = getNodeAtSpecifiedId(
-            data,
-            focusableNodeElementsIds[focusableNodeElementsIds.length - 1]
-          );
-          setSelectedNode(lastFocusedNode);
           setNavigatedId(
             focusableNodeElementsIds[focusableNodeElementsIds.length - 1]
           );
