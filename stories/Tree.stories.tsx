@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { KeyboardEvent } from 'react';
 import { Meta, Story } from '@storybook/react';
 import { Tree, TreeProps } from '../src/Tree';
 import { Card } from '../src/Card';
@@ -18,7 +18,13 @@ export default meta;
 const Template: Story<TreeProps> = (args) => {
   return (
     <div className="absolute h-5/6">
-      <Card className="bg-gray-900 relative max-h-full overflow-y-scroll shadow-lg">
+      <Card
+        className="bg-gray-900 relative max-h-full overflow-y-scroll shadow-lg"
+        onKeyDown={(e: KeyboardEvent<HTMLDivElement>): void => {
+          ['ArrowUp', 'ArrowDown', 'Space'].includes(e.code) &&
+            e.preventDefault();
+        }}
+      >
         <Tree {...args} />
       </Card>
     </div>
