@@ -2,11 +2,14 @@ import React, {
   createContext,
   Dispatch,
   FC,
+  FocusEvent,
   HTMLAttributes,
+  KeyboardEvent,
   ReactNode,
   SetStateAction,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -14,14 +17,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 interface ContextProps {
+  data: TreeNode;
+  setData: Dispatch<SetStateAction<TreeNode>>;
   nodeListContainerIsFocused: boolean;
   setNodeListContainerFocusedState: Dispatch<SetStateAction<boolean>>;
+  handleNodeListContainerFocusedState: (
+    e: FocusEvent<HTMLDivElement>,
+    focused: boolean
+  ) => void;
   mouseEntered: boolean;
   setMouseEntered: Dispatch<SetStateAction<boolean>>;
   selectedNode: TreeNode;
   setSelectedNode: Dispatch<SetStateAction<TreeNode>>;
   openNodes: number[];
   toggleNodeOpenState: (id: number, open: boolean) => void;
+  handleKeyDown: (e: KeyboardEvent<HTMLDivElement>, id: any, node: any) => void;
+  navigatedId: number;
+  setNavigatedId: Dispatch<SetStateAction<number>>;
 }
 
 const SelectedNodeContext = createContext({} as ContextProps);
@@ -31,11 +43,13 @@ interface ContextWrapperProps {
 }
 
 const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
+  const [data, setData] = useState<TreeNode>({} as TreeNode);
   const [nodeListContainerIsFocused, setNodeListContainerFocusedState] =
     useState<boolean>(false);
   const [mouseEntered, setMouseEntered] = useState<boolean>(false);
   const [openNodes, setOpenNodes] = useState<number[]>([]);
   const [selectedNode, setSelectedNode] = useState<TreeNode>({} as TreeNode);
+  const [navigatedId, setNavigatedId] = useState<number>(0);
   const toggleNodeOpenState = useCallback(
     (id: number, open: boolean): void => {
       const openNodesCopy = [...openNodes];
@@ -52,17 +66,145 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
     },
     [openNodes]
   );
+
+  const getNodeAtSpecifiedId: TreeNode | null = (obj: TreeNode, id: number) => {
+    if (obj['id'] == id) {
+      return obj;
+    } else if (obj['children'] != null) {
+      let result = null;
+      for (let i = 0; result == null && i < obj['children'].length; i++) {
+        result = getNodeAtSpecifiedId(obj['children'][i], id);
+      }
+      return result;
+    }
+    return null;
+  };
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLDivElement>, id, node): void => {
+      const { code } = e;
+      if (['Enter', 'Space'].includes(code)) {
+        const navigatedNode = getNodeAtSpecifiedId(data, navigatedId);
+        if (navigatedId !== selectedNode['id']) {
+          setSelectedNode(navigatedNode);
+        } else {
+          children &&
+            toggleNodeOpenState(navigatedId, openNodes.includes(navigatedId));
+          setSelectedNode(navigatedNode);
+          setNavigatedId(navigatedNode['id']);
+        }
+      }
+
+      if (['ArrowUp', 'ArrowDown', 'Tab', 'ShiftLeft'].includes(code)) {
+        const nodeListContainer: HTMLElement | null =
+          document.getElementById('node-list-0');
+        const focusableNodeElements: NodeListOf<Element> | [] =
+          nodeListContainer?.querySelectorAll(
+            'div, [href], input, [tabindex="0"]'
+          ) ?? [];
+        const focusableNodeElementsIds: number[] = Array.from(
+          focusableNodeElements
+        ).map((n) => parseInt(n.id));
+        const activeElement: Element | null = document.activeElement;
+
+        const nodeListIncludesActiveElement: false | (() => boolean) =
+          activeElement
+            ? () => {
+                let focusableNodeElementsArray = Array.from(
+                  focusableNodeElements
+                );
+                focusableNodeElementsArray.pop();
+                focusableNodeElementsArray.shift();
+                return focusableNodeElementsArray.includes(activeElement);
+              }
+            : false;
+        let selectedIndex: number =
+          focusableNodeElementsIds.indexOf(navigatedId) ?? 1;
+        switch (code) {
+          case 'ArrowUp':
+            selectedIndex -= 1;
+            break;
+          case 'ArrowDown':
+            selectedIndex += 1;
+            break;
+          case 'Tab':
+            if (nodeListIncludesActiveElement) {
+              if (e.shiftKey) {
+                selectedIndex -= 1;
+              } else {
+                selectedIndex += 1;
+              }
+            } else {
+              if (e.shiftKey) {
+                selectedIndex = 0;
+              } else {
+                selectedIndex = focusableNodeElementsIds.length - 1;
+              }
+            }
+            break;
+        }
+        const newNavigatedId: number = focusableNodeElementsIds[selectedIndex];
+        ['ArrowUp', 'ArrowDown', 'ShiftLeft'].includes(code) &&
+          (focusableNodeElements[selectedIndex] as HTMLElement).focus();
+        setNavigatedId(newNavigatedId);
+      }
+    },
+    [children, document, navigatedId, open, openNodes, selectedNode, data]
+  );
+
+  const handleNodeListContainerFocusedState = useCallback(
+    (e: FocusEvent<HTMLDivElement>, focused: boolean) => {
+      setNodeListContainerFocusedState(focused);
+      const nodeListContainer: HTMLElement | null =
+        document.getElementById('node-list-0');
+      const focusableNodeElements: NodeListOf<Element> | [] =
+        nodeListContainer?.querySelectorAll(
+          'div, [href], input, [tabindex="0"]'
+        ) ?? [];
+      const focusableNodeElementsIds: number[] = Array.from(
+        focusableNodeElements
+      ).map((n) => parseInt(n.id));
+      const activeElement: Element | null = document.activeElement;
+      const activeElementId: number = parseInt(activeElement?.id);
+      switch (activeElementId) {
+        case 1:
+          const firstFocusedNode = getNodeAtSpecifiedId(data, 1);
+          setSelectedNode(firstFocusedNode);
+          setNavigatedId(1);
+          break;
+        case focusableNodeElementsIds[focusableNodeElementsIds.length - 1]:
+          const lastFocusedNode = getNodeAtSpecifiedId(
+            data,
+            focusableNodeElementsIds[focusableNodeElementsIds.length - 1]
+          );
+          setSelectedNode(lastFocusedNode);
+          setNavigatedId(
+            focusableNodeElementsIds[focusableNodeElementsIds.length - 1]
+          );
+          break;
+      }
+    },
+    [data]
+  );
+
   return (
     <SelectedNodeContext.Provider
       value={{
+        data: data,
+        setData: setData,
         nodeListContainerIsFocused: nodeListContainerIsFocused,
         setNodeListContainerFocusedState: setNodeListContainerFocusedState,
+        handleNodeListContainerFocusedState:
+          handleNodeListContainerFocusedState,
         selectedNode: selectedNode,
         setSelectedNode: setSelectedNode,
         mouseEntered: mouseEntered,
         setMouseEntered: setMouseEntered,
         openNodes: openNodes,
         toggleNodeOpenState: toggleNodeOpenState,
+        navigatedId: navigatedId,
+        setNavigatedId: setNavigatedId,
+        handleKeyDown: handleKeyDown,
       }}
     >
       {children}
@@ -83,6 +225,7 @@ interface TreeNode {
 
 interface NodeElementProps {
   node: TreeNode;
+  data: TreeNode;
 }
 
 const NodeElement: FC<NodeElementProps> = ({ node }) => {
@@ -93,6 +236,9 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
     selectedNode,
     setSelectedNode,
     toggleNodeOpenState,
+    handleKeyDown,
+    setNavigatedId,
+    navigatedId,
   } = useSelectedNodeContext();
   const children = useMemo<boolean>(() => 'children' in node, [node]);
   const icon = useMemo<boolean>(() => 'icon' in node, [node]);
@@ -104,6 +250,10 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
   const selected = useMemo<boolean>(
     () => node === selectedNode,
     [node, selectedNode]
+  );
+  const navigated = useMemo<boolean>(
+    () => id === navigatedId,
+    [id, navigatedId]
   );
   const currentDirectory = useMemo<boolean>(
     () =>
@@ -117,31 +267,29 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
       false,
     [node, selectedNode]
   );
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLDivElement>): void => {
-      if (['Enter', 'Space'].includes(e.code)) {
-        children && toggleNodeOpenState(id, open);
-        setSelectedNode(node);
-      }
-    },
-    [children, id, open, node, selectedNode]
-  );
+
   return (
-    <li className="hover:bg-gray-100 hover:bg-opacity-10 transition ease-in-out duration-100">
+    <li
+      className={
+        'hover:bg-gray-100 hover:bg-opacity-10 transition ease-in-out duration-100'
+      }
+    >
       <div
-        className={`flex px-2 focus:outline-none tree-node-focus-visible ${
+        className={`flex px-2 focus:outline-none tree-node-focus-visible z-20 ${
           selected &&
           `bg-gray-100 bg-opacity-20 border border-opacity-0 ${
             nodeListContainerIsFocused && 'border-opacity-100 border-blue-500'
           }`
-        }`}
+        } ${navigated && 'bg-green-300 bg-opacity-50'}`}
         onKeyDown={(e): void => {
-          handleKeyDown(e);
+          handleKeyDown(e, id, node);
         }}
         onClick={(): void => {
           setSelectedNode(node);
+          setNavigatedId(id);
           children && toggleNodeOpenState(id, open);
         }}
+        id={`${id}`}
         tabIndex={0}
       >
         {children && (
@@ -199,22 +347,30 @@ export interface TreeProps extends HTMLAttributes<HTMLUListElement> {
 
 const NodeList: FC<TreeProps> = ({ className, data }) => {
   return (
-    <ul className={`${className} flex flex-col`}>
+    <ul className={`${className} flex flex-col`} id={`node-list-${data['id']}`}>
       {data.children?.map((n) => (
-        <NodeElement key={n['value']} node={n} />
+        <NodeElement key={n['value']} node={n} data={data} />
       ))}
     </ul>
   );
 };
 
 export const NodeListContainer: FC<TreeProps> = (props) => {
-  const { setMouseEntered, setNodeListContainerFocusedState } =
+  const { setData, setMouseEntered, handleNodeListContainerFocusedState } =
     useSelectedNodeContext();
+  const { data } = props;
+  useEffect(() => {
+    setData(data);
+  }, []);
   return (
     <div
       className="cursor-pointer"
-      onFocus={(): void => setNodeListContainerFocusedState(true)}
-      onBlur={(): void => setNodeListContainerFocusedState(false)}
+      onFocus={(e: FocusEvent<HTMLDivElement>): void =>
+        handleNodeListContainerFocusedState(e, true)
+      }
+      onBlur={(e: FocusEvent<HTMLDivElement>): void =>
+        handleNodeListContainerFocusedState(e, false)
+      }
       onMouseEnter={(): void => setMouseEntered(true)}
       onMouseLeave={(): void => setMouseEntered(false)}
     >
