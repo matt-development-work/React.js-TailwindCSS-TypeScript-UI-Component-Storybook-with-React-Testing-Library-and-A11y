@@ -53,24 +53,26 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
       switch (open) {
         case true:
           openNodesCopy.splice(openNodesCopy.indexOf(id), 1);
-          setOpenNodes(openNodesCopy);
           break;
         case false:
           openNodesCopy.push(id);
-          setOpenNodes(openNodesCopy);
           break;
       }
+      setOpenNodes(openNodesCopy);
     },
     [openNodes]
   );
 
-  const getNodeAtSpecifiedId: TreeNode | null = (obj: TreeNode, id: number) => {
-    if (obj['id'] === id) {
-      return obj;
-    } else if (!!obj['children']) {
+  const getNodeAtSpecifiedId: TreeNode | null = (
+    node: TreeNode,
+    id: number
+  ) => {
+    if (node['id'] === id) {
+      return node;
+    } else if (!!node['children']) {
       let result = null;
-      for (let i = 0; result == null && i < obj['children'].length; i++) {
-        result = getNodeAtSpecifiedId(obj['children'][i], id);
+      for (let i = 0; !result && i < node['children'].length; i++) {
+        result = getNodeAtSpecifiedId(node['children'][i], id);
       }
       return result;
     }
