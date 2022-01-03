@@ -17,19 +17,19 @@ import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 interface ContextProps {
   data: TreeNode;
-  setData: Dispatch<SetStateAction<TreeNode>>;
-  nodeListContainerIsFocused: boolean;
-  setNodeListContainerFocusedState: Dispatch<SetStateAction<boolean>>;
+  handleKeyDown: (e: KeyboardEvent<HTMLDivElement>) => void;
   handleNodeListContainerFocusedState: (focused: boolean) => void;
   mouseEntered: boolean;
-  setMouseEntered: Dispatch<SetStateAction<boolean>>;
-  selectedNode: TreeNode;
-  setSelectedNode: Dispatch<SetStateAction<TreeNode>>;
-  openNodes: number[];
-  toggleNodeOpenState: (id: number, open: boolean) => void;
-  handleKeyDown: (e: KeyboardEvent<HTMLDivElement>) => void;
   navigatedId: number;
+  nodeListContainerIsFocused: boolean;
+  openNodes: number[];
+  selectedNode: TreeNode;
+  setData: Dispatch<SetStateAction<TreeNode>>;
+  setMouseEntered: Dispatch<SetStateAction<boolean>>;
   setNavigatedId: Dispatch<SetStateAction<number>>;
+  setNodeListContainerFocusedState: Dispatch<SetStateAction<boolean>>;
+  setSelectedNode: Dispatch<SetStateAction<TreeNode>>;
+  toggleNodeOpenState: (id: number, open: boolean) => void;
 }
 
 const SelectedNodeContext = createContext({} as ContextProps);
@@ -40,12 +40,13 @@ interface ContextWrapperProps {
 
 const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   const [data, setData] = useState<TreeNode>({} as TreeNode);
+  const [mouseEntered, setMouseEntered] = useState<boolean>(false);
+  const [navigatedId, setNavigatedId] = useState<number>(0);
   const [nodeListContainerIsFocused, setNodeListContainerFocusedState] =
     useState<boolean>(false);
-  const [mouseEntered, setMouseEntered] = useState<boolean>(false);
   const [openNodes, setOpenNodes] = useState<number[]>([]);
   const [selectedNode, setSelectedNode] = useState<TreeNode>({} as TreeNode);
-  const [navigatedId, setNavigatedId] = useState<number>(0);
+
   const toggleNodeOpenState = useCallback(
     (id: number, open: boolean): void => {
       const openNodesCopy = [...openNodes];
@@ -64,9 +65,9 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   );
 
   const getNodeAtSpecifiedId: TreeNode | null = (obj: TreeNode, id: number) => {
-    if (obj['id'] == id) {
+    if (obj['id'] === id) {
       return obj;
-    } else if (obj['children'] != null) {
+    } else if (!!obj['children']) {
       let result = null;
       for (let i = 0; result == null && i < obj['children'].length; i++) {
         result = getNodeAtSpecifiedId(obj['children'][i], id);
@@ -84,13 +85,12 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         if (navigatedId !== selectedNode['id']) {
           setSelectedNode(navigatedNode);
         } else {
-          children &&
-            toggleNodeOpenState(navigatedId, openNodes.includes(navigatedId));
           setSelectedNode(navigatedNode);
           setNavigatedId(navigatedNode['id']);
+          children &&
+            toggleNodeOpenState(navigatedId, openNodes.includes(navigatedId));
         }
       }
-
       if (['ArrowUp', 'ArrowDown', 'Tab', 'ShiftLeft'].includes(code)) {
         const nodeListContainer: HTMLElement | null =
           document.getElementById('node-list-0');
@@ -102,7 +102,6 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
           focusableNodeElements
         ).map((n) => parseInt(n.id));
         const activeElement: Element | null = document.activeElement;
-
         const nodeListIncludesActiveElement: false | (() => boolean) =
           activeElement
             ? () => {
@@ -125,17 +124,13 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
             break;
           case 'Tab':
             if (nodeListIncludesActiveElement) {
-              if (e.shiftKey) {
-                selectedIndex -= 1;
-              } else {
-                selectedIndex += 1;
-              }
+              selectedIndex = e.shiftKey
+                ? selectedIndex - 1
+                : selectedIndex + 1;
             } else {
-              if (e.shiftKey) {
-                selectedIndex = 0;
-              } else {
-                selectedIndex = focusableNodeElementsIds.length - 1;
-              }
+              selectedIndex = e.shiftKey
+                ? 0
+                : focusableNodeElementsIds.length - 1;
             }
             break;
         }
@@ -149,7 +144,7 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   );
 
   const handleNodeListContainerFocusedState = useCallback(
-    (focused: boolean) => {
+    (focused: boolean): void => {
       setNodeListContainerFocusedState(focused);
       const nodeListContainer: HTMLElement | null =
         document.getElementById('node-list-0');
@@ -164,12 +159,10 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
       const activeElementId: number = parseInt(activeElement?.id);
       switch (activeElementId) {
         case 1:
-          setNavigatedId(1);
+          setNavigatedId(activeElementId);
           break;
         case focusableNodeElementsIds[focusableNodeElementsIds.length - 1]:
-          setNavigatedId(
-            focusableNodeElementsIds[focusableNodeElementsIds.length - 1]
-          );
+          setNavigatedId(activeElementId);
           break;
       }
     },
@@ -180,20 +173,20 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
     <SelectedNodeContext.Provider
       value={{
         data: data,
-        setData: setData,
-        nodeListContainerIsFocused: nodeListContainerIsFocused,
-        setNodeListContainerFocusedState: setNodeListContainerFocusedState,
+        handleKeyDown: handleKeyDown,
         handleNodeListContainerFocusedState:
           handleNodeListContainerFocusedState,
-        selectedNode: selectedNode,
-        setSelectedNode: setSelectedNode,
         mouseEntered: mouseEntered,
-        setMouseEntered: setMouseEntered,
-        openNodes: openNodes,
-        toggleNodeOpenState: toggleNodeOpenState,
         navigatedId: navigatedId,
+        nodeListContainerIsFocused: nodeListContainerIsFocused,
+        openNodes: openNodes,
+        selectedNode: selectedNode,
+        setData: setData,
+        setMouseEntered: setMouseEntered,
         setNavigatedId: setNavigatedId,
-        handleKeyDown: handleKeyDown,
+        setNodeListContainerFocusedState: setNodeListContainerFocusedState,
+        setSelectedNode: setSelectedNode,
+        toggleNodeOpenState: toggleNodeOpenState,
       }}
     >
       {children}
@@ -219,15 +212,16 @@ interface NodeElementProps {
 
 const NodeElement: FC<NodeElementProps> = ({ node }) => {
   const {
-    nodeListContainerIsFocused,
     mouseEntered,
+    navigatedId,
+    nodeListContainerIsFocused,
     openNodes,
     selectedNode,
+    setNavigatedId,
     setSelectedNode,
     toggleNodeOpenState,
-    setNavigatedId,
-    navigatedId,
   } = useSelectedNodeContext();
+
   const children = useMemo<boolean>(() => 'children' in node, [node]);
   const icon = useMemo<boolean>(() => 'icon' in node, [node]);
   const id = useMemo<number>(() => node['id'], [node]);
@@ -269,12 +263,12 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
             nodeListContainerIsFocused && 'border-opacity-100 border-blue-500'
           }`
         } ${navigated && 'bg-green-300 bg-opacity-50'}`}
+        id={`${id}`}
         onClick={(): void => {
           setSelectedNode(node);
           setNavigatedId(id);
           children && toggleNodeOpenState(id, open);
         }}
-        id={`${id}`}
         tabIndex={0}
       >
         {children && (
@@ -334,7 +328,7 @@ const NodeList: FC<TreeProps> = ({ className, data }) => {
   return (
     <ul className={`${className} flex flex-col`} id={`node-list-${data['id']}`}>
       {data.children?.map((n) => (
-        <NodeElement key={n['value']} node={n} data={data} />
+        <NodeElement data={data} key={n['value']} node={n} />
       ))}
     </ul>
   );
@@ -354,13 +348,13 @@ export const NodeListContainer: FC<TreeProps> = (props) => {
   return (
     <div
       className="cursor-pointer"
-      onFocus={(): void => handleNodeListContainerFocusedState(true)}
       onBlur={(): void => handleNodeListContainerFocusedState(false)}
-      onMouseEnter={(): void => setMouseEntered(true)}
-      onMouseLeave={(): void => setMouseEntered(false)}
+      onFocus={(): void => handleNodeListContainerFocusedState(true)}
       onKeyDown={(e): void => {
         handleKeyDown(e);
       }}
+      onMouseEnter={(): void => setMouseEntered(true)}
+      onMouseLeave={(): void => setMouseEntered(false)}
     >
       <NodeList {...props} />
     </div>
