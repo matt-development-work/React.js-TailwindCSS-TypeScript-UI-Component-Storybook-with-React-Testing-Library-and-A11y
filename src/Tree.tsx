@@ -225,7 +225,6 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
     selectedNode,
     setSelectedNode,
     toggleNodeOpenState,
-    handleKeyDown,
     setNavigatedId,
     navigatedId,
   } = useSelectedNodeContext();
@@ -270,9 +269,6 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
             nodeListContainerIsFocused && 'border-opacity-100 border-blue-500'
           }`
         } ${navigated && 'bg-green-300 bg-opacity-50'}`}
-        onKeyDown={(e): void => {
-          handleKeyDown(e);
-        }}
         onClick={(): void => {
           setSelectedNode(node);
           setNavigatedId(id);
@@ -345,8 +341,12 @@ const NodeList: FC<TreeProps> = ({ className, data }) => {
 };
 
 export const NodeListContainer: FC<TreeProps> = (props) => {
-  const { setData, setMouseEntered, handleNodeListContainerFocusedState } =
-    useSelectedNodeContext();
+  const {
+    setData,
+    setMouseEntered,
+    handleKeyDown,
+    handleNodeListContainerFocusedState,
+  } = useSelectedNodeContext();
   const { data } = props;
   useEffect(() => {
     setData(data);
@@ -358,6 +358,9 @@ export const NodeListContainer: FC<TreeProps> = (props) => {
       onBlur={(): void => handleNodeListContainerFocusedState(false)}
       onMouseEnter={(): void => setMouseEntered(true)}
       onMouseLeave={(): void => setMouseEntered(false)}
+      onKeyDown={(e): void => {
+        handleKeyDown(e);
+      }}
     >
       <NodeList {...props} />
     </div>
