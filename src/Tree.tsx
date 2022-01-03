@@ -63,16 +63,16 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
     [openNodes]
   );
 
-  const getNodeAtSpecifiedId: TreeNode | null = (
+  const getNodeAtSpecifiedId = (
     node: TreeNode,
     id: number
-  ) => {
-    if (node['id'] === id) {
+  ): TreeNode | null => {
+    if (node.id === id) {
       return node;
-    } else if (!!node['children']) {
+    } else if (!!node.children) {
       let result = null;
-      for (let i = 0; !result && i < node['children'].length; i++) {
-        result = getNodeAtSpecifiedId(node['children'][i], id);
+      for (let i = 0; !result && i < node.children.length; i++) {
+        result = getNodeAtSpecifiedId(node.children[i], id);
       }
       return result;
     }
@@ -84,11 +84,11 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
       const { code } = e;
       if (['Enter', 'Space'].includes(code)) {
         const navigatedNode = getNodeAtSpecifiedId(data, navigatedId);
-        if (navigatedId !== selectedNode['id']) {
-          setSelectedNode(navigatedNode);
+        if (navigatedId !== selectedNode.id) {
+          setSelectedNode(navigatedNode ?? ({} as TreeNode));
         } else {
-          setSelectedNode(navigatedNode);
-          setNavigatedId(navigatedNode['id']);
+          setSelectedNode(navigatedNode ?? ({} as TreeNode));
+          setNavigatedId(navigatedNode?.id ?? 0);
           children &&
             toggleNodeOpenState(navigatedId, openNodes.includes(navigatedId));
         }
@@ -158,7 +158,8 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         focusableNodeElements
       ).map((n) => parseInt(n.id));
       const activeElement: Element | null = document.activeElement;
-      const activeElementId: number = parseInt(activeElement?.id);
+      const activeElementId: number | null =
+        activeElement && parseInt(activeElement?.id);
       switch (activeElementId) {
         case 1:
           setNavigatedId(activeElementId);
@@ -226,7 +227,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
 
   const children = useMemo<boolean>(() => 'children' in node, [node]);
   const icon = useMemo<boolean>(() => 'icon' in node, [node]);
-  const id = useMemo<number>(() => node['id'], [node]);
+  const id = useMemo<number>(() => node.id, [node]);
   const open = useMemo<boolean>(
     () => openNodes.includes(id),
     [openNodes, node]
@@ -302,7 +303,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
           } ${icon && 'gap-x-2'}`}
         >
           <i className="flex items-center">{node.icon}</i>
-          <span>{node['value']}</span>
+          <span>{node.value}</span>
         </p>
       </div>
       {children && open && (
@@ -328,9 +329,9 @@ export interface TreeProps extends HTMLAttributes<HTMLUListElement> {
 
 const NodeList: FC<TreeProps> = ({ className, data }) => {
   return (
-    <ul className={`${className} flex flex-col`} id={`node-list-${data['id']}`}>
+    <ul className={`${className} flex flex-col`} id={`node-list-${data.id}`}>
       {data.children?.map((n) => (
-        <NodeElement data={data} key={n['value']} node={n} />
+        <NodeElement data={data} key={n.value} node={n} />
       ))}
     </ul>
   );
