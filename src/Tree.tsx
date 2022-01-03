@@ -47,6 +47,10 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   const [openNodes, setOpenNodes] = useState<number[]>([]);
   const [selectedNode, setSelectedNode] = useState<TreeNode>({} as TreeNode);
 
+  useEffect(() => {
+    !nodeListContainerIsFocused && setNavigatedId(0);
+  }, [nodeListContainerIsFocused]);
+
   const toggleNodeOpenState = useCallback(
     (id: number, open: boolean): void => {
       const openNodesCopy = [...openNodes];
