@@ -18,7 +18,7 @@ import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 interface ContextProps {
   data: TreeNode;
   handleKeyDown: (e: KeyboardEvent<HTMLDivElement>) => void;
-  handleNodeListContainerFocusedState: (focused: boolean) => void;
+  handleNodeListContainerFocusing: (focused: boolean) => void;
   mouseEntered: boolean;
   navigatedId: number;
   nodeListContainerIsFocused: boolean;
@@ -145,40 +145,36 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
     [children, document, navigatedId, open, openNodes, selectedNode, data]
   );
 
-  const handleNodeListContainerFocusedState = useCallback(
-    (focused: boolean): void => {
-      setNodeListContainerFocusedState(focused);
-      const nodeListContainer: HTMLElement | null =
-        document.getElementById('node-list-0');
-      const focusableNodeElements: NodeListOf<Element> | [] =
-        nodeListContainer?.querySelectorAll(
-          'div, [href], input, [tabindex="0"]'
-        ) ?? [];
-      const focusableNodeElementsIds: number[] = Array.from(
-        focusableNodeElements
-      ).map((n) => parseInt(n.id));
-      const activeElement: Element | null = document.activeElement;
-      const activeElementId: number | null =
-        activeElement && parseInt(activeElement?.id);
-      switch (activeElementId) {
-        case 1:
-          setNavigatedId(activeElementId);
-          break;
-        case focusableNodeElementsIds[focusableNodeElementsIds.length - 1]:
-          setNavigatedId(activeElementId);
-          break;
-      }
-    },
-    [data]
-  );
+  const handleNodeListContainerFocusing = useCallback((): void => {
+    const nodeListContainer: HTMLElement | null =
+      document.getElementById('node-list-0');
+    const focusableNodeElements: NodeListOf<Element> | [] =
+      nodeListContainer?.querySelectorAll(
+        'div, [href], input, [tabindex="0"]'
+      ) ?? [];
+    const focusableNodeElementsIds: number[] = Array.from(
+      focusableNodeElements
+    ).map((n) => parseInt(n.id));
+    const activeElement: Element | null = document.activeElement;
+    const activeElementId: number | null =
+      activeElement && parseInt(activeElement?.id);
+    switch (activeElementId) {
+      case 1:
+        setNavigatedId(activeElementId);
+        break;
+      case focusableNodeElementsIds[focusableNodeElementsIds.length - 1]:
+        setNavigatedId(activeElementId);
+        break;
+    }
+    setNodeListContainerFocusedState(true);
+  }, [data]);
 
   return (
     <SelectedNodeContext.Provider
       value={{
         data: data,
         handleKeyDown: handleKeyDown,
-        handleNodeListContainerFocusedState:
-          handleNodeListContainerFocusedState,
+        handleNodeListContainerFocusing: handleNodeListContainerFocusing,
         mouseEntered: mouseEntered,
         navigatedId: navigatedId,
         nodeListContainerIsFocused: nodeListContainerIsFocused,
@@ -342,20 +338,17 @@ export const NodeListContainer: FC<TreeProps> = (props) => {
     setData,
     setMouseEntered,
     handleKeyDown,
-    handleNodeListContainerFocusedState,
+    handleNodeListContainerFocusing,
+    setNodeListContainerFocusedState,
   } = useSelectedNodeContext();
   const { data } = props;
-  useEffect(() => {
-    setData(data);
-  }, []);
+  useEffect(() => setData(data), []);
   return (
     <div
       className="cursor-pointer"
-      onBlur={(): void => handleNodeListContainerFocusedState(false)}
-      onFocus={(): void => handleNodeListContainerFocusedState(true)}
-      onKeyDown={(e): void => {
-        handleKeyDown(e);
-      }}
+      onBlur={(): void => setNodeListContainerFocusedState(false)}
+      onFocus={(): void => handleNodeListContainerFocusing(true)}
+      onKeyDown={handleKeyDown}
       onMouseEnter={(): void => setMouseEntered(true)}
       onMouseLeave={(): void => setMouseEntered(false)}
     >
