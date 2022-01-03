@@ -18,7 +18,7 @@ import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 interface ContextProps {
   data: TreeNode;
   handleKeyDown: (e: KeyboardEvent<HTMLDivElement>) => void;
-  handleNodeListContainerFocusing: (focused: boolean) => void;
+  handleNodeListContainerFocusing: () => void;
   mouseEntered: boolean;
   navigatedId: number;
   nodeListContainerIsFocused: boolean;
@@ -347,7 +347,7 @@ export const NodeListContainer: FC<TreeProps> = (props) => {
     <div
       className="cursor-pointer"
       onBlur={(): void => setNodeListContainerFocusedState(false)}
-      onFocus={(): void => handleNodeListContainerFocusing(true)}
+      onFocus={(): void => handleNodeListContainerFocusing()}
       onKeyDown={handleKeyDown}
       onMouseEnter={(): void => setMouseEntered(true)}
       onMouseLeave={(): void => setMouseEntered(false)}
