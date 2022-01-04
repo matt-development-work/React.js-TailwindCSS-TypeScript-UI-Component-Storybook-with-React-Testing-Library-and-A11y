@@ -118,18 +118,19 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         const focusableNodeElementsIds: number[] = Array.from(
           focusableNodeElements
         ).map((n) => parseInt(n.id));
-        const activeElement: Element | null = document.activeElement;
-        const nodeListIncludesActiveElement: false | (() => boolean) =
-          activeElement
-            ? (): boolean => {
-                let focusableNodeElementsArray = Array.from(
-                  focusableNodeElements
-                );
-                focusableNodeElementsArray.pop();
-                focusableNodeElementsArray.shift();
-                return focusableNodeElementsArray.includes(activeElement);
-              }
-            : false;
+        const nodeListIncludesActiveElement: boolean = ((): boolean => {
+          const { activeElement } = document;
+          if (activeElement) {
+            const focusableNodeElementsArray = Array.from(
+              focusableNodeElements
+            );
+            focusableNodeElementsArray.pop();
+            focusableNodeElementsArray.shift();
+            return focusableNodeElementsArray.includes(activeElement);
+          } else {
+            return false;
+          }
+        })();
         let selectedIndex: number =
           focusableNodeElementsIds.indexOf(navigatedId) ?? 1;
         switch (code) {
@@ -170,7 +171,7 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
     const focusableNodeElementsIds: number[] = Array.from(
       focusableNodeElements
     ).map((n) => parseInt(n.id));
-    const activeElement: Element | null = document.activeElement;
+    const { activeElement } = document;
     const activeElementId: number | null =
       activeElement && parseInt(activeElement?.id);
     switch (activeElementId) {
