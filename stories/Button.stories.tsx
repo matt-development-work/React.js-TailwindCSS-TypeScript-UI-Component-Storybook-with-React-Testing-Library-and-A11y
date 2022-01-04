@@ -17,11 +17,7 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<Props> = (args) => {
-  return (
-    <Button {...args}>
-      <div className="">Button</div>
-    </Button>
-  );
+  return <Button {...args}>Button</Button>;
 };
 
 export const Text = Template.bind({});
@@ -48,7 +44,7 @@ Outlined.args = {
 const IconTemplate: Story<Props> = (args) => {
   return (
     <Button {...args}>
-      <FontAwesomeIcon className={`text-white`} icon={faArrowDown} size="sm" />
+      <FontAwesomeIcon className="text-white" icon={faArrowDown} size="sm" />
     </Button>
   );
 };
