@@ -1,5 +1,6 @@
 import React, {
   createContext,
+  createRef,
   Dispatch,
   FC,
   HTMLAttributes,
@@ -47,17 +48,6 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
     useState<boolean>(false);
   const [openNodes, setOpenNodes] = useState<number[]>([]);
   const [selectedNode, setSelectedNode] = useState<TreeNode>({} as TreeNode);
-
-  useEffect(() => {
-    if (
-      !document
-        .querySelector('#node-list-container')
-        ?.contains(document.activeElement) &&
-      !nodeListContainerIsFocused
-    ) {
-      setNavigatedId(0);
-    }
-  }, [nodeListContainerIsFocused]);
 
   const toggleNodeOpenState = useCallback(
     (id: number, open: boolean): void => {
@@ -255,7 +245,6 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
     selectedNode,
     toggleNodeOpenState,
   } = useSelectedNodeContext();
-
   const children = useMemo<boolean>(() => 'children' in node, [node]);
   const icon = useMemo<boolean>(() => 'icon' in node, [node]);
   const id = useMemo<number>(() => node.id, [node]);
@@ -372,21 +361,36 @@ export const NodeListContainer: FC<TreeProps> = (props) => {
     setMouseEntered,
     handleKeyDown,
     handleNodeListContainerFocusing,
+    nodeListContainerIsFocused,
+    setNavigatedId,
     setNodeListContainerFocusedState,
   } = useSelectedNodeContext();
+
   useEffect(() => {
     const { data } = props;
     setData(data);
   }, []);
+
+  const nodeListContainerRef = createRef<HTMLDivElement>();
+
+  useEffect(() => {
+    if (
+      !nodeListContainerRef.current?.contains(document.activeElement) &&
+      !nodeListContainerIsFocused
+    ) {
+      setNavigatedId(0);
+    }
+  }, [nodeListContainerIsFocused]);
+
   return (
     <div
       className="cursor-pointer"
-      id="node-list-container"
       onBlur={(): void => setNodeListContainerFocusedState(false)}
       onFocus={(): void => handleNodeListContainerFocusing()}
       onKeyDown={handleKeyDown}
       onMouseEnter={(): void => setMouseEntered(true)}
       onMouseLeave={(): void => setMouseEntered(false)}
+      ref={nodeListContainerRef}
     >
       <NodeList {...props} />
     </div>
