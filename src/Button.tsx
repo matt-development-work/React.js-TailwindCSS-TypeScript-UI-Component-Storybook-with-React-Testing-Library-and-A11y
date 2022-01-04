@@ -9,15 +9,14 @@ export interface Props extends HTMLAttributes<HTMLButtonElement> {
 
 export const Button = forwardRef<HTMLButtonElement, Props>(
   ({ children, onClick, rounded, variant = 'contained', ...props }, ref) => {
-    // TODO: This value is temporary and will be replaced when the theme is implemented.
+    // TODO: Extract class names to theme
     const color: string = 'green';
-
     const classes: {
       contained: string;
       outlined: string;
       text: string;
     } = {
-      contained: `bg-${color}-500 hover:brightness-90 shadow-md hover:shadow-xl`,
+      contained: `bg-${color}-600 hover:brightness-90 shadow-md hover:shadow-xl text-white`,
       outlined: `border border-${color}-500 hover:bg-${color}-100`,
       text: `hover:bg-${color}-100`,
     };

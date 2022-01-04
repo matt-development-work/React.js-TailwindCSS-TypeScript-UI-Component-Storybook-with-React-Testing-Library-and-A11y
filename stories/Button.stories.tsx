@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { Meta, Story } from '@storybook/react';
 import { Button, Props } from '../src/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPepperHot } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 
 const meta: Meta = {
   title: 'Button',
@@ -48,11 +48,7 @@ Outlined.args = {
 const IconTemplate: Story<Props> = (args) => {
   return (
     <Button {...args}>
-      <FontAwesomeIcon
-        className={`text-yellow-500`}
-        icon={faPepperHot}
-        size="sm"
-      />
+      <FontAwesomeIcon className={`text-white`} icon={faArrowDown} size="sm" />
     </Button>
   );
 };
