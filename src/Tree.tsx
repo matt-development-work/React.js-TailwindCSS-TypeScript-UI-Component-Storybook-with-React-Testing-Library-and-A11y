@@ -25,11 +25,13 @@ interface ContextProps {
   navigatedId: number;
   nodeListContainerIsFocused: boolean;
   openNodes: number[];
+  rootNodeChildrenListElement: HTMLElement | null;
   selectedNode: TreeNode;
   setData: Dispatch<SetStateAction<TreeNode>>;
   setMouseEntered: Dispatch<SetStateAction<boolean>>;
   setNavigatedId: Dispatch<SetStateAction<number>>;
   setNodeListContainerFocusedState: Dispatch<SetStateAction<boolean>>;
+  setRootNodeChildrenListElement: Dispatch<SetStateAction<HTMLElement | null>>;
   setSelectedNode: Dispatch<SetStateAction<TreeNode>>;
   toggleNodeOpenState: (id: number, open: boolean) => void;
 }
@@ -47,6 +49,8 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   const [nodeListContainerIsFocused, setNodeListContainerFocusedState] =
     useState<boolean>(false);
   const [openNodes, setOpenNodes] = useState<number[]>([]);
+  const [rootNodeChildrenListElement, setRootNodeChildrenListElement] =
+    useState<HTMLElement | null>(null);
   const [selectedNode, setSelectedNode] = useState<TreeNode>({} as TreeNode);
 
   const toggleNodeOpenState = useCallback(
@@ -105,10 +109,8 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   }
 
   const getNodeElementUtilities = useCallback((): NodeElementUtilities => {
-    const nodeListContainer: HTMLElement | null =
-      document.getElementById('node-list-0');
     const focusableNodeElements: NodeListOf<Element> | [] =
-      nodeListContainer?.querySelectorAll(
+      rootNodeChildrenListElement?.querySelectorAll(
         'div, [href], input, [tabindex="0"]'
       ) ?? [];
     return {
@@ -118,7 +120,7 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         parseInt(n.id)
       ),
     };
-  }, [document]);
+  }, [document, rootNodeChildrenListElement]);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>): void => {
@@ -205,11 +207,13 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         navigatedId: navigatedId,
         nodeListContainerIsFocused: nodeListContainerIsFocused,
         openNodes: openNodes,
+        rootNodeChildrenListElement: rootNodeChildrenListElement,
         selectedNode: selectedNode,
         setData: setData,
         setMouseEntered: setMouseEntered,
         setNavigatedId: setNavigatedId,
         setNodeListContainerFocusedState: setNodeListContainerFocusedState,
+        setRootNodeChildrenListElement: setRootNodeChildrenListElement,
         setSelectedNode: setSelectedNode,
         toggleNodeOpenState: toggleNodeOpenState,
       }}
@@ -363,12 +367,22 @@ export const NodeListContainer: FC<TreeProps> = (props) => {
     nodeListContainerIsFocused,
     setNavigatedId,
     setNodeListContainerFocusedState,
+    setRootNodeChildrenListElement,
   } = useSelectedNodeContext();
   const { data } = props;
   useEffect(() => {
     setData(data);
   }, [data]);
   const nodeListContainerRef = createRef<HTMLDivElement>();
+  useEffect(() => {
+    if (nodeListContainerRef.current) {
+      const rootNodeChildrenListElement =
+        nodeListContainerRef.current?.querySelector(
+          '#node-list-0'
+        ) as HTMLElement;
+      setRootNodeChildrenListElement(rootNodeChildrenListElement);
+    }
+  }, [nodeListContainerRef.current]);
   useEffect(() => {
     if (
       !nodeListContainerRef.current?.contains(document.activeElement) &&
