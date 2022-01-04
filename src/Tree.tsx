@@ -364,10 +364,10 @@ export const NodeListContainer: FC<TreeProps> = (props) => {
     setNavigatedId,
     setNodeListContainerFocusedState,
   } = useSelectedNodeContext();
+  const { data } = props;
   useEffect(() => {
-    const { data } = props;
     setData(data);
-  }, []);
+  }, [data]);
   const nodeListContainerRef = createRef<HTMLDivElement>();
   useEffect(() => {
     if (
