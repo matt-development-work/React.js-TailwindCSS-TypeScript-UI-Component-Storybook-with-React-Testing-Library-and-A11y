@@ -49,7 +49,14 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   const [selectedNode, setSelectedNode] = useState<TreeNode>({} as TreeNode);
 
   useEffect(() => {
-    !nodeListContainerIsFocused && setNavigatedId(0);
+    if (
+      !document
+        .querySelector('#node-list-container')
+        ?.contains(document.activeElement) &&
+      !nodeListContainerIsFocused
+    ) {
+      setNavigatedId(0);
+    }
   }, [nodeListContainerIsFocused]);
 
   const toggleNodeOpenState = useCallback(
@@ -110,7 +117,7 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
       }
       if (['ArrowUp', 'ArrowDown', 'Tab', 'ShiftLeft'].includes(code)) {
         const nodeListContainer: HTMLElement | null =
-          document.getElementById('node-list-0');
+          document.querySelector('#node-list-0');
         const focusableNodeElements: NodeListOf<Element> | [] =
           nodeListContainer?.querySelectorAll(
             'div, [href], input, [tabindex="0"]'
@@ -118,19 +125,18 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         const focusableNodeElementsIds: number[] = Array.from(
           focusableNodeElements
         ).map((n) => parseInt(n.id));
-        const nodeListIncludesActiveElement: boolean = ((): boolean => {
-          const { activeElement } = document;
-          if (activeElement) {
-            const focusableNodeElementsArray = Array.from(
-              focusableNodeElements
-            );
-            focusableNodeElementsArray.pop();
-            focusableNodeElementsArray.shift();
-            return focusableNodeElementsArray.includes(activeElement);
-          } else {
-            return false;
-          }
-        })();
+        const { activeElement } = document;
+        const nodeListIncludesActiveElement: boolean | (() => boolean) =
+          activeElement
+            ? () => {
+                const focusableNodeElementsArray = Array.from(
+                  focusableNodeElements
+                );
+                focusableNodeElementsArray.pop();
+                focusableNodeElementsArray.shift();
+                return focusableNodeElementsArray.includes(activeElement);
+              }
+            : false;
         let selectedIndex: number =
           focusableNodeElementsIds.indexOf(navigatedId) ?? 1;
         switch (code) {
@@ -360,6 +366,7 @@ export const NodeListContainer: FC<TreeProps> = (props) => {
   return (
     <div
       className="cursor-pointer"
+      id="node-list-container"
       onBlur={(): void => setNodeListContainerFocusedState(false)}
       onFocus={(): void => handleNodeListContainerFocusing()}
       onKeyDown={handleKeyDown}
