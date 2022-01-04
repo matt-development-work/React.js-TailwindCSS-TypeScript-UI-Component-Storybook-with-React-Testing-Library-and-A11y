@@ -68,21 +68,21 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
     [openNodes]
   );
 
-  const getNodeAtSpecifiedId = (
-    node: TreeNode,
-    id: number
-  ): TreeNode | null => {
-    if (node.id === id) {
-      return node;
-    } else if (!!node.children) {
-      let result = null;
-      for (let i = 0; !result && i < node.children.length; i++) {
-        result = getNodeAtSpecifiedId(node.children[i], id);
+  const getNodeAtSpecifiedId = useCallback(
+    (node: TreeNode, id: number): TreeNode | null => {
+      if (node.id === id) {
+        return node;
+      } else if (!!node.children) {
+        let result = null;
+        for (let i = 0; !result && i < node.children.length; i++) {
+          result = getNodeAtSpecifiedId(node.children[i], id);
+        }
+        return result;
       }
-      return result;
-    }
-    return null;
-  };
+      return null;
+    },
+    []
+  );
 
   const confirmSelection = useCallback(
     (node: TreeNode, id: number, children: ReactNode) => {
