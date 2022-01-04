@@ -110,7 +110,7 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         const activeElement: Element | null = document.activeElement;
         const nodeListIncludesActiveElement: false | (() => boolean) =
           activeElement
-            ? () => {
+            ? (): boolean => {
                 let focusableNodeElementsArray = Array.from(
                   focusableNodeElements
                 );
