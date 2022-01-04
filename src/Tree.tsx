@@ -272,7 +272,6 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
       false,
     [node, selectedNode]
   );
-
   return (
     <li
       className={
@@ -365,14 +364,11 @@ export const NodeListContainer: FC<TreeProps> = (props) => {
     setNavigatedId,
     setNodeListContainerFocusedState,
   } = useSelectedNodeContext();
-
   useEffect(() => {
     const { data } = props;
     setData(data);
   }, []);
-
   const nodeListContainerRef = createRef<HTMLDivElement>();
-
   useEffect(() => {
     if (
       !nodeListContainerRef.current?.contains(document.activeElement) &&
@@ -381,7 +377,6 @@ export const NodeListContainer: FC<TreeProps> = (props) => {
       setNavigatedId(0);
     }
   }, [nodeListContainerIsFocused]);
-
   return (
     <div
       className="cursor-pointer"
