@@ -90,7 +90,7 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
       setNavigatedId(node?.id ?? 0);
       if (children) toggleNodeOpenState(id, openNodes.includes(id));
     },
-    []
+    [openNodes]
   );
 
   const handleKeyDown = useCallback(
