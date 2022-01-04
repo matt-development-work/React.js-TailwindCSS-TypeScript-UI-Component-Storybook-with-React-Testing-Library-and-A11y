@@ -361,8 +361,10 @@ export const NodeListContainer: FC<TreeProps> = (props) => {
     handleNodeListContainerFocusing,
     setNodeListContainerFocusedState,
   } = useSelectedNodeContext();
-  const { data } = props;
-  useEffect(() => setData(data), []);
+  useEffect(() => {
+    const { data } = props;
+    setData(data);
+  }, []);
   return (
     <div
       className="cursor-pointer"
