@@ -96,13 +96,39 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   );
 
   const confirmSelection = useCallback(
-    (node: TreeNode = {} as TreeNode, id: number, children: ReactNode) => {
+    (
+      node: TreeNode = {} as TreeNode,
+      id: number,
+      children: ReactNode
+    ): void => {
       setSelectedNode(node);
       setNavigatedId(node?.id ?? 0);
       children && toggleNodeOpenState(id, openNodes.includes(id));
     },
     [openNodes]
   );
+
+  interface NodeElementUtilities {
+    activeElement: Element | null;
+    focusableNodeElements: NodeListOf<Element> | [];
+    focusableNodeElementsIds: number[];
+  }
+
+  const getNodeElementUtilities = useCallback((): NodeElementUtilities => {
+    const nodeListContainer: HTMLElement | null =
+      document.getElementById('node-list-0');
+    const focusableNodeElements: NodeListOf<Element> | [] =
+      nodeListContainer?.querySelectorAll(
+        'div, [href], input, [tabindex="0"]'
+      ) ?? [];
+    return {
+      activeElement: document.activeElement,
+      focusableNodeElements: focusableNodeElements,
+      focusableNodeElementsIds: Array.from(focusableNodeElements).map((n) =>
+        parseInt(n.id)
+      ),
+    };
+  }, [document]);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>): void => {
@@ -116,16 +142,11 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         }
       }
       if (['ArrowUp', 'ArrowDown', 'Tab', 'ShiftLeft'].includes(code)) {
-        const nodeListContainer: HTMLElement | null =
-          document.querySelector('#node-list-0');
-        const focusableNodeElements: NodeListOf<Element> | [] =
-          nodeListContainer?.querySelectorAll(
-            'div, [href], input, [tabindex="0"]'
-          ) ?? [];
-        const focusableNodeElementsIds: number[] = Array.from(
-          focusableNodeElements
-        ).map((n) => parseInt(n.id));
-        const { activeElement } = document;
+        const {
+          activeElement,
+          focusableNodeElements,
+          focusableNodeElementsIds,
+        } = getNodeElementUtilities();
         const nodeListIncludesActiveElement: boolean | (() => boolean) =
           activeElement
             ? () => {
@@ -168,16 +189,8 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   );
 
   const handleNodeListContainerFocusing = useCallback((): void => {
-    const nodeListContainer: HTMLElement | null =
-      document.getElementById('node-list-0');
-    const focusableNodeElements: NodeListOf<Element> | [] =
-      nodeListContainer?.querySelectorAll(
-        'div, [href], input, [tabindex="0"]'
-      ) ?? [];
-    const focusableNodeElementsIds: number[] = Array.from(
-      focusableNodeElements
-    ).map((n) => parseInt(n.id));
-    const { activeElement } = document;
+    const { activeElement, focusableNodeElementsIds } =
+      getNodeElementUtilities();
     const activeElementId: number | null =
       activeElement && parseInt(activeElement?.id);
     switch (activeElementId) {
