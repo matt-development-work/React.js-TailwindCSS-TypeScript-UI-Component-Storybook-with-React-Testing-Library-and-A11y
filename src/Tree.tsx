@@ -17,6 +17,7 @@ import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 interface ContextProps {
   data: TreeNode;
+  confirmSelection: (node: TreeNode, id: number, children: ReactNode) => void;
   handleKeyDown: (e: KeyboardEvent<HTMLDivElement>) => void;
   handleNodeListContainerFocusing: () => void;
   mouseEntered: boolean;
@@ -83,6 +84,15 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
     return null;
   };
 
+  const confirmSelection = useCallback(
+    (node: TreeNode, id: number, children: ReactNode) => {
+      setSelectedNode(node ?? ({} as TreeNode));
+      setNavigatedId(node?.id ?? 0);
+      if (children) toggleNodeOpenState(id, openNodes.includes(id));
+    },
+    []
+  );
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>): void => {
       const { code } = e;
@@ -91,10 +101,11 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         if (navigatedId !== selectedNode.id) {
           setSelectedNode(navigatedNode ?? ({} as TreeNode));
         } else {
-          setSelectedNode(navigatedNode ?? ({} as TreeNode));
-          setNavigatedId(navigatedNode?.id ?? 0);
-          children &&
-            toggleNodeOpenState(navigatedId, openNodes.includes(navigatedId));
+          confirmSelection(
+            navigatedNode ?? ({} as TreeNode),
+            navigatedId,
+            children
+          );
         }
       }
       if (['ArrowUp', 'ArrowDown', 'Tab', 'ShiftLeft'].includes(code)) {
@@ -176,6 +187,7 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   return (
     <SelectedNodeContext.Provider
       value={{
+        confirmSelection: confirmSelection,
         data: data,
         handleKeyDown: handleKeyDown,
         handleNodeListContainerFocusing: handleNodeListContainerFocusing,
@@ -215,6 +227,7 @@ interface NodeElementProps {
 
 const NodeElement: FC<NodeElementProps> = ({ node }) => {
   const {
+    confirmSelection,
     mouseEntered,
     navigatedId,
     nodeListContainerIsFocused,
@@ -268,9 +281,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
         } ${navigated && 'bg-green-300 bg-opacity-20'}`}
         id={`${id}`}
         onClick={(): void => {
-          setSelectedNode(node);
-          setNavigatedId(id);
-          children && toggleNodeOpenState(id, open);
+          confirmSelection(node, id, children);
         }}
         tabIndex={0}
       >
