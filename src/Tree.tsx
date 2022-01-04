@@ -69,17 +69,21 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   );
 
   const getNodeAtSpecifiedId = useCallback(
-    (node: TreeNode, id: number): TreeNode | null => {
+    (node: TreeNode, id: number): TreeNode => {
+      let result = {} as TreeNode;
       if (node.id === id) {
         return node;
       } else if (!!node.children) {
-        let result = null;
-        for (let i = 0; !result && i < node.children.length; i++) {
+        for (
+          let i = 0;
+          !Object.keys(result).length && i < node.children.length;
+          i++
+        ) {
           result = getNodeAtSpecifiedId(node.children[i], id);
         }
         return result;
       }
-      return null;
+      return result;
     },
     []
   );
@@ -88,7 +92,7 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
     (node: TreeNode = {} as TreeNode, id: number, children: ReactNode) => {
       setSelectedNode(node);
       setNavigatedId(node?.id ?? 0);
-      if (children) toggleNodeOpenState(id, openNodes.includes(id));
+      children && toggleNodeOpenState(id, openNodes.includes(id));
     },
     [openNodes]
   );
@@ -97,8 +101,7 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
     (e: KeyboardEvent<HTMLDivElement>): void => {
       const { code } = e;
       if (['Enter', 'Space'].includes(code)) {
-        const navigatedNode =
-          getNodeAtSpecifiedId(data, navigatedId) ?? ({} as TreeNode);
+        const navigatedNode = getNodeAtSpecifiedId(data, navigatedId);
         if (navigatedId !== selectedNode.id) {
           setSelectedNode(navigatedNode);
         } else {
