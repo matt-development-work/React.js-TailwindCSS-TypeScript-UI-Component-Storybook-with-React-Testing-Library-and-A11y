@@ -85,8 +85,8 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   );
 
   const confirmSelection = useCallback(
-    (node: TreeNode, id: number, children: ReactNode) => {
-      setSelectedNode(node ?? ({} as TreeNode));
+    (node: TreeNode = {} as TreeNode, id: number, children: ReactNode) => {
+      setSelectedNode(node);
       setNavigatedId(node?.id ?? 0);
       if (children) toggleNodeOpenState(id, openNodes.includes(id));
     },
@@ -97,15 +97,12 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
     (e: KeyboardEvent<HTMLDivElement>): void => {
       const { code } = e;
       if (['Enter', 'Space'].includes(code)) {
-        const navigatedNode = getNodeAtSpecifiedId(data, navigatedId);
+        const navigatedNode =
+          getNodeAtSpecifiedId(data, navigatedId) ?? ({} as TreeNode);
         if (navigatedId !== selectedNode.id) {
-          setSelectedNode(navigatedNode ?? ({} as TreeNode));
+          setSelectedNode(navigatedNode);
         } else {
-          confirmSelection(
-            navigatedNode ?? ({} as TreeNode),
-            navigatedId,
-            children
-          );
+          confirmSelection(navigatedNode, navigatedId, children);
         }
       }
       if (['ArrowUp', 'ArrowDown', 'Tab', 'ShiftLeft'].includes(code)) {
@@ -233,8 +230,6 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
     nodeListContainerIsFocused,
     openNodes,
     selectedNode,
-    setNavigatedId,
-    setSelectedNode,
     toggleNodeOpenState,
   } = useSelectedNodeContext();
 
