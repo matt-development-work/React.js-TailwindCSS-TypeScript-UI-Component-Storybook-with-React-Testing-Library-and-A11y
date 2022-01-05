@@ -36,13 +36,13 @@ interface ContextProps {
   toggleNodeOpenState: (id: number, open: boolean) => void;
 }
 
-const SelectedNodeContext = createContext({} as ContextProps);
+const NodeListContext = createContext({} as ContextProps);
 
 interface ContextWrapperProps {
   children: ReactNode;
 }
 
-const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
+const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   const [data, setData] = useState<TreeNode>({} as TreeNode);
   const [mouseEntered, setMouseEntered] = useState<boolean>(false);
   const [navigatedId, setNavigatedId] = useState<number>(0);
@@ -197,7 +197,7 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   }, [data]);
 
   return (
-    <SelectedNodeContext.Provider
+    <NodeListContext.Provider
       value={{
         confirmSelection: confirmSelection,
         data: data,
@@ -219,12 +219,12 @@ const SelectedNodeContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
       }}
     >
       {children}
-    </SelectedNodeContext.Provider>
+    </NodeListContext.Provider>
   );
 };
 
-const useSelectedNodeContext = () => {
-  return useContext(SelectedNodeContext);
+const useNodeListContext = () => {
+  return useContext(NodeListContext);
 };
 
 interface TreeNode {
@@ -248,7 +248,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
     openNodes,
     selectedNode,
     toggleNodeOpenState,
-  } = useSelectedNodeContext();
+  } = useNodeListContext();
   const children = useMemo<boolean>(() => 'children' in node, [node]);
   const icon = useMemo<boolean>(() => 'icon' in node, [node]);
   const id = useMemo<number>(() => node.id, [node]);
@@ -368,7 +368,7 @@ export const NodeListContainer: FC<TreeProps> = (props) => {
     setNavigatedId,
     setNodeListContainerFocusedState,
     setRootNodeChildrenListElement,
-  } = useSelectedNodeContext();
+  } = useNodeListContext();
   const { data } = props;
   useEffect(() => {
     setData(data);
@@ -408,8 +408,8 @@ export const NodeListContainer: FC<TreeProps> = (props) => {
 
 export const Tree: FC<TreeProps> = (props) => {
   return (
-    <SelectedNodeContextWrapper>
+    <NodeListContextWrapper>
       <NodeListContainer {...props} />
-    </SelectedNodeContextWrapper>
+    </NodeListContextWrapper>
   );
 };
