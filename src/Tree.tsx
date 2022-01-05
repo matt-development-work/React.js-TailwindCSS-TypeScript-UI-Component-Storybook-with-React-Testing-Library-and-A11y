@@ -358,7 +358,7 @@ const NodeList: FC<TreeProps> = ({ className, data }) => {
   );
 };
 
-export const NodeListContainer: FC<TreeProps> = (props) => {
+const NodeListContainer: FC<TreeProps> = (props) => {
   const {
     setData,
     setMouseEntered,
