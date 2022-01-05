@@ -20,9 +20,9 @@ const addIdAttributesToTreeNodes = (data) => {
   const traverseTreeNodes = (node) => {
     node['id'] = uniqueId;
     uniqueId += 1;
-    if (node['children'] != null) {
+    if (!!node['children']) {
       let result = null;
-      for (let i = 0; result == null && i < node['children'].length; i++) {
+      for (let i = 0; !result && i < node['children'].length; i++) {
         result = traverseTreeNodes(node['children'][i]);
       }
     }
@@ -31,7 +31,7 @@ const addIdAttributesToTreeNodes = (data) => {
   return data;
 };
 
-export const customTreeData = addIdAttributesToTreeNodes({
+const treeNodes = {
   value: 'Root',
   icon: (
     <FontAwesomeIcon icon={faReact} className={'text-blue-400'} size="sm" />
@@ -487,4 +487,6 @@ export const customTreeData = addIdAttributesToTreeNodes({
       ),
     },
   ],
-});
+};
+
+export const customTreeData = addIdAttributesToTreeNodes(treeNodes);
