@@ -110,9 +110,8 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
 
   const getNodeElementUtilities = useCallback((): NodeElementUtilities => {
     const focusableNodeElements: NodeListOf<Element> | [] =
-      rootNodeChildrenListElement?.querySelectorAll(
-        'div, [href], input, [tabindex="0"]'
-      ) ?? [];
+      rootNodeChildrenListElement?.querySelectorAll('div, [tabindex="0"]') ??
+      [];
     return {
       activeElement: document.activeElement,
       focusableNodeElements: focusableNodeElements,
