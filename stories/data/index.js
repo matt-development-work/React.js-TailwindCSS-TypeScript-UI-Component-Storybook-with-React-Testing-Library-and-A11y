@@ -441,7 +441,7 @@ export const customTreeData = addIdAttributesToTreeNodes({
           ),
         },
         {
-          value: 'TestField.test.tsx',
+          value: 'TextField.test.tsx',
           icon: (
             <FontAwesomeIcon
               icon={faFlask}
