@@ -34,6 +34,6 @@ const Template: Story<TreeProps> = (args) => {
 export const Custom = Template.bind({});
 
 Custom.args = {
-  label: 'Default',
+  label: 'Custom',
   data: customTreeData,
 };
