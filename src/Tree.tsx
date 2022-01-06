@@ -235,7 +235,6 @@ interface TreeNode {
 
 interface NodeElementProps {
   node: TreeNode;
-  data: TreeNode;
 }
 
 const NodeElement: FC<NodeElementProps> = ({ node }) => {
@@ -351,7 +350,7 @@ const NodeList: FC<TreeProps> = ({ className, data }) => {
   return (
     <ul className={`${className} flex flex-col`} id={`node-list-${data.id}`}>
       {data.children?.map((n) => (
-        <NodeElement data={data} key={n.value} node={n} />
+        <NodeElement key={n.value} node={n} />
       ))}
     </ul>
   );
