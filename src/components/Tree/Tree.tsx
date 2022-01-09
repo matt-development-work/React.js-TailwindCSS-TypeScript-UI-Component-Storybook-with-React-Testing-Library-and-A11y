@@ -277,13 +277,13 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
   return (
     <li
       className={
-        'hover:bg-blue-100 hover:bg-opacity-10 transition ease-in-out duration-100'
+        'hover:bg-indigo-500 hover:bg-opacity-20 transition ease-in-out duration-150'
       }
     >
       <div
-        className={`flex px-2 focus:outline-none tree-node-focus-visible z-20 border border-blue-100 border-opacity-0 hover:border-opacity-40 ${
+        className={`flex px-2 focus:outline-none tree-node-focus-visible z-20 border border-blue-300 border-opacity-0 hover:border-opacity-40 ${
           selected &&
-          `bg-blue-300 bg-opacity-30 border border-opacity-0 ${
+          `bg-blue-700 bg-opacity-50 border border-opacity-0 ${
             nodeListContainerIsFocused && 'border-opacity-50 border-blue-400'
           }`
         } ${navigated && 'bg-green-300 bg-opacity-20'}`}
@@ -329,9 +329,9 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
         <NodeList
           className={`ml-4 border-l transition ease-in-out duration-150 ${
             currentDirectory
-              ? 'border-gray-400'
+              ? 'border-gray-200'
               : mouseEntered
-              ? 'border-gray-500 border-opacity-50'
+              ? 'border-gray-300 border-opacity-30'
               : 'border-opacity-0'
           }`}
           data={node}
