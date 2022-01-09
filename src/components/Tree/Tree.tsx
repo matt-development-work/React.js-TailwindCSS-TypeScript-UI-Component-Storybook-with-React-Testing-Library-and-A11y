@@ -342,7 +342,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
 };
 
 export interface TreeProps extends HTMLAttributes<HTMLUListElement> {
-  className: string;
+  className?: string;
   data: TreeNode;
 }
 
