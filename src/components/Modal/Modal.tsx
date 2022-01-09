@@ -1,5 +1,5 @@
 import React, { forwardRef, HTMLAttributes, ReactNode } from 'react';
-import { Backdrop } from '../src/Backdrop';
+import Backdrop from '../Backdrop';
 
 export interface Props extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;

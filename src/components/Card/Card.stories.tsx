@@ -1,6 +1,6 @@
-import React, { Fragment, useState } from 'react';
+import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import { Card, Props } from '../src/Card';
+import { Card, Props } from './Card';
 
 const meta: Meta = {
   title: 'Card',
@@ -23,21 +23,15 @@ const Template: Story<Props> = (args) => {
 
 export const Default = Template.bind({});
 
-Default.args = {
-  label: 'Default',
-};
-
 export const Square = Template.bind({});
 
 Square.args = {
-  label: 'Square',
   square: true,
 };
 
 export const Hover = Template.bind({});
 
 Hover.args = {
-  label: 'Hover',
   elevation: 'md',
   hoverElevation: 'lg',
 };

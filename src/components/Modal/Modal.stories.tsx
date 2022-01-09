@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Meta, Story } from '@storybook/react';
-import { Button } from '../src/Button';
-import { Modal, Props } from '../src/Modal';
-import { Checkbox } from '../src/Checkbox';
+import { Modal, Props } from './Modal';
+import Button from '../Button';
+import Checkbox from '../Checkbox';
 
 const meta: Meta = {
   title: 'Modal',
@@ -55,7 +55,3 @@ const Template: Story<Props> = (args) => {
 };
 
 export const Default = Template.bind({});
-
-Default.args = {
-  label: 'Default',
-};

@@ -1,6 +1,6 @@
-import React, { Fragment, useState } from 'react';
+import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import { Button, Props } from '../src/Button';
+import { Button, Props } from './Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 
@@ -23,21 +23,18 @@ const Template: Story<Props> = (args) => {
 export const Text = Template.bind({});
 
 Text.args = {
-  label: 'Button',
   variant: 'text',
 };
 
 export const Contained = Template.bind({});
 
 Contained.args = {
-  label: 'Button',
   variant: 'contained',
 };
 
 export const Outlined = Template.bind({});
 
 Outlined.args = {
-  label: 'Button',
   variant: 'outlined',
 };
 
@@ -52,8 +49,6 @@ const IconTemplate: Story<Props> = (args) => {
 export const Icon = IconTemplate.bind({});
 
 Icon.args = {
-  label: 'Button',
-  icon: true,
   variant: 'contained',
   rounded: true,
 };

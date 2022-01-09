@@ -1,3 +1,7 @@
+import React, { KeyboardEvent } from 'react';
+import { Meta, Story } from '@storybook/react';
+import { Tree, TreeProps } from './Tree';
+import Card from '../Card';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCog,
@@ -15,9 +19,9 @@ import {
   faYarn,
 } from '@fortawesome/free-brands-svg-icons';
 
-const addIdAttributesToTreeNodes = (data) => {
+const addIdAttributesToTreeNodes = (data: any) => {
   let uniqueId = 0;
-  const traverseTreeNodes = (node) => {
+  const traverseTreeNodes = (node: any) => {
     node['id'] = uniqueId;
     uniqueId += 1;
     if (!!node['children']) {
@@ -489,4 +493,37 @@ const treeNodes = {
   ],
 };
 
-export const customTreeData = addIdAttributesToTreeNodes(treeNodes);
+const customTreeData = addIdAttributesToTreeNodes(treeNodes);
+
+const meta: Meta = {
+  title: 'Tree',
+  component: Tree,
+  argTypes: {
+    id: { defaultValue: 'tree' },
+    title: { defaultValue: 'Tree' },
+  },
+};
+
+export default meta;
+
+const Template: Story<TreeProps> = (args) => {
+  return (
+    <div className="absolute h-5/6">
+      <Card
+        className="bg-gray-900 relative max-h-full overflow-y-scroll shadow-lg"
+        onKeyDown={(e: KeyboardEvent<HTMLDivElement>): void => {
+          ['ArrowUp', 'ArrowDown', 'Space'].includes(e.code) &&
+            e.preventDefault();
+        }}
+      >
+        <Tree {...args} />
+      </Card>
+    </div>
+  );
+};
+
+export const Custom = Template.bind({});
+
+Custom.args = {
+  data: customTreeData,
+};

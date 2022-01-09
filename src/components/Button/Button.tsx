@@ -16,7 +16,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
       outlined: string;
       text: string;
     } = {
-      contained: `bg-${color}-600 hover:brightness-90 shadow-md hover:shadow-xl text-white`,
+      contained: `bg-${color}-700 hover:brightness-90 shadow-md hover:shadow-xl text-white`,
       outlined: `border border-${color}-500 hover:bg-${color}-100`,
       text: `hover:bg-${color}-100`,
     };
@@ -35,3 +35,5 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
     );
   }
 );
+
+export default Button;
