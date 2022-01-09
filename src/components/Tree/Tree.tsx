@@ -277,7 +277,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
   return (
     <li
       className={
-        'hover:bg-gray-100 hover:bg-opacity-10 transition ease-in-out duration-100'
+        'hover:bg-blue-100 hover:bg-opacity-10 transition ease-in-out duration-100'
       }
     >
       <div
