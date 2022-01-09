@@ -226,7 +226,7 @@ const useNodeListContext = () => {
   return useContext(NodeListContext);
 };
 
-interface TreeNode {
+export interface TreeNode {
   children?: TreeNode[];
   icon?: ReactNode;
   id: number;
