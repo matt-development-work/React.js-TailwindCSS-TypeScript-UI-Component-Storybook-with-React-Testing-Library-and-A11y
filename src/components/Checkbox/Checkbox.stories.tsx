@@ -97,8 +97,8 @@ export const Custom2 = TemplateCustom.bind({});
 
 Custom2.args = {
   icon: {
-    checked: faPause,
-    unChecked: faPlay,
+    checked: faPlay,
+    unChecked: faPause,
     className: 'text-green-500',
   },
   label: 'Custom 2',
