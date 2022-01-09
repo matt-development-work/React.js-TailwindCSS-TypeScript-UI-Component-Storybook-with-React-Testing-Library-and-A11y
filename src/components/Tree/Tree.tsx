@@ -131,8 +131,7 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         } else {
           confirmSelection(navigatedNode, navigatedId, children);
         }
-      }
-      if (['ArrowUp', 'ArrowDown', 'Tab', 'ShiftLeft'].includes(code)) {
+      } else if (['ArrowUp', 'ArrowDown', 'Tab', 'ShiftLeft'].includes(code)) {
         const {
           activeElement,
           focusableNodeElements,
