@@ -434,7 +434,7 @@ const Template: Story<TreeProps> = (args) => {
   return (
     <div className="absolute h-5/6">
       <Card
-        className="bg-gray-900 relative max-h-full overflow-y-scroll shadow-lg"
+        className="bg-black relative max-h-full overflow-y-scroll shadow-lg"
         onKeyDown={(e: KeyboardEvent<HTMLDivElement>): void => {
           ['ArrowUp', 'ArrowDown', 'Space'].includes(e.code) &&
             e.preventDefault();
