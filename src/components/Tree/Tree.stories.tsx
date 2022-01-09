@@ -1,6 +1,6 @@
-import React, { KeyboardEvent } from 'react';
+import React, { KeyboardEvent, ReactNode } from 'react';
 import { Meta, Story } from '@storybook/react';
-import { Tree, TreeProps } from './Tree';
+import { Tree, TreeNode, TreeProps } from './Tree';
 import Card from '../Card';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -18,9 +18,18 @@ import {
   faYarn,
 } from '@fortawesome/free-brands-svg-icons';
 
-const addIdAttributesToTreeNodes = (data: any) => {
+interface PreIndexedTreeNode {
+  children?: PreIndexedTreeNode[];
+  icon?: ReactNode;
+  id?: number;
+  value: string;
+}
+
+const addIdAttributesToTreeNodes = (
+  data: PreIndexedTreeNode
+): PreIndexedTreeNode | TreeNode => {
   let uniqueId = 0;
-  const traverseTreeNodes = (node: any) => {
+  const traverseTreeNodes = (node: PreIndexedTreeNode | TreeNode) => {
     node['id'] = uniqueId;
     uniqueId += 1;
     if (!!node['children']) {
@@ -34,7 +43,7 @@ const addIdAttributesToTreeNodes = (data: any) => {
   return data;
 };
 
-const treeNodes = {
+const treeNodes: PreIndexedTreeNode = {
   value: 'Root',
   icon: (
     <FontAwesomeIcon icon={faReact} className={'text-blue-400'} size="sm" />
@@ -449,5 +458,5 @@ const Template: Story<TreeProps> = (args) => {
 export const Custom = Template.bind({});
 
 Custom.args = {
-  data: customTreeData,
+  data: customTreeData as TreeNode,
 };
