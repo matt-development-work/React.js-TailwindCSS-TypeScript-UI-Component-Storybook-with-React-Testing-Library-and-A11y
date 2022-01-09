@@ -18,6 +18,17 @@ import {
   faYarn,
 } from '@fortawesome/free-brands-svg-icons';
 
+const meta: Meta = {
+  title: 'Tree',
+  component: Tree,
+  argTypes: {
+    id: { defaultValue: 'tree' },
+    title: { defaultValue: 'Tree' },
+  },
+};
+
+export default meta;
+
 interface PreIndexedTreeNode {
   children?: PreIndexedTreeNode[];
   icon?: ReactNode;
@@ -43,7 +54,7 @@ const addIdAttributesToTreeNodes = (
   return data;
 };
 
-const treeNodes: PreIndexedTreeNode = {
+let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
   value: 'Root',
   icon: (
     <FontAwesomeIcon icon={faReact} className={'text-blue-400'} size="sm" />
@@ -173,7 +184,6 @@ const treeNodes: PreIndexedTreeNode = {
                     />
                   ),
                 },
-
                 {
                   value: 'index.ts',
                   icon: (
@@ -260,6 +270,16 @@ const treeNodes: PreIndexedTreeNode = {
               ),
               children: [
                 {
+                  value: 'index.ts',
+                  icon: (
+                    <FontAwesomeIcon
+                      icon={faFileCode}
+                      className={'text-blue-300'}
+                      size="sm"
+                    />
+                  ),
+                },
+                {
                   value: 'table.css',
                   icon: (
                     <FontAwesomeIcon
@@ -299,17 +319,6 @@ const treeNodes: PreIndexedTreeNode = {
                     />
                   ),
                 },
-
-                {
-                  value: 'index.ts',
-                  icon: (
-                    <FontAwesomeIcon
-                      icon={faFileCode}
-                      className={'text-blue-300'}
-                      size="sm"
-                    />
-                  ),
-                },
               ],
             },
             {
@@ -322,6 +331,16 @@ const treeNodes: PreIndexedTreeNode = {
                 />
               ),
               children: [
+                {
+                  value: 'index.ts',
+                  icon: (
+                    <FontAwesomeIcon
+                      icon={faFileCode}
+                      className={'text-blue-300'}
+                      size="sm"
+                    />
+                  ),
+                },
                 {
                   value: 'textfield.css',
                   icon: (
@@ -358,17 +377,6 @@ const treeNodes: PreIndexedTreeNode = {
                     <FontAwesomeIcon
                       icon={faFileCode}
                       className={'text-blue-200'}
-                      size="sm"
-                    />
-                  ),
-                },
-
-                {
-                  value: 'index.ts',
-                  icon: (
-                    <FontAwesomeIcon
-                      icon={faFileCode}
-                      className={'text-blue-300'}
                       size="sm"
                     />
                   ),
@@ -426,18 +434,7 @@ const treeNodes: PreIndexedTreeNode = {
   ],
 };
 
-const customTreeData = addIdAttributesToTreeNodes(treeNodes);
-
-const meta: Meta = {
-  title: 'Tree',
-  component: Tree,
-  argTypes: {
-    id: { defaultValue: 'tree' },
-    title: { defaultValue: 'Tree' },
-  },
-};
-
-export default meta;
+customTreeNodeData = addIdAttributesToTreeNodes(customTreeNodeData);
 
 const Template: Story<TreeProps> = (args) => {
   return (
@@ -458,5 +455,5 @@ const Template: Story<TreeProps> = (args) => {
 export const Custom = Template.bind({});
 
 Custom.args = {
-  data: customTreeData as TreeNode,
+  data: customTreeNodeData as TreeNode,
 };
