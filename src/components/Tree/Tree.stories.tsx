@@ -14,7 +14,6 @@ import {
   faGitAlt,
   faJsSquare,
   faNpm,
-  faReact,
   faYarn,
 } from '@fortawesome/free-brands-svg-icons';
 
@@ -56,9 +55,6 @@ const addIdAttributesToTreeNodes = (
 
 let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
   value: 'Root',
-  icon: (
-    <FontAwesomeIcon icon={faReact} className={'text-blue-400'} size="sm" />
-  ),
   children: [
     {
       value: '.storybook',
