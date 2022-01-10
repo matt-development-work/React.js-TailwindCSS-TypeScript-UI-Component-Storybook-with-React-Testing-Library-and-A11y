@@ -68,10 +68,11 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
           className={`absolute flex justify-center items-center h-4 w-4 m-1 rounded focus:outline-none focus-visible transition duration-100 ease-in-out filter ${
             !icon.unChecked && 'border border-gray-500 hover:shadow-sm text'
           } ${
-            !disabled &&
-            `${
-              !icon.unChecked && `border-${color}-500`
-            } cursor-pointer hover:brightness-110`
+            !disabled
+              ? `${
+                  !icon.unChecked && `border-${color}-500`
+                } cursor-pointer hover:brightness-110`
+              : 'cursor-default'
           } ${hasValue && `${!icon.unChecked && `bg-${color}-500`}`} `}
           onClick={handleChange}
           onKeyDown={(e) => handleKeyDown(e.code)}
