@@ -74,6 +74,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
                 } cursor-pointer hover:brightness-110`
               : 'cursor-default'
           } ${hasValue && `${!icon.unChecked && `bg-${color}-500`}`} `}
+          data-testid="checkbox-alias"
           onClick={handleChange}
           onKeyDown={(e) => handleKeyDown(e.code)}
           tabIndex={0}
@@ -97,6 +98,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
           aria-label={id}
           checked={checked}
           className="hidden"
+          data-testid="checkbox"
           disabled={disabled}
           id={id}
           onChange={handleChange}
