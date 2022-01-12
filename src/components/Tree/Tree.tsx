@@ -392,7 +392,7 @@ const NodeListContainer: FC<TreeProps> = (props) => {
     <div
       className="cursor-pointer"
       onBlur={(): void => setNodeListContainerFocusedState(false)}
-      onFocus={(): void => handleNodeListContainerFocusing()}
+      onFocus={handleNodeListContainerFocusing}
       onKeyDown={handleKeyDown}
       onMouseEnter={(): void => setMouseEntered(true)}
       onMouseLeave={(): void => setMouseEntered(false)}
