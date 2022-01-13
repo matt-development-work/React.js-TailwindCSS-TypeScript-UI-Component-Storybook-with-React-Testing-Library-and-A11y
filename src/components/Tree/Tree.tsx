@@ -131,7 +131,7 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         } else {
           confirmSelection(navigatedNode, navigatedId, children);
         }
-      } else if (['ArrowUp', 'ArrowDown', 'Tab', 'ShiftLeft'].includes(code)) {
+      } else if (['ArrowUp', 'ArrowDown', 'Tab'].includes(code)) {
         const {
           activeElement,
           focusableNodeElements,
@@ -170,7 +170,7 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
             break;
         }
         const newNavigatedId: number = focusableNodeElementsIds[selectedIndex];
-        ['ArrowUp', 'ArrowDown', 'ShiftLeft'].includes(code) &&
+        ['ArrowUp', 'ArrowDown'].includes(code) &&
           (focusableNodeElements[selectedIndex] as HTMLElement).focus();
         setNavigatedId(newNavigatedId);
       }
