@@ -20,11 +20,11 @@ export const Backdrop = forwardRef<HTMLDivElement, Props>(
   ({ children, open, onClose, transitionDuration = 500, ...props }, ref) => {
     const [opacity, setOpacity] = useState<0 | 80>(0);
 
-    const backdropIsRenderable: boolean = useMemo(() => open, [open]);
+    const backdropIsRenderable = useMemo<boolean>(() => open, [open]);
 
     useEffect(() => {
       if (backdropIsRenderable) {
-        setTimeout(() => {
+        setTimeout((): void => {
           setOpacity(80);
         }, 1);
       }
@@ -32,7 +32,7 @@ export const Backdrop = forwardRef<HTMLDivElement, Props>(
 
     const handleClose = useCallback((): void => {
       setOpacity(0);
-      setTimeout(() => {
+      setTimeout((): void => {
         onClose();
       }, transitionDuration);
     }, [transitionDuration]);
