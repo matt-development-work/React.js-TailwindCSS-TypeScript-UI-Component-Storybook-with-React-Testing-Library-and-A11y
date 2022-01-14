@@ -6,6 +6,7 @@ const meta: Meta = {
   title: 'Card',
   component: Card,
   argTypes: {
+    className: { defaultValue: 'h-40 w-40 flex items-center justify-center' },
     id: { defaultValue: 'Card' },
     title: { defaultValue: 'Card' },
   },
@@ -14,11 +15,7 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<Props> = (args) => {
-  return (
-    <Card {...args}>
-      <div className="h-40 w-40 flex items-center justify-center"></div>
-    </Card>
-  );
+  return <Card {...args} />;
 };
 
 export const Default = Template.bind({});
