@@ -280,12 +280,15 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
       }
     >
       <div
-        className={`flex px-2 focus:outline-none tree-node-focus-visible z-20 border border-blue-300 border-opacity-0 hover:border-opacity-40 ${
-          selected &&
-          `bg-blue-700 bg-opacity-50 border border-opacity-0 ${
-            nodeListContainerIsFocused && 'border-opacity-50 border-blue-400'
-          }`
-        } ${navigated && 'bg-green-300 bg-opacity-20'}`}
+        className={`flex px-2 focus:outline-none tree-node-focus-visible z-20 border border-blue-300 border-opacity-0 hover:border-opacity-40${
+          selected
+            ? ` bg-blue-700 bg-opacity-50 border border-opacity-0${
+                nodeListContainerIsFocused
+                  ? ' border-opacity-50 border-blue-400'
+                  : ''
+              }`
+            : ''
+        }${navigated ? ' bg-green-300 bg-opacity-20' : ''}`}
         id={`${id}`}
         onClick={(): void => {
           confirmSelection(node, id, children);
@@ -298,9 +301,10 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
             1. Move all color styling parameters to stories file and/or theme.
            */
           <i
-            className={`cursor-pointer ${
-              open &&
-              'transform rotate-90 transition-transform ease-in-out duration-100'
+            className={`cursor-pointer${
+              open
+                ? ' transform rotate-90 transition-transform ease-in-out duration-100'
+                : ''
             }`}
             onClick={() => toggleNodeOpenState(id, open)}
           >
@@ -318,7 +322,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
         <p
           className={`text-white select-none flex transition ease-in-out duration-75 px-1 ml-${
             children ? '1' : '3'
-          } ${icon && 'gap-x-2'}`}
+          }${icon ? ' gap-x-2' : ''}`}
         >
           <i className="flex items-center">{node.icon}</i>
           <span>{node.value}</span>
