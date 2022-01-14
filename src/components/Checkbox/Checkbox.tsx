@@ -65,8 +65,10 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
     return (
       <Fragment>
         <span
-          className={`absolute flex justify-center items-center h-4 w-4 m-1 rounded focus:outline-none focus-visible transition duration-100 ease-in-out filter ${
-            !icon.unChecked ? 'border border-gray-500 hover:shadow-sm text' : ''
+          className={`absolute flex justify-center items-center h-4 w-4 m-1 rounded focus:outline-none focus-visible transition duration-100 ease-in-out filter${
+            !icon.unChecked
+              ? ' border border-gray-500 hover:shadow-sm text'
+              : ''
           }${
             !disabled
               ? ` ${
