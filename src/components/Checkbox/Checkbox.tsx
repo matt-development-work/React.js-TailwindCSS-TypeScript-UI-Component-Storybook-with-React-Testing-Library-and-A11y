@@ -1,10 +1,4 @@
-import React, {
-  forwardRef,
-  Fragment,
-  HTMLAttributes,
-  useCallback,
-  useMemo,
-} from 'react';
+import React, { forwardRef, HTMLAttributes, useCallback, useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
@@ -63,7 +57,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
     );
 
     return (
-      <Fragment>
+      <span className="flex">
         <span
           className={`absolute flex justify-center items-center h-4 w-4 m-1 rounded focus:outline-none focus-visible transition duration-100 ease-in-out filter${
             !icon.unChecked
@@ -110,12 +104,10 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
           type="checkbox"
           {...props}
         />
-        <div className="ml-6">
-          <label className="select-none" htmlFor={id}>
-            {label}
-          </label>
-        </div>
-      </Fragment>
+        <label className="ml-6 select-none" htmlFor={id}>
+          {label}
+        </label>
+      </span>
     );
   }
 );
