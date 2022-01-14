@@ -2,7 +2,7 @@ import React, { forwardRef, HTMLAttributes, ReactNode, useMemo } from 'react';
 
 export interface Props extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
-  className: string;
+  className?: string;
   elevation?: string;
   hoverElevation?: string;
   square?: boolean;
