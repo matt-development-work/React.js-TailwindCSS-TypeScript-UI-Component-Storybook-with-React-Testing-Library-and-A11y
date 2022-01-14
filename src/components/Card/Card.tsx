@@ -13,11 +13,11 @@ export const Card = forwardRef<HTMLDivElement, Props>(
     { children, className, elevation = 'md', hoverElevation, square, ...props },
     ref
   ) => {
-    const rounded: string = useMemo(
+    const rounded = useMemo<string>(
       () => (!square ? ' rounded' : ''),
       [square]
     );
-    const hoverEffects: string = useMemo(
+    const hoverEffects = useMemo<string>(
       () =>
         hoverElevation ? ` hover:shadow-${hoverElevation} cursor-pointer` : '',
       [hoverElevation]
