@@ -50,5 +50,5 @@ export const Icon = IconTemplate.bind({});
 
 Icon.args = {
   variant: 'contained',
-  rounded: true,
+  round: true,
 };

@@ -3,12 +3,12 @@ import React, { forwardRef, HTMLAttributes, ReactNode } from 'react';
 export interface Props extends HTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
   onClick: () => void;
-  rounded?: boolean;
+  round?: boolean;
   variant?: 'contained' | 'outlined' | 'text';
 }
 
 export const Button = forwardRef<HTMLButtonElement, Props>(
-  ({ children, onClick, rounded, variant = 'contained', ...props }, ref) => {
+  ({ children, onClick, round, variant = 'contained', ...props }, ref) => {
     // TODO: Extract class names to theme
     const color: string = 'green';
     const classes: {
@@ -23,8 +23,8 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
 
     return (
       <button
-        className={`${classes[variant]} rounded${
-          rounded && '-full h-8 w-8'
+        className={`${classes[variant]}${
+          round ? ' rounded-full h-8 w-8' : ''
         } p-2 transition ease-in-out duration-300 filter cursor-pointer flex justify-center items-center select-none focus:outline-none focus-visible`}
         onClick={onClick}
         ref={ref}
