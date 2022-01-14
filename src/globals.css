@@ -3,6 +3,5 @@
 @tailwind utilities;
 
 .focus-visible:focus-visible {
-  outline: 2px solid #38bdf8;
-  outline-offset: 1px;
+  @apply ring-2 ring-offset-1 ring-blue-400;
 }
