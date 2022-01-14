@@ -28,7 +28,7 @@ export const Card = forwardRef<HTMLDivElement, Props>(
     );
     return (
       <div
-        className={`absolute transition-shadow ease-in-out duration-500 p-2 shadow-${elevation}${hoverEffects}${rounded}${className}`}
+        className={`transition-shadow ease-in-out duration-500 p-2 shadow-${elevation}${hoverEffects}${rounded}${className}`}
         ref={ref}
         {...props}
       >
