@@ -42,7 +42,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
     },
     ref
   ) => {
-    const color: string = useMemo(() => (error ? 'red' : 'green'), [error]);
+    const color = useMemo<string>(() => (error ? 'red' : 'green'), [error]);
 
     const handleChange = useCallback((): void => {
       !disabled && onChange();
