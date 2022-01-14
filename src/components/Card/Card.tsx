@@ -22,9 +22,13 @@ export const Card = forwardRef<HTMLDivElement, Props>(
         hoverElevation ? ` hover:shadow-${hoverElevation} cursor-pointer` : '',
       [hoverElevation]
     );
+    className = useMemo<string>(
+      () => (className ? ` ${className}` : ''),
+      [className]
+    );
     return (
       <div
-        className={`absolute transition-shadow ease-in-out duration-500 p-2 shadow-${elevation}${hoverEffects}${rounded}`}
+        className={`absolute transition-shadow ease-in-out duration-500 p-2 shadow-${elevation}${hoverEffects}${rounded}${className}`}
         ref={ref}
         {...props}
       >
