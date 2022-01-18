@@ -9,10 +9,7 @@ import { faPause } from '@fortawesome/free-solid-svg-icons';
 const meta: Meta = {
   title: 'Checkbox',
   component: Checkbox,
-  argTypes: {
-    id: { defaultValue: 'checkbox' },
-    title: { defaultValue: 'Checkbox' },
-  },
+  argTypes: {},
 };
 
 export default meta;

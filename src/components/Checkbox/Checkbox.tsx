@@ -14,7 +14,6 @@ export interface Props extends HTMLAttributes<HTMLInputElement> {
   disabled?: boolean;
   error?: boolean;
   icon?: icon;
-  id: string;
   indeterminate?: boolean;
   label?: string;
   onChange: () => void;
@@ -60,9 +59,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
       <span className="flex">
         <span
           className={`absolute flex justify-center items-center h-4 w-4 m-1 rounded focus:outline-none focus-visible transition duration-100 ease-in-out filter${
-            !icon.unChecked
-              ? ' border border-gray-500 hover:shadow-sm text'
-              : ''
+            !icon.unChecked ? ' border border-gray-500 hover:shadow-sm' : ''
           }${
             !disabled
               ? ` ${
@@ -91,20 +88,18 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
           )}
         </span>
         <input
-          aria-label={id}
           checked={checked}
           className="hidden"
           data-testid="checkbox"
           disabled={disabled}
-          id={id}
+          id={label}
           onChange={handleChange}
           ref={ref}
           tabIndex={-1}
-          title={title}
           type="checkbox"
           {...props}
         />
-        <label className="ml-6 select-none" htmlFor={id}>
+        <label className="ml-6 select-none" htmlFor={label}>
           {label}
         </label>
       </span>
