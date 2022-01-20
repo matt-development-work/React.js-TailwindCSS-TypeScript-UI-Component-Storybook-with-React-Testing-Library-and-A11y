@@ -1,4 +1,4 @@
-import React, { forwardRef, HTMLAttributes, ReactNode, useMemo } from 'react';
+import React, { forwardRef, HTMLAttributes, ReactNode } from 'react';
 
 export interface Props extends HTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
@@ -9,19 +9,13 @@ export interface Props extends HTMLAttributes<HTMLButtonElement> {
 
 export const Button = forwardRef<HTMLButtonElement, Props>(
   ({ children, onClick, round, variant = 'contained', ...props }, ref) => {
-    // TODO: Extract class names to theme
-    const color = useMemo<string>(() => 'green', []);
-    const classes = useMemo<{
-      contained: string;
-      outlined: string;
-      text: string;
-    }>(() => {
-      return {
-        contained: `bg-${color}-700 hover:brightness-90 shadow-md hover:shadow-xl text-white`,
-        outlined: `border border-${color}-500 hover:bg-${color}-100`,
-        text: `hover:bg-${color}-100`,
-      };
-    }, [color]);
+    // TODO: Move class names to stories file or theme
+    const color: string = 'green';
+    const classes: { [key: string]: string } = {
+      contained: `bg-${color}-700 hover:brightness-90 shadow-md hover:shadow-xl text-white`,
+      outlined: `border border-${color}-500 hover:bg-${color}-100`,
+      text: `hover:bg-${color}-100`,
+    };
     return (
       <button
         className={`${classes[variant]}${
