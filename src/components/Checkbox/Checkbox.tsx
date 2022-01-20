@@ -1,4 +1,4 @@
-import React, { forwardRef, HTMLAttributes, useCallback, useMemo } from 'react';
+import React, { forwardRef, HTMLAttributes } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
@@ -35,25 +35,19 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
     },
     ref
   ) => {
-    const color = useMemo<string>(() => (error ? 'red' : 'green'), [error]);
+    const color: string = error ? 'red' : 'green';
 
-    const handleChange = useCallback((): void => {
+    const hasValue: boolean = checked || indeterminate;
+
+    const handleChange = (): void => {
       !disabled && onChange();
-    }, [disabled]);
+    };
 
-    const handleKeyDown = useCallback(
-      (code: string): void => {
-        if (!disabled && ['Space', 'Enter'].includes(code)) {
-          handleChange();
-        }
-      },
-      [disabled]
-    );
-
-    const hasValue = useMemo<boolean>(
-      () => checked || indeterminate,
-      [checked, indeterminate]
-    );
+    const handleKeyDown = (code: string): void => {
+      if (!disabled && ['Space', 'Enter'].includes(code)) {
+        handleChange();
+      }
+    };
 
     return (
       <span className="flex">
