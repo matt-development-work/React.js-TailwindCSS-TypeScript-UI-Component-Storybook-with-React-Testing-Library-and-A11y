@@ -13,6 +13,7 @@ export interface Props extends HTMLAttributes<HTMLInputElement> {
   checked?: boolean;
   disabled?: boolean;
   error?: boolean;
+  id?: string;
   icon?: icon;
   indeterminate?: boolean;
   label?: string;
@@ -28,13 +29,15 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
       icon = { checked: faCheck, unChecked: undefined },
       id,
       indeterminate = false,
-      label = '',
+      label,
       onChange,
       title,
       ...props
     },
     ref
   ) => {
+    id = id ?? label;
+
     const color: string = error ? 'red' : 'green';
 
     const hasValue: boolean = checked || indeterminate;
@@ -86,14 +89,14 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
           className="hidden"
           data-testid="checkbox"
           disabled={disabled}
-          id={label}
+          id={id}
           onChange={handleChange}
           ref={ref}
           tabIndex={-1}
           type="checkbox"
           {...props}
         />
-        <label className="ml-6 select-none" htmlFor={label}>
+        <label className="ml-6 select-none" htmlFor={id}>
           {label}
         </label>
       </span>
