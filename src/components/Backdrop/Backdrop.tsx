@@ -8,6 +8,7 @@ import React, {
   useMemo,
 } from 'react';
 import { createPortal } from 'react-dom';
+import FocusLock from 'react-focus-lock';
 
 export interface Props extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
@@ -39,15 +40,17 @@ export const Backdrop = forwardRef<HTMLDivElement, Props>(
 
     return backdropIsRenderable
       ? createPortal(
-          <div
-            className={`flex justify-center items-center fixed inset-0 bg-gray-800 transition-opacity ease-in-out duration-${transitionDuration} opacity-${opacity}`}
-            data-testid="backdrop"
-            onClick={handleClose}
-            ref={ref}
-            {...props}
-          >
-            {children}
-          </div>,
+          <FocusLock autoFocus={false}>
+            <div
+              className={`flex justify-center items-center fixed inset-0 bg-gray-800 transition-opacity ease-in-out duration-${transitionDuration} opacity-${opacity}`}
+              data-testid="backdrop"
+              onClick={handleClose}
+              ref={ref}
+              {...props}
+            >
+              {children}
+            </div>
+          </FocusLock>,
           document.body
         )
       : null;
