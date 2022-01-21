@@ -62,7 +62,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
               ? ` ${
                   !icon.unChecked && `border-${color}-500`
                 } cursor-pointer hover:brightness-110`
-              : 'cursor-default'
+              : ' cursor-default'
           }${hasValue ? ` ${!icon.unChecked ? `bg-${color}-500` : ''}` : ''}`}
           data-testid="checkbox-alias"
           onClick={handleChange}
