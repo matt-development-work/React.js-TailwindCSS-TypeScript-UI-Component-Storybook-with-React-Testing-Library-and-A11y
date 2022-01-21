@@ -27,7 +27,11 @@ const Template: Story<Props> = (args) => {
   };
   return (
     <div>
-      <Button variant="outlined" onClick={() => handleClick()}>
+      <Button
+        variant="outlined"
+        data-testid="modal-button"
+        onClick={() => handleClick()}
+      >
         open
       </Button>
       <Modal {...args}>

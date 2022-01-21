@@ -41,6 +41,7 @@ export const Backdrop = forwardRef<HTMLDivElement, Props>(
       ? createPortal(
           <div
             className={`flex justify-center items-center fixed inset-0 bg-gray-800 transition-opacity ease-in-out duration-${transitionDuration} opacity-${opacity}`}
+            data-testid="backdrop"
             onClick={handleClose}
             ref={ref}
             {...props}
