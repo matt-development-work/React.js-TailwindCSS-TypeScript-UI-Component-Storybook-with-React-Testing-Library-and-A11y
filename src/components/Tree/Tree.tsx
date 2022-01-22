@@ -281,11 +281,11 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
       }
     >
       <div
-        className={`flex px-2 focus:outline-none tree-node-focus-visible z-20 border border-opacity-0 hover:border-lime-400 hover:border-opacity-100${
+        className={`flex px-2 focus:outline-none tree-node-focus-visible z-20 border border-opacity-0 hover:border-amber-400 hover:border-opacity-100${
           selected
             ? ` bg-emerald-600 bg-opacity-50 border border-opacity-0${
                 nodeListContainerIsFocused
-                  ? ' border-opacity-100 border-amber-400'
+                  ? ' border-opacity-100 border-lime-400'
                   : ''
               }`
             : ''
