@@ -80,7 +80,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
             <FontAwesomeIcon
               className={`absolute ${icon.className ?? 'text-white'}`}
               icon={indeterminate ? faMinus : icon.checked}
-              size="sm"
+              size={icon.unChecked ? 'sm' : 'xs'}
             />
           )}
         </span>
