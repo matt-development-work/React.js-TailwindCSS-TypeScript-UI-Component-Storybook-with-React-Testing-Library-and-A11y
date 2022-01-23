@@ -331,12 +331,12 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
       </div>
       {children && open && (
         <NodeList
-          className={`ml-4 border-l transition ease-in-out duration-150 ${
+          className={`ml-4 border-l transition ease-in-out duration-150${
             currentDirectory
-              ? 'border-gray-200'
+              ? ' border-gray-200'
               : mouseEntered
-              ? 'border-gray-300 border-opacity-30'
-              : 'border-opacity-0'
+              ? ' border-gray-300 border-opacity-30'
+              : ' border-opacity-0'
           }`}
           data={node}
         />
@@ -351,8 +351,12 @@ export interface TreeProps extends HTMLAttributes<HTMLUListElement> {
 }
 
 const NodeList: FC<TreeProps> = ({ className, data }) => {
+  className = useMemo<string>(
+    () => (className ? ` ${className}` : ''),
+    [className]
+  );
   return (
-    <ul className={`${className} flex flex-col`} id={`node-list-${data.id}`}>
+    <ul className={`flex flex-col${className}`} id={`node-list-${data.id}`}>
       {data.children?.map((n) => (
         <NodeElement key={n.value} node={n} />
       ))}
