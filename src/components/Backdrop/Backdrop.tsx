@@ -38,6 +38,16 @@ export const Backdrop = forwardRef<HTMLDivElement, Props>(
       }, transitionDuration);
     }, [transitionDuration]);
 
+    /* Invokes handleClose transiton method on press of 'Escape' key.
+    TODO: Make this functionality optional with props or move to Modal parent component, and apply the same approach to the handleClose method invoked in the onClick.
+    The Backdrop component can have broader applicability such as being usable with a loading spinner / progress bar component that will not be closeable with mouse and keyboard events.
+    */
+    useEffect(() => {
+      document.addEventListener('keydown', (e) => {
+        e.code === 'Escape' && handleClose();
+      });
+    }, []);
+
     return backdropIsRenderable
       ? createPortal(
           <FocusLock autoFocus={false}>
