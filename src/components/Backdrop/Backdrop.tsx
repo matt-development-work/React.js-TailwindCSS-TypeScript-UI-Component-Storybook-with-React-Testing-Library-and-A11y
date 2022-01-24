@@ -5,14 +5,13 @@ import React, {
   useEffect,
   useState,
   useCallback,
-  useMemo,
 } from 'react';
 import { createPortal } from 'react-dom';
 import FocusLock from 'react-focus-lock';
 
 export interface Props extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
-  onClose: () => void;
+  onClose?: () => void;
   open: boolean;
   transitionDuration?: 75 | 100 | 150 | 200 | 300 | 500 | 700 | 1000;
   /* If true, the component is non-interactable with mouse/keyboard input. */
@@ -33,30 +32,49 @@ export const Backdrop = forwardRef<HTMLDivElement, Props>(
   ) => {
     const [opacity, setOpacity] = useState<0 | 80>(0);
 
-    const backdropIsRenderable = useMemo<boolean>(() => open, [open]);
+    const [backdropIsRenderable, setBackdropIsRenderable] = useState<boolean>();
+
+    const [initialRender, setInitialRender] = useState<boolean>(true);
+
+    //Auto-handle transition on close
+    useEffect(() => {
+      if (!initialRender) {
+        if (open) {
+          setBackdropIsRenderable(open);
+        } else {
+          setTimeout((): void => {
+            setBackdropIsRenderable(open);
+          }, transitionDuration);
+        }
+      } else {
+        setInitialRender(false);
+      }
+    }, [open]);
 
     useEffect(() => {
-      if (backdropIsRenderable) {
+      backdropIsRenderable &&
         setTimeout((): void => {
           setOpacity(80);
         }, 1);
-      }
     }, [backdropIsRenderable]);
+
+    useEffect(() => {
+      !displayOnly &&
+        document.addEventListener('keydown', (e) => {
+          e.code === 'Escape' && handleClose();
+        });
+    }, [displayOnly]);
+
+    useEffect(() => {
+      !open && handleClose();
+    }, [open]);
 
     const handleClose = useCallback((): void => {
       setOpacity(0);
       setTimeout((): void => {
-        onClose();
+        onClose && onClose();
       }, transitionDuration);
     }, [transitionDuration]);
-
-    useEffect(() => {
-      if (!displayOnly) {
-        document.addEventListener('keydown', (e) => {
-          e.code === 'Escape' && handleClose();
-        });
-      }
-    }, [displayOnly]);
 
     return backdropIsRenderable
       ? createPortal(
