@@ -15,10 +15,22 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {
   onClose: () => void;
   open: boolean;
   transitionDuration?: 75 | 100 | 150 | 200 | 300 | 500 | 700 | 1000;
+  /* If true, the component is non-interactable with mouse/keyboard input. */
+  displayOnly?: boolean;
 }
 
 export const Backdrop = forwardRef<HTMLDivElement, Props>(
-  ({ children, open, onClose, transitionDuration = 500, ...props }, ref) => {
+  (
+    {
+      children,
+      open,
+      onClose,
+      transitionDuration = 500,
+      displayOnly = false,
+      ...props
+    },
+    ref
+  ) => {
     const [opacity, setOpacity] = useState<0 | 80>(0);
 
     const backdropIsRenderable = useMemo<boolean>(() => open, [open]);
@@ -38,15 +50,13 @@ export const Backdrop = forwardRef<HTMLDivElement, Props>(
       }, transitionDuration);
     }, [transitionDuration]);
 
-    /* Invokes handleClose transiton method on press of 'Escape' key.
-    TODO: Make this functionality optional with props or move to Modal parent component, and apply the same approach to the handleClose method invoked in the onClick.
-    The Backdrop component can have broader applicability such as being usable with a loading spinner / progress bar component that will not be closeable with mouse and keyboard events.
-    */
     useEffect(() => {
-      document.addEventListener('keydown', (e) => {
-        e.code === 'Escape' && handleClose();
-      });
-    }, []);
+      if (!displayOnly) {
+        document.addEventListener('keydown', (e) => {
+          e.code === 'Escape' && handleClose();
+        });
+      }
+    }, [displayOnly]);
 
     return backdropIsRenderable
       ? createPortal(
@@ -54,7 +64,7 @@ export const Backdrop = forwardRef<HTMLDivElement, Props>(
             <div
               className={`flex justify-center items-center fixed inset-0 bg-gray-800 transition-opacity ease-in-out duration-${transitionDuration} opacity-${opacity}`}
               data-testid="backdrop"
-              onClick={handleClose}
+              onClick={!displayOnly ? handleClose : undefined}
               ref={ref}
               {...props}
             >
