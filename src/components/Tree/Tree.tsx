@@ -20,18 +20,18 @@ type ContextProps = {
   data: TreeNode;
   confirmSelection: (node: TreeNode, id: number, children: ReactNode) => void;
   handleKeyDown: (e: KeyboardEvent<HTMLDivElement>) => void;
-  handleNodeListContainerFocusing: () => void;
+  handleContainerFocusing: () => void;
   mouseEntered: boolean;
   navigatedId: number;
-  nodeListContainerIsFocused: boolean;
+  containerIsFocused: boolean;
   openNodes: number[];
-  rootNodeChildrenListElement: HTMLElement | null;
+  rootListElement: HTMLElement | null;
   selectedNode: TreeNode;
   setData: Dispatch<SetStateAction<TreeNode>>;
   setMouseEntered: Dispatch<SetStateAction<boolean>>;
   setNavigatedId: Dispatch<SetStateAction<number>>;
-  setNodeListContainerFocusedState: Dispatch<SetStateAction<boolean>>;
-  setRootNodeChildrenListElement: Dispatch<SetStateAction<HTMLElement | null>>;
+  setContainerFocusedState: Dispatch<SetStateAction<boolean>>;
+  setRootListElement: Dispatch<SetStateAction<HTMLElement | null>>;
   setSelectedNode: Dispatch<SetStateAction<TreeNode>>;
   toggleNodeOpenState: (id: number, open: boolean) => void;
 };
@@ -46,11 +46,12 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   const [data, setData] = useState<TreeNode>({} as TreeNode);
   const [mouseEntered, setMouseEntered] = useState<boolean>(false);
   const [navigatedId, setNavigatedId] = useState<number>(0);
-  const [nodeListContainerIsFocused, setNodeListContainerFocusedState] =
+  const [containerIsFocused, setContainerFocusedState] =
     useState<boolean>(false);
   const [openNodes, setOpenNodes] = useState<number[]>([]);
-  const [rootNodeChildrenListElement, setRootNodeChildrenListElement] =
-    useState<HTMLElement | null>(null);
+  const [rootListElement, setRootListElement] = useState<HTMLElement | null>(
+    null
+  );
   const [selectedNode, setSelectedNode] = useState<TreeNode>({} as TreeNode);
 
   const toggleNodeOpenState = useCallback(
@@ -110,8 +111,7 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
 
   const getNodeElementUtilities = useCallback((): NodeElementUtilities => {
     const focusableNodeElements: NodeListOf<Element> | [] =
-      rootNodeChildrenListElement?.querySelectorAll('div, [tabindex="0"]') ??
-      [];
+      rootListElement?.querySelectorAll('div, [tabindex="0"]') ?? [];
     return {
       activeElement: document.activeElement,
       focusableNodeElements: focusableNodeElements,
@@ -119,7 +119,7 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         parseInt(n.id)
       ),
     };
-  }, [document, rootNodeChildrenListElement]);
+  }, [document, rootListElement]);
 
   /* When NodeListContainer is already focused, makes a new selection if "Enter" or "Space" keys are pressed,
   or sets the navigatedId and handles NodeElement focusing if navigation keys are pressed. */
@@ -163,7 +163,7 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   NodeListContainer is not already focused and therefore ignores the handleKeyDown method.
   A NodeListContainer focus invocation with "Tab" will focus the NodeElement of the first index,
   whereas a NodeListContainer focus invocation with "Shift+Tab" will focus the NodeElement of the last index. */
-  const handleNodeListContainerFocusing = useCallback((): void => {
+  const handleContainerFocusing = useCallback((): void => {
     const { activeElement, focusableNodeElementsIds } =
       getNodeElementUtilities();
     const activeElementId: number | null =
@@ -176,7 +176,7 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         setNavigatedId(activeElementId);
         break;
     }
-    setNodeListContainerFocusedState(true);
+    setContainerFocusedState(true);
   }, [data]);
 
   return (
@@ -185,18 +185,18 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         confirmSelection: confirmSelection,
         data: data,
         handleKeyDown: handleKeyDown,
-        handleNodeListContainerFocusing: handleNodeListContainerFocusing,
+        handleContainerFocusing: handleContainerFocusing,
         mouseEntered: mouseEntered,
         navigatedId: navigatedId,
-        nodeListContainerIsFocused: nodeListContainerIsFocused,
+        containerIsFocused: containerIsFocused,
         openNodes: openNodes,
-        rootNodeChildrenListElement: rootNodeChildrenListElement,
+        rootListElement: rootListElement,
         selectedNode: selectedNode,
         setData: setData,
         setMouseEntered: setMouseEntered,
         setNavigatedId: setNavigatedId,
-        setNodeListContainerFocusedState: setNodeListContainerFocusedState,
-        setRootNodeChildrenListElement: setRootNodeChildrenListElement,
+        setContainerFocusedState: setContainerFocusedState,
+        setRootListElement: setRootListElement,
         setSelectedNode: setSelectedNode,
         toggleNodeOpenState: toggleNodeOpenState,
       }}
@@ -226,7 +226,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
     confirmSelection,
     mouseEntered,
     navigatedId,
-    nodeListContainerIsFocused,
+    containerIsFocused,
     openNodes,
     selectedNode,
     toggleNodeOpenState,
@@ -268,9 +268,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
         className={`flex px-2 focus:outline-none tree-node-focus-visible z-20 border border-opacity-0 hover:border-amber-400 hover:border-opacity-100${
           selected
             ? ` bg-emerald-600 bg-opacity-50 border border-opacity-0${
-                nodeListContainerIsFocused
-                  ? ' border-opacity-100 border-lime-400'
-                  : ''
+                containerIsFocused ? ' border-opacity-100 border-lime-400' : ''
               }`
             : ''
         }${navigated ? ' bg-green-300 bg-opacity-20' : ''}`}
@@ -353,43 +351,43 @@ const NodeListContainer: FC<TreeProps> = (props) => {
     setData,
     setMouseEntered,
     handleKeyDown,
-    handleNodeListContainerFocusing,
-    nodeListContainerIsFocused,
+    handleContainerFocusing,
+    containerIsFocused,
     setNavigatedId,
-    setNodeListContainerFocusedState,
-    setRootNodeChildrenListElement,
+    setContainerFocusedState,
+    setRootListElement,
   } = useNodeListContext();
   const { data } = props;
   useEffect(() => {
     setData(data);
   }, [data]);
-  const nodeListContainerRef = createRef<HTMLDivElement>();
+  const containerRef = createRef<HTMLDivElement>();
+
   useEffect(() => {
-    if (nodeListContainerRef.current) {
-      const rootNodeChildrenListElement =
-        nodeListContainerRef.current?.querySelector(
-          '#node-list-0'
-        ) as HTMLElement;
-      setRootNodeChildrenListElement(rootNodeChildrenListElement);
+    if (containerRef.current) {
+      const rootListElement = containerRef.current?.querySelector(
+        '#node-list-0'
+      ) as HTMLElement;
+      setRootListElement(rootListElement);
     }
-  }, [nodeListContainerRef.current]);
+  }, [containerRef.current]);
   useEffect(() => {
     if (
-      !nodeListContainerRef.current?.contains(document.activeElement) &&
-      !nodeListContainerIsFocused
+      !containerRef.current?.contains(document.activeElement) &&
+      !containerIsFocused
     ) {
       setNavigatedId(0);
     }
-  }, [nodeListContainerIsFocused]);
+  }, [containerIsFocused]);
   return (
     <div
       className="cursor-pointer"
-      onBlur={(): void => setNodeListContainerFocusedState(false)}
-      onFocus={handleNodeListContainerFocusing}
+      onBlur={(): void => setContainerFocusedState(false)}
+      onFocus={handleContainerFocusing}
       onKeyDown={handleKeyDown}
       onMouseEnter={(): void => setMouseEntered(true)}
       onMouseLeave={(): void => setMouseEntered(false)}
-      ref={nodeListContainerRef}
+      ref={containerRef}
     >
       <NodeList {...props} />
     </div>
