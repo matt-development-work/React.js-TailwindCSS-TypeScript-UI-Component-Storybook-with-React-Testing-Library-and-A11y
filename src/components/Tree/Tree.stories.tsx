@@ -28,12 +28,12 @@ const meta: Meta = {
 
 export default meta;
 
-interface PreIndexedTreeNode {
+type PreIndexedTreeNode = {
   children?: PreIndexedTreeNode[];
   icon?: ReactNode;
   id?: number;
   value: string;
-}
+};
 
 const addIdAttributesToTreeNodes = (
   data: PreIndexedTreeNode
