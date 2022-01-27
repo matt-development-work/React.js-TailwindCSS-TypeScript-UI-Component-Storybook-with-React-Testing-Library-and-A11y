@@ -150,6 +150,10 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
             break;
         }
         const newNavigatedId: number = focusableNodeElementsIds[selectedIndex];
+        /* Return if navigating direction has no subsequent navigable elements.
+        (i.e. if attempting to navigate upwards from a currently-selected first element,
+        or if attempting to navigate downwards from a currently-selected last element.) */
+        if (!newNavigatedId) return;
         ['ArrowUp', 'ArrowDown'].includes(code) &&
           (focusableNodeElements[selectedIndex] as HTMLElement).focus();
         setNavigatedId(newNavigatedId);
