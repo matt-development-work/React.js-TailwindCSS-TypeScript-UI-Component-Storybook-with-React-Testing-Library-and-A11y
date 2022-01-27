@@ -3,18 +3,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
-interface icon {
+type Icon = {
   checked: IconProp;
   unChecked: IconProp;
   className: string | undefined;
-}
+};
 
 export interface Props extends HTMLAttributes<HTMLInputElement> {
   checked?: boolean;
   disabled?: boolean;
   error?: boolean;
   id?: string;
-  icon?: icon;
+  icon?: Icon;
   indeterminate?: boolean;
   label?: string;
   onChange: () => void;
