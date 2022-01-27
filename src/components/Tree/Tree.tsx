@@ -281,7 +281,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
         {children && (
           /* 
           TODO:
-            1. Move all color styling parameters to stories file and/or theme.
+            1. Move all all non-component-specific styling parameters to stories file and/or theme.
            */
           <i
             className={`cursor-pointer${
@@ -313,6 +313,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
       </div>
       {children && open && (
         <NodeList
+          //Displays left vertical rulers as applicable
           className={`ml-4 border-l transition ease-in-out duration-150${
             currentDirectory
               ? ' border-gray-200'
@@ -362,7 +363,9 @@ const NodeListContainer: FC<TreeProps> = (props) => {
     setData(data);
   }, [data]);
   const containerRef = createRef<HTMLDivElement>();
-
+  /* Sets the rootListElement used for selecting the DOM elements that are eligible for focusing with keyboard navigation. 
+  NOTE: containerRef.current is passed to the dependency array to require the callback to re-run on update in case
+  the .current value of the containerRef (the <div/> element) is not recognized the first time. */
   useEffect(() => {
     if (containerRef.current) {
       const rootListElement = containerRef.current?.querySelector(
@@ -371,6 +374,9 @@ const NodeListContainer: FC<TreeProps> = (props) => {
       setRootListElement(rootListElement);
     }
   }, [containerRef.current]);
+  /* Resets the navigatedId to zero when the container loses focus. The selectedNode remains selected, and this only initializes 
+  the focused list item to allow any subsequent "Tab" or "Shoft+Tab" key press to focus the first or last item (respectively). 
+  TODO: See if navigatedId does not need need to be initialized when the container loses focus. */
   useEffect(() => {
     if (
       !containerRef.current?.contains(document.activeElement) &&
