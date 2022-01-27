@@ -133,22 +133,8 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
           confirmSelection(navigatedNode, navigatedId, children);
         }
       } else if (['ArrowUp', 'ArrowDown', 'Tab'].includes(code)) {
-        const {
-          activeElement,
-          focusableNodeElements,
-          focusableNodeElementsIds,
-        } = getNodeElementUtilities();
-        const nodeListIncludesActiveElement: boolean | (() => boolean) =
-          activeElement
-            ? () => {
-                const focusableNodeElementsArray = Array.from(
-                  focusableNodeElements
-                );
-                focusableNodeElementsArray.pop();
-                focusableNodeElementsArray.shift();
-                return focusableNodeElementsArray.includes(activeElement);
-              }
-            : false;
+        const { focusableNodeElements, focusableNodeElementsIds } =
+          getNodeElementUtilities();
         let selectedIndex: number =
           focusableNodeElementsIds.indexOf(navigatedId) ?? 1;
         switch (code) {
@@ -159,15 +145,7 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
             selectedIndex += 1;
             break;
           case 'Tab':
-            if (nodeListIncludesActiveElement) {
-              selectedIndex = e.shiftKey
-                ? selectedIndex - 1
-                : selectedIndex + 1;
-            } else {
-              selectedIndex = e.shiftKey
-                ? 0
-                : focusableNodeElementsIds.length - 1;
-            }
+            selectedIndex = e.shiftKey ? selectedIndex - 1 : selectedIndex + 1;
             break;
         }
         const newNavigatedId: number = focusableNodeElementsIds[selectedIndex];
