@@ -3,7 +3,6 @@ import React, {
   createRef,
   Dispatch,
   FC,
-  HTMLAttributes,
   KeyboardEvent,
   ReactNode,
   SetStateAction,
@@ -17,7 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import './tree.css';
 
-interface ContextProps {
+type ContextProps = {
   data: TreeNode;
   confirmSelection: (node: TreeNode, id: number, children: ReactNode) => void;
   handleKeyDown: (e: KeyboardEvent<HTMLDivElement>) => void;
@@ -35,13 +34,13 @@ interface ContextProps {
   setRootNodeChildrenListElement: Dispatch<SetStateAction<HTMLElement | null>>;
   setSelectedNode: Dispatch<SetStateAction<TreeNode>>;
   toggleNodeOpenState: (id: number, open: boolean) => void;
-}
+};
 
 const NodeListContext = createContext({} as ContextProps);
 
-interface ContextWrapperProps {
+type ContextWrapperProps = {
   children: ReactNode;
-}
+};
 
 const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   const [data, setData] = useState<TreeNode>({} as TreeNode);
@@ -103,11 +102,11 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
     [openNodes]
   );
 
-  interface NodeElementUtilities {
+  type NodeElementUtilities = {
     activeElement: Element | null;
     focusableNodeElements: NodeListOf<Element> | [];
     focusableNodeElementsIds: number[];
-  }
+  };
 
   const getNodeElementUtilities = useCallback((): NodeElementUtilities => {
     const focusableNodeElements: NodeListOf<Element> | [] =
@@ -211,16 +210,16 @@ const useNodeListContext = () => {
   return useContext(NodeListContext);
 };
 
-export interface TreeNode {
+export type TreeNode = {
   children?: TreeNode[];
   icon?: ReactNode;
   id: number;
   value: string;
-}
+};
 
-interface NodeElementProps {
+type NodeElementProps = {
   node: TreeNode;
-}
+};
 
 const NodeElement: FC<NodeElementProps> = ({ node }) => {
   const {
@@ -330,10 +329,10 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
   );
 };
 
-export interface TreeProps extends HTMLAttributes<HTMLUListElement> {
+export type TreeProps = {
   className?: string;
   data: TreeNode;
-}
+};
 
 const NodeList: FC<TreeProps> = ({ className, data }) => {
   className = useMemo<string>(
