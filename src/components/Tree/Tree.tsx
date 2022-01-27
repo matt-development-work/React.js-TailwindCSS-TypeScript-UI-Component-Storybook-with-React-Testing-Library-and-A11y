@@ -33,7 +33,7 @@ type ContextProps = {
   setContainerFocusedState: Dispatch<SetStateAction<boolean>>;
   setRootListElement: Dispatch<SetStateAction<HTMLElement | null>>;
   setSelectedNode: Dispatch<SetStateAction<TreeNode>>;
-  toggleNodeOpenState: (id: number, open: boolean) => void;
+  handleSetOpenNodes: (id: number, open: boolean) => void;
 };
 
 const NodeListContext = createContext({} as ContextProps);
@@ -54,7 +54,7 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   );
   const [selectedNode, setSelectedNode] = useState<TreeNode>({} as TreeNode);
 
-  const toggleNodeOpenState = useCallback(
+  const handleSetOpenNodes = useCallback(
     (id: number, open: boolean): void => {
       const openNodesCopy = [...openNodes];
       switch (open) {
@@ -98,7 +98,7 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
     ): void => {
       setSelectedNode(node);
       setNavigatedId(node?.id ?? 0);
-      children && toggleNodeOpenState(id, openNodes.includes(id));
+      children && handleSetOpenNodes(id, openNodes.includes(id));
     },
     [openNodes]
   );
@@ -198,7 +198,7 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         setContainerFocusedState: setContainerFocusedState,
         setRootListElement: setRootListElement,
         setSelectedNode: setSelectedNode,
-        toggleNodeOpenState: toggleNodeOpenState,
+        handleSetOpenNodes: handleSetOpenNodes,
       }}
     >
       {children}
@@ -229,7 +229,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
     containerIsFocused,
     openNodes,
     selectedNode,
-    toggleNodeOpenState,
+    handleSetOpenNodes,
   } = useNodeListContext();
   const children = useMemo<boolean>(() => 'children' in node, [node]);
   const icon = useMemo<boolean>(() => 'icon' in node, [node]);
@@ -289,7 +289,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
                 ? ' transform rotate-90 transition-transform ease-in-out duration-100'
                 : ''
             }`}
-            onClick={() => toggleNodeOpenState(id, open)}
+            onClick={() => handleSetOpenNodes(id, open)}
           >
             {
               <FontAwesomeIcon
