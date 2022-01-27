@@ -122,6 +122,8 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
     };
   }, [document, rootNodeChildrenListElement]);
 
+  /* When NodeListContainer is already focused, makes a new selection if "Enter" or "Space" keys are pressed,
+  or sets the navigatedId and handles NodeElement focusing if navigation keys are pressed. */
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>): void => {
       const { code } = e;
@@ -157,6 +159,11 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
     [children, document, navigatedId, open, openNodes, selectedNode, data]
   );
 
+  /* Runs the setNavigatedId method with the appropritae activeElementId onFocus of NodeListContainer.
+  This method will handle NodeElement focusing for "Tab" or "Shift+Tab" key input cases where 
+  NodeListContainer is not already focused and therefore ignores the handleKeyDown method.
+  A NodeListContainer focus invocation with "Tab" will focus the NodeElement of the first index,
+  whereas a NodeListContainer focus invocation with "Shift+Tab" will focus the NodeElement of the last index. */
   const handleNodeListContainerFocusing = useCallback((): void => {
     const { activeElement, focusableNodeElementsIds } =
       getNodeElementUtilities();
