@@ -18,13 +18,13 @@ import './tree.css';
 
 type ContextProps = {
   data: TreeNode;
-  confirmSelection: (node: TreeNode, id: number, children: ReactNode) => void;
+  confirmSelection: (node: TreeNode) => void;
   handleKeyDown: (e: KeyboardEvent<HTMLDivElement>) => void;
   handleContainerFocusing: () => void;
   mouseEntered: boolean;
   navigatedId: number;
   containerIsFocused: boolean;
-  openNodes: number[];
+  openNodeIds: number[];
   rootListElement: HTMLElement | null;
   selectedNode: TreeNode;
   setData: Dispatch<SetStateAction<TreeNode>>;
@@ -33,7 +33,7 @@ type ContextProps = {
   setContainerFocusedState: Dispatch<SetStateAction<boolean>>;
   setRootListElement: Dispatch<SetStateAction<HTMLElement | null>>;
   setSelectedNode: Dispatch<SetStateAction<TreeNode>>;
-  handleSetOpenNodes: (id: number, open: boolean) => void;
+  handleSetOpenNodeIds: (id: number, open: boolean) => void;
 };
 
 const NodeListContext = createContext({} as ContextProps);
@@ -48,28 +48,40 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   const [navigatedId, setNavigatedId] = useState<number>(0);
   const [containerIsFocused, setContainerFocusedState] =
     useState<boolean>(false);
-  const [openNodes, setOpenNodes] = useState<number[]>([]);
+  const [openNodeIds, setOpenNodeIds] = useState<number[]>([]);
   const [rootListElement, setRootListElement] = useState<HTMLElement | null>(
     null
   );
   const [selectedNode, setSelectedNode] = useState<TreeNode>({} as TreeNode);
 
-  const handleSetOpenNodes = useCallback(
+  /**
+   * Updates the openNodeIds array of indexes corresponding to the currently-opened nodes when the open state of a node with children is toggled.
+   * @param {number} id Id of the node being toggled
+   * @param {boolean} open New open state of the node
+   * @returns {void}
+   */
+  const handleSetOpenNodeIds = useCallback(
     (id: number, open: boolean): void => {
-      const openNodesCopy = [...openNodes];
+      const openNodeIdsCopy = [...openNodeIds];
       switch (open) {
         case true:
-          openNodesCopy.splice(openNodesCopy.indexOf(id), 1);
+          openNodeIdsCopy.splice(openNodeIdsCopy.indexOf(id), 1);
           break;
         case false:
-          openNodesCopy.push(id);
+          openNodeIdsCopy.push(id);
           break;
       }
-      setOpenNodes(openNodesCopy);
+      setOpenNodeIds(openNodeIdsCopy);
     },
-    [openNodes]
+    [openNodeIds]
   );
 
+  /**
+   * Traverses a tree to find the node with a specified ID.
+   * @param {TreeNode} node Root-level data
+   * @param {number} id Number to be matched
+   * @returns {TreeNode} Node at specified ID, matching the structure of the root node provided.
+   */
   const getNodeAtSpecifiedId = useCallback(
     (node: TreeNode, id: number): TreeNode => {
       let result = {} as TreeNode;
@@ -90,39 +102,51 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
     []
   );
 
+  /**
+   * Handles node element selecton on click or keyDown of "Space" or "Enter" keys.
+   * @param {TreeNode} node Element to be selected
+   * @returns {void}
+   */
   const confirmSelection = useCallback(
-    (
-      node: TreeNode = {} as TreeNode,
-      id: number,
-      children: ReactNode
-    ): void => {
+    (node: TreeNode = {} as TreeNode): void => {
+      const { id } = node;
+      /* TODO: See if selectedNode and navigatedId can be consolidated into one variable. */
       setSelectedNode(node);
-      setNavigatedId(node?.id ?? 0);
-      children && handleSetOpenNodes(id, openNodes.includes(id));
+      setNavigatedId(id);
+      'children' in node && handleSetOpenNodeIds(id, openNodeIds.includes(id));
     },
-    [openNodes]
+    [openNodeIds]
   );
 
-  type NodeElementUtilities = {
+  type NodeElementFocusingUtilities = {
     activeElement: Element | null;
     focusableNodeElements: NodeListOf<Element> | [];
     focusableNodeElementsIds: number[];
   };
 
-  const getNodeElementUtilities = useCallback((): NodeElementUtilities => {
-    const focusableNodeElements: NodeListOf<Element> | [] =
-      rootListElement?.querySelectorAll('div, [tabindex="0"]') ?? [];
-    return {
-      activeElement: document.activeElement,
-      focusableNodeElements: focusableNodeElements,
-      focusableNodeElementsIds: Array.from(focusableNodeElements).map((n) =>
-        parseInt(n.id)
-      ),
-    };
-  }, [document, rootListElement]);
+  /**
+   * Generates HTML-derived variables used within the node element focusing methodology.
+   * @returns {NodeElementFocusingUtilities}
+   */
+  const getNodeElementFocusingUtilities =
+    useCallback((): NodeElementFocusingUtilities => {
+      const focusableNodeElements: NodeListOf<Element> | [] =
+        rootListElement?.querySelectorAll('div, [tabindex="0"]') ?? [];
+      return {
+        activeElement: document.activeElement,
+        focusableNodeElements: focusableNodeElements,
+        focusableNodeElementsIds: Array.from(focusableNodeElements).map((n) =>
+          parseInt(n.id)
+        ),
+      };
+    }, [document, rootListElement]);
 
-  /* When NodeListContainer is already focused, makes a new selection if "Enter" or "Space" keys are pressed,
-  or sets the navigatedId and handles NodeElement focusing if navigation keys are pressed. */
+  /**
+   * When NodeListContainer is already focused, makes a new selection if "Enter" or "Space" keys are pressed,
+     or sets the navigatedId and handles NodeElement focusing if navigation keys are pressed.
+   * @param {KeyboardEvent} e Keyboard event
+   * @returns {void}
+   */
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>): void => {
       const { code } = e;
@@ -131,11 +155,11 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         if (navigatedId !== selectedNode.id) {
           setSelectedNode(navigatedNode);
         } else {
-          confirmSelection(navigatedNode, navigatedId, children);
+          confirmSelection(navigatedNode);
         }
       } else if (['ArrowUp', 'ArrowDown', 'Tab'].includes(code)) {
         const { focusableNodeElements, focusableNodeElementsIds } =
-          getNodeElementUtilities();
+          getNodeElementFocusingUtilities();
         let selectedIndex: number =
           focusableNodeElementsIds.indexOf(navigatedId) ?? 1;
         switch (code) {
@@ -159,17 +183,20 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         setNavigatedId(newNavigatedId);
       }
     },
-    [children, document, navigatedId, open, openNodes, selectedNode, data]
+    [children, document, navigatedId, open, openNodeIds, selectedNode, data]
   );
 
-  /* Runs the setNavigatedId method with the appropritae activeElementId onFocus of NodeListContainer.
-  This method will handle NodeElement focusing for "Tab" or "Shift+Tab" key input cases where 
-  NodeListContainer is not already focused and therefore ignores the handleKeyDown method.
-  A NodeListContainer focus invocation with "Tab" will focus the NodeElement of the first index,
-  whereas a NodeListContainer focus invocation with "Shift+Tab" will focus the NodeElement of the last index. */
+  /** 
+   * Runs the setNavigatedId method with the appropritae activeElementId onFocus of NodeListContainer.
+     This method will handle NodeElement focusing for "Tab" or "Shift+Tab" key input cases where 
+     NodeListContainer is not already focused and therefore ignores the handleKeyDown method.
+     A NodeListContainer focus invocation with "Tab" will focus the NodeElement of the first index,
+     whereas a NodeListContainer focus invocation with "Shift+Tab" will focus the NodeElement of the last index. 
+   * @returns {void}
+   */
   const handleContainerFocusing = useCallback((): void => {
     const { activeElement, focusableNodeElementsIds } =
-      getNodeElementUtilities();
+      getNodeElementFocusingUtilities();
     const activeElementId: number | null =
       activeElement && parseInt(activeElement?.id);
     switch (activeElementId) {
@@ -193,7 +220,7 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         mouseEntered: mouseEntered,
         navigatedId: navigatedId,
         containerIsFocused: containerIsFocused,
-        openNodes: openNodes,
+        openNodeIds: openNodeIds,
         rootListElement: rootListElement,
         selectedNode: selectedNode,
         setData: setData,
@@ -202,7 +229,7 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
         setContainerFocusedState: setContainerFocusedState,
         setRootListElement: setRootListElement,
         setSelectedNode: setSelectedNode,
-        handleSetOpenNodes: handleSetOpenNodes,
+        handleSetOpenNodeIds: handleSetOpenNodeIds,
       }}
     >
       {children}
@@ -231,16 +258,15 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
     mouseEntered,
     navigatedId,
     containerIsFocused,
-    openNodes,
+    openNodeIds,
     selectedNode,
-    handleSetOpenNodes,
   } = useNodeListContext();
+  const { id } = node;
   const children = useMemo<boolean>(() => 'children' in node, [node]);
   const icon = useMemo<boolean>(() => 'icon' in node, [node]);
-  const id = useMemo<number>(() => node.id, [node]);
   const open = useMemo<boolean>(
-    () => openNodes.includes(id),
-    [openNodes, node]
+    () => openNodeIds.includes(id),
+    [openNodeIds, node]
   );
   const selected = useMemo<boolean>(
     () => node === selectedNode,
@@ -278,7 +304,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
         }${navigated ? ' bg-green-300 bg-opacity-20' : ''}`}
         id={`${id}`}
         onClick={(): void => {
-          confirmSelection(node, id, children);
+          confirmSelection(node);
         }}
         tabIndex={0}
       >
@@ -293,7 +319,6 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
                 ? ' transform rotate-90 transition-transform ease-in-out duration-100'
                 : ''
             }`}
-            onClick={() => handleSetOpenNodes(id, open)}
           >
             {
               <FontAwesomeIcon
