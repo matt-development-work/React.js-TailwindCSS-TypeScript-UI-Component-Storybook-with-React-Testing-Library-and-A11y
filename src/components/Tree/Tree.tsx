@@ -289,13 +289,13 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
       }
     >
       <div
-        className={`flex px-2 focus:outline-none tree-node-focus-visible z-20 border border-opacity-0 hover:border-amber-400 hover:border-opacity-100${
+        className={`flex px-2 focus:outline-none tree-node-focus-visible z-20 border border-opacity-0 hover:bg-emerald-600 hover:bg-opacity-30 hover:border-amber-400 hover:border-opacity-100${
           selected
             ? ` bg-emerald-600 bg-opacity-50 border border-opacity-0${
                 containerIsFocused ? ' border-opacity-100 border-lime-400' : ''
               }`
             : ''
-        }${focused ? ' bg-green-300 bg-opacity-20' : ''}`}
+        }${focused ? ' bg-emerald-600 bg-opacity-30' : ''}`}
         id={`${id}`}
         onClick={(): void => {
           confirmSelection(node);
