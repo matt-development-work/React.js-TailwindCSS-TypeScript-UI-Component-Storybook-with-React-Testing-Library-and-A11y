@@ -402,12 +402,9 @@ const NodeListContainer: FC<TreeProps> = (props) => {
   the focused list item to allow any subsequent "Tab" or "Shoft+Tab" key press to focus the first or last item (respectively). 
   TODO: See if focusedNodeId does not need need to be initialized when the container loses focus. */
   useEffect(() => {
-    if (
-      !containerRef.current?.contains(document.activeElement) &&
-      !containerIsFocused
-    ) {
+    !containerRef.current?.contains(document.activeElement) &&
+      !containerIsFocused &&
       setFocusedNodeId(0);
-    }
   }, [containerIsFocused]);
   return (
     <div
