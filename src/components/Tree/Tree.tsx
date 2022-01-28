@@ -22,14 +22,14 @@ type ContextProps = {
   handleKeyDown: (e: KeyboardEvent<HTMLDivElement>) => void;
   handleContainerFocusing: () => void;
   mouseEntered: boolean;
-  navigatedId: number;
+  focusedNodeId: number;
   containerIsFocused: boolean;
   openNodeIds: number[];
   rootListElement: HTMLElement | null;
   selectedNode: TreeNode;
   setData: Dispatch<SetStateAction<TreeNode>>;
   setMouseEntered: Dispatch<SetStateAction<boolean>>;
-  setNavigatedId: Dispatch<SetStateAction<number>>;
+  setFocusedNodeId: Dispatch<SetStateAction<number>>;
   setContainerFocusedState: Dispatch<SetStateAction<boolean>>;
   setRootListElement: Dispatch<SetStateAction<HTMLElement | null>>;
   setSelectedNode: Dispatch<SetStateAction<TreeNode>>;
@@ -43,7 +43,7 @@ const NodeListContextWrapper: FC<{
 }> = ({ children }) => {
   const [data, setData] = useState<TreeNode>({} as TreeNode);
   const [mouseEntered, setMouseEntered] = useState<boolean>(false);
-  const [navigatedId, setNavigatedId] = useState<number>(0);
+  const [focusedNodeId, setFocusedNodeId] = useState<number>(0);
   const [containerIsFocused, setContainerFocusedState] =
     useState<boolean>(false);
   const [openNodeIds, setOpenNodeIds] = useState<number[]>([]);
@@ -108,9 +108,8 @@ const NodeListContextWrapper: FC<{
   const confirmSelection = useCallback(
     (node: TreeNode = {} as TreeNode): void => {
       const { id } = node;
-      /* TODO: See if selectedNode and navigatedId can be consolidated into one variable. */
       setSelectedNode(node);
-      setNavigatedId(id);
+      setFocusedNodeId(id);
       'children' in node && handleSetOpenNodeIds(id, openNodeIds.includes(id));
     },
     [openNodeIds]
@@ -141,7 +140,7 @@ const NodeListContextWrapper: FC<{
 
   /**
    * When NodeListContainer is already focused, makes a new selection if "Enter" or "Space" keys are pressed,
-     or sets the navigatedId and handles NodeElement focusing if navigation keys are pressed.
+     or sets the focusedNodeId and handles NodeElement focusing if navigation keys are pressed.
    * @param {KeyboardEvent} e Keyboard event
    * @returns {void}
    */
@@ -149,17 +148,15 @@ const NodeListContextWrapper: FC<{
     (e: KeyboardEvent<HTMLDivElement>): void => {
       const { code } = e;
       if (['Enter', 'Space'].includes(code)) {
-        const navigatedNode = getNodeAtSpecifiedId(data, navigatedId);
-        if (navigatedId !== selectedNode.id) {
-          setSelectedNode(navigatedNode);
-        } else {
-          confirmSelection(navigatedNode);
-        }
+        const navigatedNode = getNodeAtSpecifiedId(data, focusedNodeId);
+        focusedNodeId === selectedNode.id
+          ? confirmSelection(navigatedNode)
+          : setSelectedNode(navigatedNode);
       } else if (['ArrowUp', 'ArrowDown', 'Tab'].includes(code)) {
         const { focusableNodeElements, focusableNodeElementsIds } =
           getNodeElementFocusingUtilities();
         let selectedIndex: number =
-          focusableNodeElementsIds.indexOf(navigatedId) ?? 1;
+          focusableNodeElementsIds.indexOf(focusedNodeId) ?? 1;
         switch (code) {
           case 'ArrowUp':
             selectedIndex -= 1;
@@ -171,21 +168,22 @@ const NodeListContextWrapper: FC<{
             selectedIndex = e.shiftKey ? selectedIndex - 1 : selectedIndex + 1;
             break;
         }
-        const newNavigatedId: number = focusableNodeElementsIds[selectedIndex];
+        const newfocusedNodeId: number =
+          focusableNodeElementsIds[selectedIndex];
         /* Return if navigating direction has no subsequent navigable elements.
         (i.e. if attempting to navigate upwards from a currently-selected first element,
         or if attempting to navigate downwards from a currently-selected last element.) */
-        if (!newNavigatedId) return;
+        if (!newfocusedNodeId) return;
         ['ArrowUp', 'ArrowDown'].includes(code) &&
           (focusableNodeElements[selectedIndex] as HTMLElement).focus();
-        setNavigatedId(newNavigatedId);
+        setFocusedNodeId(newfocusedNodeId);
       }
     },
-    [children, document, navigatedId, open, openNodeIds, selectedNode, data]
+    [children, document, focusedNodeId, open, openNodeIds, selectedNode, data]
   );
 
   /** 
-   * Runs the setNavigatedId method with the appropritae activeElementId onFocus of NodeListContainer.
+   * Runs the setFocusedNodeId method with the appropritae activeElementId onFocus of NodeListContainer.
      This method will handle NodeElement focusing for "Tab" or "Shift+Tab" key input cases where 
      NodeListContainer is not already focused and therefore ignores the handleKeyDown method.
      A NodeListContainer focus invocation with "Tab" will focus the NodeElement of the first index,
@@ -199,10 +197,10 @@ const NodeListContextWrapper: FC<{
       activeElement && parseInt(activeElement?.id);
     switch (activeElementId) {
       case 1:
-        setNavigatedId(activeElementId);
+        setFocusedNodeId(activeElementId);
         break;
       case focusableNodeElementsIds[focusableNodeElementsIds.length - 1]:
-        setNavigatedId(activeElementId);
+        setFocusedNodeId(activeElementId);
         break;
     }
     setContainerFocusedState(true);
@@ -216,14 +214,14 @@ const NodeListContextWrapper: FC<{
         handleKeyDown: handleKeyDown,
         handleContainerFocusing: handleContainerFocusing,
         mouseEntered: mouseEntered,
-        navigatedId: navigatedId,
+        focusedNodeId: focusedNodeId,
         containerIsFocused: containerIsFocused,
         openNodeIds: openNodeIds,
         rootListElement: rootListElement,
         selectedNode: selectedNode,
         setData: setData,
         setMouseEntered: setMouseEntered,
-        setNavigatedId: setNavigatedId,
+        setFocusedNodeId: setFocusedNodeId,
         setContainerFocusedState: setContainerFocusedState,
         setRootListElement: setRootListElement,
         setSelectedNode: setSelectedNode,
@@ -252,7 +250,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
   const {
     confirmSelection,
     mouseEntered,
-    navigatedId,
+    focusedNodeId,
     containerIsFocused,
     openNodeIds,
     selectedNode,
@@ -268,9 +266,9 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
     () => node === selectedNode,
     [node, selectedNode]
   );
-  const navigated = useMemo<boolean>(
-    () => id === navigatedId,
-    [id, navigatedId]
+  const focused = useMemo<boolean>(
+    () => id === focusedNodeId,
+    [id, focusedNodeId]
   );
   const currentDirectory = useMemo<boolean>(
     () =>
@@ -297,7 +295,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
                 containerIsFocused ? ' border-opacity-100 border-lime-400' : ''
               }`
             : ''
-        }${navigated ? ' bg-green-300 bg-opacity-20' : ''}`}
+        }${focused ? ' bg-green-300 bg-opacity-20' : ''}`}
         id={`${id}`}
         onClick={(): void => {
           confirmSelection(node);
@@ -380,7 +378,7 @@ const NodeListContainer: FC<TreeProps> = (props) => {
     handleKeyDown,
     handleContainerFocusing,
     containerIsFocused,
-    setNavigatedId,
+    setFocusedNodeId,
     setContainerFocusedState,
     setRootListElement,
   } = useNodeListContext();
@@ -400,15 +398,15 @@ const NodeListContainer: FC<TreeProps> = (props) => {
       setRootListElement(rootListElement);
     }
   }, [containerRef.current]);
-  /* Resets the navigatedId to zero when the container loses focus. The selectedNode remains selected, and this only initializes 
+  /* Resets the focusedNodeId to zero when the container loses focus. The selectedNode remains selected, and this only initializes 
   the focused list item to allow any subsequent "Tab" or "Shoft+Tab" key press to focus the first or last item (respectively). 
-  TODO: See if navigatedId does not need need to be initialized when the container loses focus. */
+  TODO: See if focusedNodeId does not need need to be initialized when the container loses focus. */
   useEffect(() => {
     if (
       !containerRef.current?.contains(document.activeElement) &&
       !containerIsFocused
     ) {
-      setNavigatedId(0);
+      setFocusedNodeId(0);
     }
   }, [containerIsFocused]);
   return (
