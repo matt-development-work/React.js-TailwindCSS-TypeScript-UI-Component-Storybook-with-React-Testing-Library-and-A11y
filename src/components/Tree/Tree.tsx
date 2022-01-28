@@ -289,7 +289,10 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
       }
     >
       <div
-        className={`flex px-2 focus:outline-none tree-node-focus-visible z-20 border border-opacity-0 hover:bg-emerald-600 hover:bg-opacity-30 hover:border-amber-400 hover:border-opacity-100${
+        className={`flex px-2 focus:outline-none tree-node-focus-visible z-20 border border-opacity-0 ${
+          !selected &&
+          ` hover:bg-emerald-600 hover:bg-opacity-40 hover:border-amber-400 hover:border-opacity-100`
+        }${
           selected
             ? ` bg-emerald-600 bg-opacity-50 border border-opacity-0${
                 containerIsFocused ? ' border-opacity-100 border-lime-400' : ''
