@@ -363,13 +363,14 @@ export type TreeProps = {
 };
 
 const NodeList: FC<TreeProps> = ({ className, data }) => {
+  const { id, children } = data;
   className = useMemo<string>(
     () => (className ? ` ${className}` : ''),
     [className]
   );
   return (
-    <ul className={`flex flex-col${className}`} id={`node-list-${data.id}`}>
-      {data.children?.map((n) => (
+    <ul className={`flex flex-col${className}`} id={`node-list-${id}`}>
+      {children?.map((n) => (
         <NodeElement key={n.value} node={n} />
       ))}
     </ul>
