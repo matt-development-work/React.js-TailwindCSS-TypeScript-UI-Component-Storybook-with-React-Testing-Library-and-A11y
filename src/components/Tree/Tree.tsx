@@ -17,23 +17,23 @@ import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import './tree.css';
 
 type ContextProps = {
-  data: TreeNode;
   confirmSelection: (node: TreeNode) => void;
-  handleKeyDown: (e: KeyboardEvent<HTMLDivElement>) => void;
-  handleContainerFocusing: () => void;
-  mouseEntered: boolean;
-  focusedNodeId: number;
   containerIsFocused: boolean;
+  data: TreeNode;
+  focusedNodeId: number;
+  handleContainerFocusing: () => void;
+  handleKeyDown: (e: KeyboardEvent<HTMLDivElement>) => void;
+  handleSetOpenNodeIds: (id: number, open: boolean) => void;
+  mouseEntered: boolean;
   openNodeIds: number[];
   rootListElement: HTMLElement | null;
   selectedNode: TreeNode;
-  setData: Dispatch<SetStateAction<TreeNode>>;
-  setMouseEntered: Dispatch<SetStateAction<boolean>>;
-  setFocusedNodeId: Dispatch<SetStateAction<number>>;
   setContainerFocusedState: Dispatch<SetStateAction<boolean>>;
+  setData: Dispatch<SetStateAction<TreeNode>>;
+  setFocusedNodeId: Dispatch<SetStateAction<number>>;
+  setMouseEntered: Dispatch<SetStateAction<boolean>>;
   setRootListElement: Dispatch<SetStateAction<HTMLElement | null>>;
   setSelectedNode: Dispatch<SetStateAction<TreeNode>>;
-  handleSetOpenNodeIds: (id: number, open: boolean) => void;
 };
 
 const NodeListContext = createContext<ContextProps>({} as ContextProps);
@@ -210,22 +210,22 @@ const NodeListContextWrapper: FC<{
     <NodeListContext.Provider
       value={{
         confirmSelection: confirmSelection,
-        data: data,
-        handleKeyDown: handleKeyDown,
-        handleContainerFocusing: handleContainerFocusing,
-        mouseEntered: mouseEntered,
-        focusedNodeId: focusedNodeId,
         containerIsFocused: containerIsFocused,
+        data: data,
+        focusedNodeId: focusedNodeId,
+        handleContainerFocusing: handleContainerFocusing,
+        handleKeyDown: handleKeyDown,
+        handleSetOpenNodeIds: handleSetOpenNodeIds,
+        mouseEntered: mouseEntered,
         openNodeIds: openNodeIds,
         rootListElement: rootListElement,
         selectedNode: selectedNode,
-        setData: setData,
-        setMouseEntered: setMouseEntered,
-        setFocusedNodeId: setFocusedNodeId,
         setContainerFocusedState: setContainerFocusedState,
+        setData: setData,
+        setFocusedNodeId: setFocusedNodeId,
+        setMouseEntered: setMouseEntered,
         setRootListElement: setRootListElement,
         setSelectedNode: setSelectedNode,
-        handleSetOpenNodeIds: handleSetOpenNodeIds,
       }}
     >
       {children}
@@ -249,9 +249,9 @@ type NodeElementProps = {
 const NodeElement: FC<NodeElementProps> = ({ node }) => {
   const {
     confirmSelection,
-    mouseEntered,
-    focusedNodeId,
     containerIsFocused,
+    focusedNodeId,
+    mouseEntered,
     openNodeIds,
     selectedNode,
   } = useNodeListContext();
@@ -373,13 +373,13 @@ const NodeList: FC<TreeProps> = ({ className, data }) => {
 
 const NodeListContainer: FC<TreeProps> = (props) => {
   const {
-    setData,
-    setMouseEntered,
-    handleKeyDown,
-    handleContainerFocusing,
     containerIsFocused,
-    setFocusedNodeId,
+    handleContainerFocusing,
+    handleKeyDown,
     setContainerFocusedState,
+    setData,
+    setFocusedNodeId,
+    setMouseEntered,
     setRootListElement,
   } = useNodeListContext();
   const { data } = props;
