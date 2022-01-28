@@ -36,13 +36,11 @@ type ContextProps = {
   handleSetOpenNodeIds: (id: number, open: boolean) => void;
 };
 
-const NodeListContext = createContext({} as ContextProps);
+const NodeListContext = createContext<ContextProps>({} as ContextProps);
 
-type ContextWrapperProps = {
+const NodeListContextWrapper: FC<{
   children: ReactNode;
-};
-
-const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
+}> = ({ children }) => {
   const [data, setData] = useState<TreeNode>({} as TreeNode);
   const [mouseEntered, setMouseEntered] = useState<boolean>(false);
   const [navigatedId, setNavigatedId] = useState<number>(0);
@@ -237,9 +235,7 @@ const NodeListContextWrapper: FC<ContextWrapperProps> = ({ children }) => {
   );
 };
 
-const useNodeListContext = () => {
-  return useContext(NodeListContext);
-};
+const useNodeListContext = () => useContext(NodeListContext);
 
 export type TreeNode = {
   children?: TreeNode[];
