@@ -14,6 +14,7 @@ import React, {
 } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import './tree.css';
 
 type ContextProps = {
@@ -321,7 +322,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
                 className={
                   'text-green-400 hover:text-green-500 transition ease-in-out duration-200 mb-px'
                 }
-                icon={faAngleRight}
+                icon={faAngleRight as IconProp}
                 size="sm"
               />
             }
