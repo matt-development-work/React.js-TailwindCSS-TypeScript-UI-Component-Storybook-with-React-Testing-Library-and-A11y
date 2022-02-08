@@ -47,9 +47,8 @@ const NodeListContextWrapper: FC<{
   const [containerIsFocused, setContainerFocusedState] =
     useState<boolean>(false);
   const [openNodeIds, setOpenNodeIds] = useState<number[]>([]);
-  const [rootListElement, setRootListElement] = useState<HTMLElement | null>(
-    null
-  );
+  const [rootListElement, setRootListElement] =
+    useState<HTMLElement | null>(null);
   const [selectedNode, setSelectedNode] = useState<TreeNode>({} as TreeNode);
 
   /**
