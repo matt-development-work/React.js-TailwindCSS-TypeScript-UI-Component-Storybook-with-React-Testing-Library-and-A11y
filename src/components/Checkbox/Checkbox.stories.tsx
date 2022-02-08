@@ -5,6 +5,7 @@ import { faHeart as faSolidHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { faPause } from '@fortawesome/free-solid-svg-icons';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 const meta: Meta = {
   title: 'Checkbox',
@@ -83,8 +84,8 @@ export const Custom1 = TemplateCustom.bind({});
 
 Custom1.args = {
   icon: {
-    checked: faSolidHeart,
-    unChecked: faRegularHeart,
+    checked: faSolidHeart as IconProp,
+    unChecked: faRegularHeart as IconProp,
     className: 'text-pink-400',
   },
   label: 'Custom 1',
@@ -94,8 +95,8 @@ export const Custom2 = TemplateCustom.bind({});
 
 Custom2.args = {
   icon: {
-    checked: faPlay,
-    unChecked: faPause,
+    checked: faPlay as IconProp,
+    unChecked: faPause as IconProp,
     className: 'text-green-500',
   },
   label: 'Custom 2',
