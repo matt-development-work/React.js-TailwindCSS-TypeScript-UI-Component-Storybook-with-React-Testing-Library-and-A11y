@@ -3,6 +3,7 @@ import { Meta, Story } from '@storybook/react';
 import { Button, Props } from './Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 const meta: Meta = {
   title: 'Button',
@@ -41,7 +42,11 @@ Outlined.args = {
 const IconTemplate: Story<Props> = (args) => {
   return (
     <Button {...args}>
-      <FontAwesomeIcon className="text-white" icon={faArrowDown} size="sm" />
+      <FontAwesomeIcon
+        className="text-white"
+        icon={faArrowDown as IconProp}
+        size="sm"
+      />
     </Button>
   );
 };
