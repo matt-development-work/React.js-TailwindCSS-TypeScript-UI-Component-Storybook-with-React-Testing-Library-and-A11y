@@ -101,7 +101,7 @@ const NodeListContextWrapper: FC<{
   );
 
   /**
-   * Handles node element selecton on click or keyDown of "Space" or "Enter" keys.
+   * Handles node element selection on click or keyDown of "Space" or "Enter" keys.
    * @param {TreeNode} node Element to be selected
    * @returns {void}
    */
@@ -183,7 +183,7 @@ const NodeListContextWrapper: FC<{
   );
 
   /** 
-   * Runs the setFocusedNodeId method with the appropritae activeElementId onFocus of NodeListContainer.
+   * Runs the setFocusedNodeId method with the appropriate activeElementId onFocus of NodeListContainer.
      This method will handle NodeElement focusing for "Tab" or "Shift+Tab" key input cases where 
      NodeListContainer is not already focused and therefore ignores the handleKeyDown method.
      A NodeListContainer focus invocation with "Tab" will focus the NodeElement of the first index,
@@ -402,7 +402,7 @@ const NodeListContainer: FC<TreeProps> = (props) => {
     }
   }, [containerRef.current]);
   /* Resets the focusedNodeId to zero when the container loses focus. The selectedNode remains selected, and this only initializes 
-  the focused list item to allow any subsequent "Tab" or "Shoft+Tab" key press to focus the first or last item (respectively). 
+  the focused list item to allow any subsequent "Tab" or "Shift+Tab" key press to focus the first or last item (respectively). 
   TODO: See if focusedNodeId does not need need to be initialized when the container loses focus. */
   useEffect(() => {
     !containerRef.current?.contains(document.activeElement) &&
