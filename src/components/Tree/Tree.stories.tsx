@@ -16,6 +16,7 @@ import {
   faNpm,
   faYarn,
 } from '@fortawesome/free-brands-svg-icons';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 const meta: Meta = {
   title: 'Tree',
@@ -60,7 +61,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
       value: '.storybook',
       icon: (
         <FontAwesomeIcon
-          icon={faFolder}
+          icon={faFolder as IconProp}
           className={'text-yellow-200'}
           size="sm"
         />
@@ -70,7 +71,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
           value: 'main.js',
           icon: (
             <FontAwesomeIcon
-              icon={faJsSquare}
+              icon={faJsSquare as IconProp}
               className={'text-yellow-300'}
               size="sm"
             />
@@ -80,7 +81,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
           value: 'preview.js',
           icon: (
             <FontAwesomeIcon
-              icon={faJsSquare}
+              icon={faJsSquare as IconProp}
               className={'text-yellow-300'}
               size="sm"
             />
@@ -92,7 +93,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
       value: 'dist',
       icon: (
         <FontAwesomeIcon
-          icon={faFolder}
+          icon={faFolder as IconProp}
           className={'text-yellow-200'}
           size="sm"
         />
@@ -102,7 +103,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
           value: 'index.js',
           icon: (
             <FontAwesomeIcon
-              icon={faJsSquare}
+              icon={faJsSquare as IconProp}
               className={'text-yellow-300'}
               size="sm"
             />
@@ -114,7 +115,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
       value: 'src',
       icon: (
         <FontAwesomeIcon
-          icon={faFolder}
+          icon={faFolder as IconProp}
           className={'text-yellow-200'}
           size="sm"
         />
@@ -124,7 +125,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
           value: 'components',
           icon: (
             <FontAwesomeIcon
-              icon={faFolder}
+              icon={faFolder as IconProp}
               className={'text-yellow-200'}
               size="sm"
             />
@@ -134,7 +135,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
               value: 'Chip',
               icon: (
                 <FontAwesomeIcon
-                  icon={faFolder}
+                  icon={faFolder as IconProp}
                   className={'text-yellow-200'}
                   size="sm"
                 />
@@ -144,7 +145,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   value: 'chip.css',
                   icon: (
                     <FontAwesomeIcon
-                      icon={faCss3}
+                      icon={faCss3 as IconProp}
                       className={'text-blue-400'}
                       size="sm"
                     />
@@ -154,7 +155,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   value: 'Chip.stories.tsx',
                   icon: (
                     <FontAwesomeIcon
-                      icon={faFileCode}
+                      icon={faFileCode as IconProp}
                       className={'text-blue-400'}
                       size="sm"
                     />
@@ -164,7 +165,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   value: 'Chip.test.tsx',
                   icon: (
                     <FontAwesomeIcon
-                      icon={faFlask}
+                      icon={faFlask as IconProp}
                       className={'text-gray-300'}
                       size="sm"
                     />
@@ -174,7 +175,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   value: 'Chip.tsx',
                   icon: (
                     <FontAwesomeIcon
-                      icon={faFileCode}
+                      icon={faFileCode as IconProp}
                       className={'text-blue-200'}
                       size="sm"
                     />
@@ -184,7 +185,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   value: 'index.ts',
                   icon: (
                     <FontAwesomeIcon
-                      icon={faFileCode}
+                      icon={faFileCode as IconProp}
                       className={'text-blue-300'}
                       size="sm"
                     />
@@ -196,7 +197,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
               value: 'Drawer',
               icon: (
                 <FontAwesomeIcon
-                  icon={faFolder}
+                  icon={faFolder as IconProp}
                   className={'text-yellow-200'}
                   size="sm"
                 />
@@ -206,7 +207,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   value: 'drawer.css',
                   icon: (
                     <FontAwesomeIcon
-                      icon={faCss3}
+                      icon={faCss3 as IconProp}
                       className={'text-blue-400'}
                       size="sm"
                     />
@@ -216,7 +217,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   value: 'Drawer.stories.tsx',
                   icon: (
                     <FontAwesomeIcon
-                      icon={faFileCode}
+                      icon={faFileCode as IconProp}
                       className={'text-blue-400'}
                       size="sm"
                     />
@@ -226,7 +227,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   value: 'Drawer.test.tsx',
                   icon: (
                     <FontAwesomeIcon
-                      icon={faFlask}
+                      icon={faFlask as IconProp}
                       className={'text-gray-300'}
                       size="sm"
                     />
@@ -236,7 +237,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   value: 'Drawer.tsx',
                   icon: (
                     <FontAwesomeIcon
-                      icon={faFileCode}
+                      icon={faFileCode as IconProp}
                       className={'text-blue-200'}
                       size="sm"
                     />
@@ -247,7 +248,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   value: 'index.ts',
                   icon: (
                     <FontAwesomeIcon
-                      icon={faFileCode}
+                      icon={faFileCode as IconProp}
                       className={'text-blue-300'}
                       size="sm"
                     />
@@ -259,7 +260,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
               value: 'Table',
               icon: (
                 <FontAwesomeIcon
-                  icon={faFolder}
+                  icon={faFolder as IconProp}
                   className={'text-yellow-200'}
                   size="sm"
                 />
@@ -269,7 +270,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   value: 'index.ts',
                   icon: (
                     <FontAwesomeIcon
-                      icon={faFileCode}
+                      icon={faFileCode as IconProp}
                       className={'text-blue-300'}
                       size="sm"
                     />
@@ -279,7 +280,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   value: 'table.css',
                   icon: (
                     <FontAwesomeIcon
-                      icon={faCss3}
+                      icon={faCss3 as IconProp}
                       className={'text-blue-400'}
                       size="sm"
                     />
@@ -289,7 +290,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   value: 'Table.stories.tsx',
                   icon: (
                     <FontAwesomeIcon
-                      icon={faFileCode}
+                      icon={faFileCode as IconProp}
                       className={'text-blue-400'}
                       size="sm"
                     />
@@ -299,7 +300,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   value: 'Table.test.tsx',
                   icon: (
                     <FontAwesomeIcon
-                      icon={faFlask}
+                      icon={faFlask as IconProp}
                       className={'text-gray-300'}
                       size="sm"
                     />
@@ -309,7 +310,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   value: 'Table.tsx',
                   icon: (
                     <FontAwesomeIcon
-                      icon={faFileCode}
+                      icon={faFileCode as IconProp}
                       className={'text-blue-200'}
                       size="sm"
                     />
@@ -321,7 +322,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
               value: 'TextField',
               icon: (
                 <FontAwesomeIcon
-                  icon={faFolder}
+                  icon={faFolder as IconProp}
                   className={'text-yellow-200'}
                   size="sm"
                 />
@@ -331,7 +332,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   value: 'index.ts',
                   icon: (
                     <FontAwesomeIcon
-                      icon={faFileCode}
+                      icon={faFileCode as IconProp}
                       className={'text-blue-300'}
                       size="sm"
                     />
@@ -341,7 +342,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   value: 'textfield.css',
                   icon: (
                     <FontAwesomeIcon
-                      icon={faCss3}
+                      icon={faCss3 as IconProp}
                       className={'text-blue-400'}
                       size="sm"
                     />
@@ -351,7 +352,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   value: 'TextField.stories.tsx',
                   icon: (
                     <FontAwesomeIcon
-                      icon={faFileCode}
+                      icon={faFileCode as IconProp}
                       className={'text-blue-400'}
                       size="sm"
                     />
@@ -361,7 +362,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   value: 'TextField.test.tsx',
                   icon: (
                     <FontAwesomeIcon
-                      icon={faFlask}
+                      icon={faFlask as IconProp}
                       className={'text-gray-300'}
                       size="sm"
                     />
@@ -371,7 +372,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   value: 'TextField.tsx',
                   icon: (
                     <FontAwesomeIcon
-                      icon={faFileCode}
+                      icon={faFileCode as IconProp}
                       className={'text-blue-200'}
                       size="sm"
                     />
@@ -385,7 +386,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
           value: 'globals.css',
           icon: (
             <FontAwesomeIcon
-              icon={faCss3}
+              icon={faCss3 as IconProp}
               className={'text-blue-400'}
               size="sm"
             />
@@ -396,20 +397,28 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
     {
       value: '.gitignore',
       icon: (
-        <FontAwesomeIcon icon={faGitAlt} className={'text-red-500'} size="sm" />
+        <FontAwesomeIcon
+          icon={faGitAlt as IconProp}
+          className={'text-red-500'}
+          size="sm"
+        />
       ),
     },
     {
       value: 'package.json',
       icon: (
-        <FontAwesomeIcon icon={faNpm} className={'text-red-500'} size="sm" />
+        <FontAwesomeIcon
+          icon={faNpm as IconProp}
+          className={'text-red-500'}
+          size="sm"
+        />
       ),
     },
     {
       value: 'tailwind.config.js',
       icon: (
         <FontAwesomeIcon
-          icon={faFileCode}
+          icon={faFileCode as IconProp}
           className={'text-green-100'}
           size="sm"
         />
@@ -418,13 +427,21 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
     {
       value: 'tsconfig.json',
       icon: (
-        <FontAwesomeIcon icon={faCog} className={'text-blue-400'} size="sm" />
+        <FontAwesomeIcon
+          icon={faCog as IconProp}
+          className={'text-blue-400'}
+          size="sm"
+        />
       ),
     },
     {
       value: 'yarn.lock',
       icon: (
-        <FontAwesomeIcon icon={faYarn} className={'text-blue-300'} size="sm" />
+        <FontAwesomeIcon
+          icon={faYarn as IconProp}
+          className={'text-blue-300'}
+          size="sm"
+        />
       ),
     },
   ],
