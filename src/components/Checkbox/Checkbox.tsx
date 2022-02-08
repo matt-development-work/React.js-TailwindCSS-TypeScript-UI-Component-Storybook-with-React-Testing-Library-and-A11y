@@ -79,7 +79,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
           {hasValue && (
             <FontAwesomeIcon
               className={`absolute ${icon.className ?? 'text-white'}`}
-              icon={indeterminate ? faMinus : icon.checked}
+              icon={(indeterminate ? faMinus : icon.checked) as IconProp}
               size={icon.unChecked ? 'sm' : 'xs'}
             />
           )}
