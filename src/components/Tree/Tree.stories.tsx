@@ -18,15 +18,15 @@ import {
 } from '@fortawesome/free-brands-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
-const gearIcon = faCog as IconProp;
-const fileCodeIcon = faFileCode as IconProp;
-const flaskIcon = faFlask as IconProp;
-const folderIcon = faFolder as IconProp;
-const cssIcon = faCss3 as IconProp;
-const gitIcon = faGitAlt as IconProp;
-const jsIcon = faJsSquare as IconProp;
-const npmIcon = faNpm as IconProp;
-const yarnIcon = faYarn as IconProp;
+const gearIcon: IconProp = faCog as IconProp;
+const fileCodeIcon: IconProp = faFileCode as IconProp;
+const flaskIcon: IconProp = faFlask as IconProp;
+const folderIcon: IconProp = faFolder as IconProp;
+const cssIcon: IconProp = faCss3 as IconProp;
+const gitIcon: IconProp = faGitAlt as IconProp;
+const jsIcon: IconProp = faJsSquare as IconProp;
+const npmIcon: IconProp = faNpm as IconProp;
+const yarnIcon: IconProp = faYarn as IconProp;
 
 const meta: Meta = {
   title: 'Tree',
@@ -49,12 +49,12 @@ type PreIndexedTreeNode = {
 const addIdAttributesToTreeNodes = (
   data: PreIndexedTreeNode
 ): PreIndexedTreeNode | TreeNode => {
-  let uniqueId = 0;
-  const traverseTreeNodes = (node: PreIndexedTreeNode | TreeNode) => {
+  let uniqueId: number = 0;
+  const traverseTreeNodes = (node: PreIndexedTreeNode | TreeNode): void => {
     node['id'] = uniqueId;
     uniqueId += 1;
     if (!!node['children']) {
-      let result = null;
+      let result: null | void = null;
       for (let i = 0; !result && i < node['children'].length; i++) {
         result = traverseTreeNodes(node['children'][i]);
       }
