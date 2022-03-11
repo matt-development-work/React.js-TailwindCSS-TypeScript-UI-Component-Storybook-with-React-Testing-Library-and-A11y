@@ -313,16 +313,16 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
             1. Move all all non-component-specific styling parameters to stories file and/or theme.
            */
           <i
-            className={`cursor-pointer${
+            className={
               open
-                ? ' transform rotate-90 transition-transform ease-in-out duration-100'
+                ? 'transform rotate-90 transition-transform ease-in-out duration-100'
                 : ''
-            }`}
+            }
           >
             {
               <FontAwesomeIcon
                 className={
-                  'text-green-400 hover:text-green-500 transition ease-in-out duration-200 mb-px'
+                  'text-green-400 hover:text-green-500 transition ease-in-out duration-200'
                 }
                 icon={faAngleRight as IconProp}
                 size="sm"
