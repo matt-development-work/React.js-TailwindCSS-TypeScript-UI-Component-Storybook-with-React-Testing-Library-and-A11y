@@ -65,7 +65,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
               : ' cursor-default'
           }${hasValue ? ` ${!icon.unChecked ? `bg-${color}-500` : ''}` : ''}`}
           data-testid="checkbox-alias"
-          onClick={handleChange}
+          onChange={handleChange}
           onKeyDown={(e) => handleKeyDown(e.code)}
           aria-checked={checked}
           aria-labelledby={labelID}
