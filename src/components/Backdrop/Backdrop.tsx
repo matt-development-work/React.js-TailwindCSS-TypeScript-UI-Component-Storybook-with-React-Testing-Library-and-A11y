@@ -78,7 +78,7 @@ export const Backdrop = forwardRef<HTMLDivElement, Props>(
 
     return backdropIsRenderable
       ? createPortal(
-          <FocusLock autoFocus={false}>
+          <FocusLock autoFocus={true}>
             <div
               className={`flex justify-center items-center fixed inset-0 bg-gray-800 transition-opacity ease-in-out duration-${transitionDuration} opacity-${opacity}`}
               data-testid="backdrop"

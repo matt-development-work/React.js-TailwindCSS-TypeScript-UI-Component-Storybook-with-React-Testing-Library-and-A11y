@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Meta, Story } from '@storybook/react';
 import { Modal, Props } from './Modal';
 import Backdrop from '../Backdrop';
@@ -18,11 +18,15 @@ const meta: Meta = {
 export default meta;
 
 const DefaultTemplate: Story<Props> = (args) => {
+  const modalButton = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
   args = {
     ...args,
     open: open,
-    onClose: () => setOpen(false),
+    onClose: () => {
+      setOpen(false);
+      modalButton.current?.focus();
+    },
   };
   const handleClick: () => void = () => {
     setOpen(true);
@@ -30,9 +34,10 @@ const DefaultTemplate: Story<Props> = (args) => {
   return (
     <div>
       <Button
-        variant="outlined"
         data-testid="modal-button"
         onClick={() => handleClick()}
+        ref={modalButton}
+        variant="outlined"
       >
         open
       </Button>

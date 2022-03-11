@@ -17,6 +17,7 @@ export const Modal = forwardRef<HTMLDivElement, Props>(
         transitionDuration={transitionDuration}
       >
         <div
+          aria-modal
           className={'relative w-auto h-auto overflow-hidden bg-white'}
           onClick={(e) => e.stopPropagation()}
           role="dialog"
