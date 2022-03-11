@@ -339,7 +339,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
       </span>
       {children && open && (
         <NodeList
-          //Displays left vertical rulers as applicable
+          /* Displays left vertical rulers as applicable */
           className={`ml-4 border-l transition ease-in-out duration-150${
             currentDirectory
               ? ' border-gray-200'
