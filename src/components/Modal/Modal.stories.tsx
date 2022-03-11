@@ -4,7 +4,6 @@ import { Modal, Props } from './Modal';
 import Backdrop from '../Backdrop';
 import Button from '../Button';
 import Checkbox from '../Checkbox';
-import './modal-stories.css';
 
 const meta: Meta = {
   title: 'Modal',
