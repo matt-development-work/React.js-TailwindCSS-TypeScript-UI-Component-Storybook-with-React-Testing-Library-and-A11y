@@ -4,6 +4,7 @@ import { Modal, Props } from './Modal';
 import Backdrop from '../Backdrop';
 import Button from '../Button';
 import Checkbox from '../Checkbox';
+import './modal-stories.css';
 
 const meta: Meta = {
   title: 'Modal',
@@ -34,12 +35,12 @@ const DefaultTemplate: Story<Props> = (args) => {
   return (
     <div>
       <Button
-        data-testid="modal-button"
+        data-testid="dialog-open-button"
         onClick={() => handleClick()}
         ref={modalButton}
         variant="outlined"
       >
-        open
+        Open Modal
       </Button>
       <Modal {...args}>
         <div className="flex items-end justify-end p-4">
@@ -57,10 +58,18 @@ const DefaultTemplate: Story<Props> = (args) => {
             })}
           </div>
           <div className="flex gap-x-2">
-            <Button variant="outlined" onClick={handleClose}>
+            <Button
+              data-testid="dialog-cancel-button"
+              onClick={handleClose}
+              variant="outlined"
+            >
               Cancel
             </Button>
-            <Button variant="contained" onClick={() => undefined}>
+            <Button
+              data-testid="dialog-submit-button"
+              onClick={() => undefined}
+              variant="contained"
+            >
               Submit
             </Button>
           </div>
@@ -85,10 +94,10 @@ const LoadingSpinnerTemplate: Story = () => {
     <div>
       <Button
         variant="outlined"
-        data-testid="modal-button"
+        data-testid="launch-spinner-button"
         onClick={() => handleClick()}
       >
-        open
+        Launch Spinner
       </Button>
       <Backdrop displayOnly open={open} transitionDuration={700}>
         <div className="loading-spinner"></div>
