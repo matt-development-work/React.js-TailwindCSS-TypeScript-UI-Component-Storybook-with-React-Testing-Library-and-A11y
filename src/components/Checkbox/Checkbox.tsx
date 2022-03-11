@@ -84,19 +84,19 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
             />
           )}
         </span>
-        <input
-          checked={checked}
-          className="hidden"
-          data-testid="checkbox"
-          disabled={disabled}
-          id={id}
-          onChange={handleChange}
-          ref={ref}
-          tabIndex={-1}
-          type="checkbox"
-          {...props}
-        />
-        <label className="ml-6 select-none" htmlFor={id}>
+        <label className="ml-6 select-none">
+          <input
+            checked={checked}
+            className="hidden"
+            data-testid="checkbox"
+            disabled={disabled}
+            id={id}
+            onChange={handleChange}
+            ref={ref}
+            tabIndex={-1}
+            type="checkbox"
+            {...props}
+          />
           {label}
         </label>
       </span>
