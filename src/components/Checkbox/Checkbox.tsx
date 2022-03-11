@@ -53,7 +53,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
     };
 
     return (
-      <span className="flex">
+      <label className="select-none flex" id={labelID}>
         <span
           className={`absolute flex justify-center items-center h-4 w-4 m-1 rounded focus:outline-none focus-visible transition duration-100 ease-in-out filter${
             !icon.unChecked ? ' border border-gray-500 hover:shadow-sm' : ''
@@ -86,8 +86,6 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
               size={icon.unChecked ? 'sm' : 'xs'}
             />
           )}
-        </span>
-        <label className="ml-6 select-none" id={labelID}>
           <input
             checked={checked}
             className="hidden"
@@ -100,9 +98,9 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
             type="checkbox"
             {...props}
           />
-          {label}
-        </label>
-      </span>
+        </span>
+        <span className="ml-6">{label}</span>
+      </label>
     );
   }
 );
