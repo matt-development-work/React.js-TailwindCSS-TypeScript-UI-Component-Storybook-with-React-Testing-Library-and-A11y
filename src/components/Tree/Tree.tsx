@@ -287,6 +287,8 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
       className={
         'hover:bg-emerald-600 hover:bg-opacity-20 transition ease-in-out duration-150'
       }
+      role="treeitem"
+      aria-expanded={open}
     >
       <span
         className={`flex px-2 focus:outline-none tree-node-focus-visible z-20 border border-opacity-0 ${
@@ -348,6 +350,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
               : ' border-opacity-0'
           }`}
           data={node}
+          role="group"
         />
       )}
     </li>
@@ -357,16 +360,21 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
 export type TreeProps = {
   className?: string;
   data: TreeNode;
+  role?: string;
 };
 
-const NodeList: FC<TreeProps> = ({ className, data }) => {
+const NodeList: FC<TreeProps> = ({ className, data, role = 'tree' }) => {
   const { id, children } = data;
   className = useMemo<string>(
     () => (className ? ` ${className}` : ''),
     [className]
   );
   return (
-    <ul className={`flex flex-col${className}`} id={`node-list-${id}`}>
+    <ul
+      className={`flex flex-col${className}`}
+      id={`node-list-${id}`}
+      role={role}
+    >
       {children?.map((n) => (
         <NodeElement key={n.value} node={n} />
       ))}
