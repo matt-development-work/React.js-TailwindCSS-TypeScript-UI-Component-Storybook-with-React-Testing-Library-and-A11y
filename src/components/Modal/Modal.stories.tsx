@@ -19,13 +19,14 @@ export default meta;
 const DefaultTemplate: Story<Props> = (args) => {
   const modalButton = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
+  const handleClose = (): void => {
+    setOpen(false);
+    modalButton.current?.focus();
+  };
   args = {
     ...args,
     open: open,
-    onClose: () => {
-      setOpen(false);
-      modalButton.current?.focus();
-    },
+    onClose: handleClose,
   };
   const handleClick: () => void = () => {
     setOpen(true);
@@ -55,9 +56,14 @@ const DefaultTemplate: Story<Props> = (args) => {
               );
             })}
           </div>
-          <Button variant="outlined" onClick={() => undefined}>
-            Submit
-          </Button>
+          <div className="flex gap-x-2">
+            <Button variant="outlined" onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button variant="contained" onClick={() => undefined}>
+              Submit
+            </Button>
+          </div>
         </div>
       </Modal>
     </div>
