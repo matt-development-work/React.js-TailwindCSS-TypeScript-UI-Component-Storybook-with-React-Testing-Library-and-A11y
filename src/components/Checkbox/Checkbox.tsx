@@ -16,7 +16,7 @@ export interface Props extends HTMLAttributes<HTMLInputElement> {
   id?: string;
   icon?: Icon;
   indeterminate?: boolean;
-  label?: string;
+  label: string;
   onChange: () => void;
 }
 
@@ -36,7 +36,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
     },
     ref
   ) => {
-    id = id ?? label;
+    const labelID = label.replace(/\s/g, '-');
 
     const color: string = error ? 'red' : 'green';
 
@@ -67,6 +67,9 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
           data-testid="checkbox-alias"
           onClick={handleChange}
           onKeyDown={(e) => handleKeyDown(e.code)}
+          aria-checked={checked}
+          aria-labelledby={labelID}
+          role="checkbox"
           tabIndex={0}
         >
           {icon.unChecked && !hasValue && (
@@ -84,7 +87,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
             />
           )}
         </span>
-        <label className="ml-6 select-none">
+        <label className="ml-6 select-none" id={labelID}>
           <input
             checked={checked}
             className="hidden"
