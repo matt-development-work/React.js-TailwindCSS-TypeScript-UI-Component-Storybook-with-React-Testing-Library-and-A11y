@@ -20,7 +20,7 @@ export interface Props extends HTMLAttributes<HTMLInputElement> {
   onChange: () => void;
 }
 
-export const Checkbox = forwardRef<HTMLInputElement, Props>(
+export const Checkbox = forwardRef<HTMLSpanElement, Props>(
   (
     {
       checked = false,
@@ -53,7 +53,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
     };
 
     return (
-      <label className="select-none flex" id={labelID}>
+      <label className="select-none flex" id={labelID} onClick={handleChange}>
         <span
           className={`absolute flex justify-center items-center h-4 w-4 m-1 rounded focus:outline-none focus-visible transition duration-100 ease-in-out filter${
             !icon.unChecked ? ' border border-gray-500 hover:shadow-sm' : ''
@@ -64,13 +64,15 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
                 } cursor-pointer hover:brightness-110`
               : ' cursor-default'
           }${hasValue ? ` ${!icon.unChecked ? `bg-${color}-500` : ''}` : ''}`}
-          data-testid="checkbox-alias"
+          data-testid="checkbox"
           onChange={handleChange}
           onKeyDown={(e) => handleKeyDown(e.code)}
           aria-checked={checked}
           aria-labelledby={labelID}
+          ref={ref}
           role="checkbox"
           tabIndex={0}
+          {...props}
         >
           {icon.unChecked && !hasValue && (
             <FontAwesomeIcon
@@ -86,18 +88,6 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
               size={icon.unChecked ? 'sm' : 'xs'}
             />
           )}
-          <input
-            checked={checked}
-            className="hidden"
-            data-testid="checkbox"
-            disabled={disabled}
-            id={id}
-            onChange={handleChange}
-            ref={ref}
-            tabIndex={-1}
-            type="checkbox"
-            {...props}
-          />
         </span>
         <span className="ml-6">{label}</span>
       </label>

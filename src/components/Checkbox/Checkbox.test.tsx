@@ -5,7 +5,7 @@ import * as stories from './Checkbox.stories';
 
 const { Default, Disabled, Error } = composeStories(stories);
 
-test('Checked value changes when component is clicked', () => {
+test('Checked value changes when component onChange method is invoked', () => {
   const Wrapper = () => {
     const [checked, setChecked] = useState<boolean>(false);
     Default.args = {
@@ -18,48 +18,44 @@ test('Checked value changes when component is clicked', () => {
     return <Default {...Default.args} />;
   };
   const component = render(<Wrapper />);
-  const checkbox = component.getByTestId('checkbox') as HTMLInputElement;
-  const checkboxComponentCheckedState: boolean = checkbox.checked;
-  fireEvent.click(checkbox);
+  const checkbox = component.getByTestId('checkbox') as HTMLSpanElement;
+  const checkboxComponentCheckedState: string = checkbox.ariaChecked;
+  fireEvent.change(checkbox);
   switch (checkboxComponentCheckedState) {
-    case true:
-      expect(checkbox.checked).toBeFalsy();
+    case 'true':
+      expect(checkbox.ariaChecked).toEqual('false');
       break;
-    case false:
-      expect(checkbox.checked).toBeTruthy();
+    case 'false':
+      expect(checkbox.ariaChecked).toEqual('true');
       break;
   }
 });
 
-test('Disabled component checked value does not change when component is clicked', () => {
+test('Disabled component checked value does not change', () => {
   const component = render(<Disabled {...Disabled.args} />);
-  const checkbox = component.getByTestId('checkbox') as HTMLInputElement;
-  const checkboxComponentCheckedState: boolean = checkbox.checked;
-  fireEvent.click(checkbox);
+  const checkbox = component.getByTestId('checkbox') as HTMLSpanElement;
+  const checkboxComponentCheckedState: string = checkbox.ariaChecked;
+  fireEvent.change(checkbox);
   switch (checkboxComponentCheckedState) {
-    case true:
-      expect(checkbox.checked).toBeTruthy();
+    case 'true':
+      expect(checkbox.ariaChecked).toEqual('true');
       break;
-    case false:
-      expect(checkbox.checked).toBeFalsy();
+    case 'false':
+      expect(checkbox.ariaChecked).toEqual('false');
       break;
   }
 });
 
 test('Disabled component has default cursor', () => {
   const component = render(<Disabled {...Disabled.args} />);
-  const checkboxAlias = component.getByTestId(
-    'checkbox-alias'
-  ) as HTMLInputElement;
-  expect(checkboxAlias).toHaveClass('cursor-default');
+  const checkbox = component.getByTestId('checkbox') as HTMLSpanElement;
+  expect(checkbox).toHaveClass('cursor-default');
 });
 
 test('Error state component has a red color', () => {
   const component = render(<Error {...Error.args} />);
-  const checkboxAlias = component.getByTestId(
-    'checkbox-alias'
-  ) as HTMLInputElement;
+  const checkbox = component.getByTestId('checkbox') as HTMLSpanElement;
   //NOTE: Class name used for error state is subject to change
   const redColor: string = 'red-500';
-  expect(checkboxAlias).toHaveClass(`bg-${redColor} border-${redColor}`);
+  expect(checkbox).toHaveClass(`bg-${redColor} border-${redColor}`);
 });
