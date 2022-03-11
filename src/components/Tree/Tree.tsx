@@ -288,7 +288,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
         'hover:bg-emerald-600 hover:bg-opacity-20 transition ease-in-out duration-150'
       }
     >
-      <div
+      <span
         className={`flex px-2 focus:outline-none tree-node-focus-visible z-20 border border-opacity-0 ${
           !selected &&
           ` hover:bg-emerald-600 hover:bg-opacity-40 hover:border-amber-400 hover:border-opacity-100`
@@ -328,15 +328,15 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
             }
           </i>
         )}
-        <p
+        <span
           className={`text-white select-none flex transition ease-in-out duration-75 px-1 ml-${
             children ? '1' : '3'
           }${icon ? ' gap-x-2' : ''}`}
         >
           <i className="flex items-center">{node.icon}</i>
           <span>{node.value}</span>
-        </p>
-      </div>
+        </span>
+      </span>
       {children && open && (
         <NodeList
           //Displays left vertical rulers as applicable
