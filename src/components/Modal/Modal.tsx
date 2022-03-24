@@ -19,6 +19,7 @@ export const Modal = forwardRef<HTMLDivElement, Props>(
         <div
           aria-modal
           className={'relative w-auto h-auto overflow-hidden bg-white'}
+          data-testid="dialog"
           onClick={(e) => e.stopPropagation()}
           role="dialog"
           ref={ref}

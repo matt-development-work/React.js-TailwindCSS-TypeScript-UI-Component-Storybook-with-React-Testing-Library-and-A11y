@@ -6,12 +6,13 @@ import * as stories from './Modal.stories';
 
 const { Default } = composeStories(stories);
 
-test('Renders a Backdrop component', () => {
+test('The Modal component renders a dialog element within a Backdrop component.', () => {
   const component = render(<Default {...Default.args} />);
-  const openButton = component.getByTestId('open-dialog') as HTMLButtonElement;
-  fireEvent.click(openButton);
+  const open = component.getByTestId('open-dialog') as HTMLButtonElement;
+  fireEvent.click(open);
   const backdrop = component.getByTestId('backdrop') as HTMLDivElement;
-  expect(backdrop).toBeInTheDocument();
+  const dialog = component.getByTestId('dialog') as HTMLDivElement;
+  expect(backdrop.contains(dialog)).toBeTruthy();
 });
 
 test("When the dialog closes, the user's point of regard is maintained by returning focus to the Open Modal button.", async () => {
