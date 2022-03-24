@@ -33,7 +33,7 @@ const DefaultTemplate: Story<Props> = (args) => {
   return (
     <div>
       <Button
-        data-testid="dialog-open-button"
+        data-testid="open-dialog"
         onClick={() => handleClick()}
         ref={modalButton}
         variant="outlined"
@@ -57,14 +57,14 @@ const DefaultTemplate: Story<Props> = (args) => {
           </div>
           <div className="flex gap-x-2">
             <Button
-              data-testid="dialog-cancel-button"
+              data-testid="dialog-cancel"
               onClick={handleClose}
               variant="outlined"
             >
               Cancel
             </Button>
             <Button
-              data-testid="dialog-submit-button"
+              data-testid="dialog-submit"
               onClick={() => undefined}
               variant="contained"
             >

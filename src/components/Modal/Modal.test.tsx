@@ -7,9 +7,7 @@ const { Default } = composeStories(stories);
 
 test('Renders a Backdrop component', () => {
   const component = render(<Default {...Default.args} />);
-  const openButton = component.getByTestId(
-    'dialog-open-button'
-  ) as HTMLButtonElement;
+  const openButton = component.getByTestId('open-dialog') as HTMLButtonElement;
   fireEvent.click(openButton);
   const backdrop = component.getByTestId('backdrop') as HTMLDivElement;
   expect(backdrop).toBeInTheDocument();
@@ -17,17 +15,13 @@ test('Renders a Backdrop component', () => {
 
 test("When the dialog closes, the user's point of regard is maintained by returning focus to the Open Modal button.", async () => {
   const component = render(<Default {...Default.args} />);
-  const openButton = component.getByTestId(
-    'dialog-open-button'
-  ) as HTMLButtonElement;
-  fireEvent.click(openButton);
-  const cancelButton = component.getByTestId(
-    'dialog-cancel-button'
-  ) as HTMLButtonElement;
-  fireEvent.click(cancelButton);
+  const open = component.getByTestId('open-dialog') as HTMLButtonElement;
+  fireEvent.click(open);
+  const cancel = component.getByTestId('dialog-cancel') as HTMLButtonElement;
+  fireEvent.click(cancel);
   const backdrop = component.getByTestId('backdrop') as HTMLDivElement;
   await waitFor(() => {
     expect(backdrop).not.toBeInTheDocument();
   });
-  expect(document.activeElement === openButton).toBeTruthy();
+  expect(document.activeElement === open).toBeTruthy();
 });
