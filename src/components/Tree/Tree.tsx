@@ -53,9 +53,9 @@ const NodeListContextWrapper: FC<{
   const [selectedNode, setSelectedNode] = useState<TreeNode>({} as TreeNode);
 
   /**
-   * Updates the openNodeIds array of indexes corresponding to the currently-opened nodes when the open state of a node with children is toggled.
+   * Updates the openNodeIds array to correspond with the indexes of the currently-opened node elements when the open state of a node with children is changed.
    * @param {number} id Id of the node being toggled
-   * @param {boolean} open New open state of the node
+   * @param {boolean} open New open state of the toggled node
    * @returns {void}
    */
   const handleSetOpenNodeIds = useCallback(
@@ -78,7 +78,7 @@ const NodeListContextWrapper: FC<{
    * Traverses a tree to find the node with a specified ID.
    * @param {TreeNode} node Root-level data
    * @param {number} id Number to be matched
-   * @returns {TreeNode} Node at specified ID, matching the structure of the root node provided.
+   * @returns {TreeNode} Node at specified ID, matching the structure of the root node provided
    */
   const getNodeAtSpecifiedId = useCallback(
     (node: TreeNode, id: number): TreeNode => {
@@ -122,7 +122,7 @@ const NodeListContextWrapper: FC<{
   };
 
   /**
-   * Generates HTML-derived variables used within the node element focusing methodology.
+   * Returns HTML-derived variables used within the node element focusing methodology.
    * @returns {NodeElementFocusingUtilities}
    */
   const getNodeElementFocusingUtilities =
