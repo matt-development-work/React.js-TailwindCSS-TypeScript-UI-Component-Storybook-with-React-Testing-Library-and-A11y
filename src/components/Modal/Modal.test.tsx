@@ -1,5 +1,6 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { composeStories } from '@storybook/testing-react';
 import * as stories from './Modal.stories';
 
@@ -24,4 +25,20 @@ test("When the dialog closes, the user's point of regard is maintained by return
     expect(backdrop).not.toBeInTheDocument();
   });
   expect(document.activeElement === open).toBeTruthy();
+});
+
+test('The page Tab sequence is contained within the scope of dialog.', () => {
+  const component = render(<Default {...Default.args} />);
+  const open = component.getByTestId('open-dialog') as HTMLButtonElement;
+  fireEvent.click(open);
+  const backdrop = component.getByTestId('backdrop') as HTMLDivElement;
+  const initialFocusedElement = document.activeElement;
+  let iterating = true;
+  while (iterating) {
+    userEvent.keyboard('{Tab}');
+    const focusedElement = document.activeElement;
+    if (!backdrop.contains(focusedElement)) break;
+    if (focusedElement === initialFocusedElement) iterating = false;
+  }
+  expect(iterating).toBeFalsy();
 });
