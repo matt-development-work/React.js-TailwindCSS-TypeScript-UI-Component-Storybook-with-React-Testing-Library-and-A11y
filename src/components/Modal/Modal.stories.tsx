@@ -1,10 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Meta, Story } from '@storybook/react';
 import { Modal, Props } from './Modal';
-import Backdrop from '../Backdrop';
 import Button from '../Button';
 import Checkbox from '../Checkbox';
-import './modal-stories.css';
 
 const meta: Meta = {
   title: 'Modal',
@@ -80,30 +78,3 @@ const DefaultTemplate: Story<Props> = (args) => {
 };
 
 export const Default = DefaultTemplate.bind({});
-
-const LoadingSpinnerTemplate: Story = () => {
-  const [open, setOpen] = useState(false);
-  const handleClick: () => void = () => {
-    setOpen(true);
-    setTimeout((): void => {
-      setOpen(false);
-    }, 2500);
-  };
-
-  return (
-    <div>
-      <Button
-        variant="outlined"
-        data-testid="launch-spinner-button"
-        onClick={() => handleClick()}
-      >
-        Launch Spinner
-      </Button>
-      <Backdrop displayOnly open={open} transitionDuration={700}>
-        <div className="loading-spinner"></div>
-      </Backdrop>
-    </div>
-  );
-};
-
-export const LoadingSpinner = LoadingSpinnerTemplate.bind({});
