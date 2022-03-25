@@ -1,8 +1,8 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import { composeStories } from '@storybook/testing-react';
 import * as stories from './Modal.stories';
 
