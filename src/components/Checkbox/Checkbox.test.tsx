@@ -3,6 +3,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { composeStories } from '@storybook/testing-react';
 import * as stories from './Checkbox.stories';
 import { Checkbox } from './Checkbox';
+import userEvent from '@testing-library/user-event';
 
 const { Default, Disabled, Error } = composeStories(stories);
 
@@ -45,6 +46,25 @@ test('When partially checked, the checkbox element has state aria-checked set to
   );
   const checkbox = component.getByTestId('checkbox') as HTMLSpanElement;
   expect(checkbox.getAttribute('aria-checked')).toEqual('mixed');
+});
+
+test('Space key press toggles checkbox between checked and unchecked states.', () => {
+  const Wrapper = () => {
+    const [checked, setChecked] = useState<boolean>(false);
+    Default.args = {
+      ...Default.args,
+      checked: checked,
+      onChange: (): void => {
+        setChecked(!checked);
+      },
+    };
+    return <Default {...Default.args} />;
+  };
+  const component = render(<Wrapper />);
+  const checkbox = component.getByTestId('checkbox') as HTMLSpanElement;
+  checkbox.focus();
+  userEvent.keyboard('{Space}');
+  expect(checkbox.getAttribute('aria-checked')).toEqual('true');
 });
 
 test('Checked value changes when component onChange method is invoked', () => {
