@@ -59,7 +59,7 @@ export const Backdrop = forwardRef<HTMLDivElement, Props>(
         (transitionDuration > 0
           ? setTimeout((): void => {
               setOpacity(openedStateOpacity);
-            }, 0)
+            }, 1)
           : setOpacity(openedStateOpacity));
     }, [backdropIsRenderable]);
 
