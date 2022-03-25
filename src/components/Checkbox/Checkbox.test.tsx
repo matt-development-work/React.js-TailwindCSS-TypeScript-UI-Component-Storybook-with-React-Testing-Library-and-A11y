@@ -19,7 +19,7 @@ test('Checked value changes when component onChange method is invoked', () => {
   };
   const component = render(<Wrapper />);
   const checkbox = component.getByTestId('checkbox') as HTMLSpanElement;
-  const checkboxComponentCheckedState: string = checkbox.ariaChecked;
+  const checkboxComponentCheckedState: string = checkbox.ariaChecked as string;
   fireEvent.change(checkbox);
   switch (checkboxComponentCheckedState) {
     case 'true':
@@ -34,7 +34,7 @@ test('Checked value changes when component onChange method is invoked', () => {
 test('Disabled component checked value does not change', () => {
   const component = render(<Disabled {...Disabled.args} />);
   const checkbox = component.getByTestId('checkbox') as HTMLSpanElement;
-  const checkboxComponentCheckedState: string = checkbox.ariaChecked;
+  const checkboxComponentCheckedState: string = checkbox.ariaChecked as string;
   fireEvent.change(checkbox);
   switch (checkboxComponentCheckedState) {
     case 'true':
