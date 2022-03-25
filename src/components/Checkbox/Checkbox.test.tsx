@@ -48,7 +48,7 @@ test('When partially checked, the checkbox element has state aria-checked set to
   expect(checkbox.getAttribute('aria-checked')).toEqual('mixed');
 });
 
-test('Space key press toggles checkbox between checked and unchecked states.', () => {
+test('Space key press changes the checkbox checked state.', () => {
   const Wrapper = () => {
     const [checked, setChecked] = useState<boolean>(false);
     Default.args = {
@@ -67,7 +67,7 @@ test('Space key press toggles checkbox between checked and unchecked states.', (
   expect(checkbox.getAttribute('aria-checked')).toEqual('true');
 });
 
-test('Checked value changes when component onChange method is invoked', () => {
+test('Click event changes the checkbox checked state.', () => {
   const Wrapper = () => {
     const [checked, setChecked] = useState<boolean>(false);
     Default.args = {
@@ -81,31 +81,27 @@ test('Checked value changes when component onChange method is invoked', () => {
   };
   const component = render(<Wrapper />);
   const checkbox = component.getByTestId('checkbox') as HTMLSpanElement;
-  const checkboxComponentCheckedState: string = checkbox.ariaChecked as string;
-  fireEvent.change(checkbox);
-  switch (checkboxComponentCheckedState) {
-    case 'true':
-      expect(checkbox.ariaChecked).toEqual('false');
-      break;
-    case 'false':
-      expect(checkbox.ariaChecked).toEqual('true');
-      break;
-  }
+  fireEvent.click(checkbox);
+  expect(checkbox.getAttribute('aria-checked')).toEqual('true');
 });
 
-test('Disabled component checked value does not change', () => {
-  const component = render(<Disabled {...Disabled.args} />);
+test('Click event does not change the checked state of a checkbox with a disabled prop set to true.', () => {
+  const Wrapper = () => {
+    const [checked, setChecked] = useState<boolean>(false);
+    Default.args = {
+      ...Default.args,
+      checked: checked,
+      disabled: true,
+      onChange: (): void => {
+        setChecked(!checked);
+      },
+    };
+    return <Default {...Default.args} />;
+  };
+  const component = render(<Wrapper />);
   const checkbox = component.getByTestId('checkbox') as HTMLSpanElement;
-  const checkboxComponentCheckedState: string = checkbox.ariaChecked as string;
-  fireEvent.change(checkbox);
-  switch (checkboxComponentCheckedState) {
-    case 'true':
-      expect(checkbox.ariaChecked).toEqual('true');
-      break;
-    case 'false':
-      expect(checkbox.ariaChecked).toEqual('false');
-      break;
-  }
+  fireEvent.click(checkbox);
+  expect(checkbox.getAttribute('aria-checked')).toEqual('false');
 });
 
 test('Disabled component has default cursor', () => {
