@@ -146,18 +146,18 @@ const NodeListContextWrapper: FC<{
    */
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>): void => {
-      const { code } = e;
-      if (['Enter', 'Space'].includes(code)) {
+      const { key } = e;
+      if (['Enter', 'Space'].includes(key)) {
         const navigatedNode = getNodeAtSpecifiedId(data, focusedNodeId);
         focusedNodeId === selectedNode.id
           ? confirmSelection(navigatedNode)
           : setSelectedNode(navigatedNode);
-      } else if (['ArrowUp', 'ArrowDown', 'Tab'].includes(code)) {
+      } else if (['ArrowUp', 'ArrowDown', 'Tab'].includes(key)) {
         const { focusableNodeElements, focusableNodeElementsIds } =
           getNodeElementFocusingUtilities();
         let selectedIndex: number =
           focusableNodeElementsIds.indexOf(focusedNodeId) ?? 1;
-        switch (code) {
+        switch (key) {
           case 'ArrowUp':
             selectedIndex -= 1;
             break;
@@ -174,7 +174,7 @@ const NodeListContextWrapper: FC<{
         (i.e. if attempting to navigate upwards from a currently-selected first element,
         or if attempting to navigate downwards from a currently-selected last element.) */
         if (!newfocusedNodeId) return;
-        ['ArrowUp', 'ArrowDown'].includes(code) &&
+        ['ArrowUp', 'ArrowDown'].includes(key) &&
           (focusableNodeElements[selectedIndex] as HTMLElement).focus();
         setFocusedNodeId(newfocusedNodeId);
       }
