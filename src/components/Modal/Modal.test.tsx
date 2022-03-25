@@ -1,10 +1,11 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { configure } from 'enzyme';
+import { configure, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { composeStories } from '@storybook/testing-react';
 import * as stories from './Modal.stories';
+import { Modal } from './Modal';
 
 configure({ adapter: new Adapter() });
 
@@ -49,7 +50,16 @@ test('The page Tab sequence is contained within the scope of dialog.', () => {
 });
 
 test('The default Modal component renders with no transitionDuration prop.', () => {
-  expect(Default.args?.transitionDuration).toBeUndefined();
+  const component = mount(
+    <Modal
+      children={undefined}
+      onClose={() => {
+        return;
+      }}
+      open={false}
+    />
+  );
+  expect(component.props().transitionDuration).toBeUndefined();
 });
 
 test('The default Modal component opens with a transition duration of less than 500 milliseconds.', async () => {
