@@ -90,8 +90,8 @@ test('The default Modal component closes with a transition duration of less than
   fireEvent.click(open);
   const cancel = component.getByTestId('dialog-cancel') as HTMLButtonElement;
   const startTime: number = new Date().getUTCMilliseconds();
-  fireEvent.click(cancel);
   const backdrop = component.getByTestId('backdrop') as HTMLDivElement;
+  fireEvent.click(cancel);
   await waitFor(() => {
     expect(backdrop).not.toBeInTheDocument();
   });
