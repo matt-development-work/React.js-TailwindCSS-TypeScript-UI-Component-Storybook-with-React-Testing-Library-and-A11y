@@ -9,7 +9,7 @@ type Icon = {
   className: string | undefined;
 };
 
-export interface Props extends HTMLAttributes<HTMLInputElement> {
+export interface Props extends HTMLAttributes<HTMLSpanElement> {
   checked?: boolean;
   disabled?: boolean;
   error?: boolean;
