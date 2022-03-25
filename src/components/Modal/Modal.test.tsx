@@ -30,7 +30,16 @@ test("When the dialog closes, the user's point of regard is maintained by return
   await waitFor(() => {
     expect(backdrop).not.toBeInTheDocument();
   });
-  expect(document.activeElement === open).toBeTruthy();
+  expect(open).toHaveFocus();
+});
+
+test('Initial focus is set on the first input, which is the first focusable element.', () => {
+  const component = render(<Default {...Default.args} />);
+  const open = component.getByTestId('open-dialog') as HTMLButtonElement;
+  fireEvent.click(open);
+  const backdrop = component.getByTestId('backdrop') as HTMLDivElement;
+  const firstFocusableElement = backdrop.querySelector('[tabindex = "0"]');
+  expect(firstFocusableElement).toHaveFocus();
 });
 
 test('The page Tab sequence is contained within the scope of dialog.', () => {
