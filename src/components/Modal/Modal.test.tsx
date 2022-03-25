@@ -65,13 +65,13 @@ test('The default Modal component renders with no transitionDuration prop.', () 
 test('The default Modal component opens with a transition duration of less than 500 milliseconds.', async () => {
   const component = render(<Default {...Default.args} />);
   const open = component.getByTestId('open-dialog') as HTMLButtonElement;
-  const startTime: number = new Date().getTime();
+  const startTime: number = new Date().getUTCMilliseconds();
   fireEvent.click(open);
   const backdrop = component.getByTestId('backdrop') as HTMLDivElement;
   await waitFor(() => {
     expect(backdrop).toBeInTheDocument();
   });
-  const endTime: number = new Date().getTime();
+  const endTime: number = new Date().getUTCMilliseconds();
   expect(endTime - startTime).toBeLessThan(500);
 });
 
@@ -80,12 +80,12 @@ test('The default Modal component closes with a transition duration of less than
   const open = component.getByTestId('open-dialog') as HTMLButtonElement;
   fireEvent.click(open);
   const cancel = component.getByTestId('dialog-cancel') as HTMLButtonElement;
-  const startTime: number = new Date().getTime();
+  const startTime: number = new Date().getUTCMilliseconds();
   fireEvent.click(cancel);
   const backdrop = component.getByTestId('backdrop') as HTMLDivElement;
   await waitFor(() => {
     expect(backdrop).not.toBeInTheDocument();
   });
-  const endTime: number = new Date().getTime();
+  const endTime: number = new Date().getUTCMilliseconds();
   expect(endTime - startTime).toBeLessThan(500);
 });
