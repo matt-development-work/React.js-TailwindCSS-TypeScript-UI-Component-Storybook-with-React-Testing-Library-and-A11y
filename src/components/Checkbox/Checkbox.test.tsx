@@ -2,8 +2,50 @@ import React, { useState } from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { composeStories } from '@storybook/testing-react';
 import * as stories from './Checkbox.stories';
+import { Checkbox } from './Checkbox';
 
 const { Default, Disabled, Error } = composeStories(stories);
+
+test('When checked, the checkbox element has state aria-checked set to true.', () => {
+  const component = render(
+    <Checkbox
+      checked
+      label=""
+      onChange={() => {
+        return;
+      }}
+    />
+  );
+  const checkbox = component.getByTestId('checkbox') as HTMLSpanElement;
+  expect(checkbox.getAttribute('aria-checked')).toEqual('true');
+});
+
+test('When not checked, the checkbox element has state aria-checked set to false.', () => {
+  const component = render(
+    <Checkbox
+      label=""
+      onChange={() => {
+        return;
+      }}
+    />
+  );
+  const checkbox = component.getByTestId('checkbox') as HTMLSpanElement;
+  expect(checkbox.getAttribute('aria-checked')).toEqual('false');
+});
+
+test('When partially checked, the checkbox element has state aria-checked set to mixed.', () => {
+  const component = render(
+    <Checkbox
+      indeterminate
+      label=""
+      onChange={() => {
+        return;
+      }}
+    />
+  );
+  const checkbox = component.getByTestId('checkbox') as HTMLSpanElement;
+  expect(checkbox.getAttribute('aria-checked')).toEqual('mixed');
+});
 
 test('Checked value changes when component onChange method is invoked', () => {
   const Wrapper = () => {
@@ -55,7 +97,7 @@ test('Disabled component has default cursor', () => {
 test('Error state component has a red color', () => {
   const component = render(<Error {...Error.args} />);
   const checkbox = component.getByTestId('checkbox') as HTMLSpanElement;
-  //NOTE: Class name used for error state is subject to change
+  //NOTE: Class name used for error state may change
   const redColor: string = 'red-500';
   expect(checkbox).toHaveClass(`bg-${redColor} border-${redColor}`);
 });
