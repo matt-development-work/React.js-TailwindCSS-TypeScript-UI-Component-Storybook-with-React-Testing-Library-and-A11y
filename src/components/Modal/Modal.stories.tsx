@@ -3,6 +3,7 @@ import { Meta, Story } from '@storybook/react';
 import { Modal, Props } from './Modal';
 import Button from '../Button';
 import Checkbox from '../Checkbox';
+import Backdrop from '../Backdrop';
 
 const meta: Meta = {
   title: 'Modal',
@@ -84,3 +85,30 @@ export const Transition = Template.bind({});
 Transition.args = {
   transitionDuration: 500,
 };
+
+const LoadingSpinnerTemplate: Story = () => {
+  const [open, setOpen] = useState(false);
+  const handleClick: () => void = () => {
+    setOpen(true);
+    setTimeout((): void => {
+      setOpen(false);
+    }, 2500);
+  };
+
+  return (
+    <div>
+      <Button
+        variant="outlined"
+        data-testid="launch-spinner-button"
+        onClick={() => handleClick()}
+      >
+        Launch Spinner
+      </Button>
+      <Backdrop displayOnly open={open} transitionDuration={700}>
+        <div className="loading-spinner"></div>
+      </Backdrop>
+    </div>
+  );
+};
+
+export const LoadingSpinner = LoadingSpinnerTemplate.bind({});
