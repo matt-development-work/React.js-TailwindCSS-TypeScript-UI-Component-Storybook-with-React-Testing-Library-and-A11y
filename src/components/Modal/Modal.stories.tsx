@@ -15,7 +15,7 @@ const meta: Meta = {
 
 export default meta;
 
-const DefaultTemplate: Story<Props> = (args) => {
+const Template: Story<Props> = (args) => {
   const modalButton = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
   const handleClose = (): void => {
@@ -77,4 +77,10 @@ const DefaultTemplate: Story<Props> = (args) => {
   );
 };
 
-export const Default = DefaultTemplate.bind({});
+export const Default = Template.bind({});
+
+export const Transition = Template.bind({});
+
+Transition.args = {
+  transitionDuration: 500,
+};

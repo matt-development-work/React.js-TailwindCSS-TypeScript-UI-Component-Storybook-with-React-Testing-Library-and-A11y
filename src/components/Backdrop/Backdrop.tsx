@@ -13,7 +13,7 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   onClose?: () => void;
   open: boolean;
-  transitionDuration?: 75 | 100 | 150 | 200 | 300 | 500 | 700 | 1000;
+  transitionDuration?: 0 | 75 | 100 | 150 | 200 | 300 | 500 | 700 | 1000;
   /* If true, the component is non-interactable with mouse/keyboard input. */
   displayOnly?: boolean;
 }
@@ -24,13 +24,16 @@ export const Backdrop = forwardRef<HTMLDivElement, Props>(
       children,
       open,
       onClose,
-      transitionDuration = 500,
+      transitionDuration = 0,
       displayOnly = false,
       ...props
     },
     ref
   ) => {
-    const [opacity, setOpacity] = useState<0 | 80>(0);
+    /* TODO: Add opacity as a prop. */
+    const openedStateOpacity: number = 80;
+
+    const [opacity, setOpacity] = useState<number>(0);
 
     const [backdropIsRenderable, setBackdropIsRenderable] = useState<boolean>();
 
@@ -53,9 +56,11 @@ export const Backdrop = forwardRef<HTMLDivElement, Props>(
 
     useEffect(() => {
       backdropIsRenderable &&
-        setTimeout((): void => {
-          setOpacity(80);
-        }, 1);
+        (transitionDuration > 0
+          ? setTimeout((): void => {
+              setOpacity(openedStateOpacity);
+            }, 0)
+          : setOpacity(openedStateOpacity));
     }, [backdropIsRenderable]);
 
     useEffect(() => {

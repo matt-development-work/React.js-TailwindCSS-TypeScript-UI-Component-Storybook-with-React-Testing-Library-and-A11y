@@ -5,11 +5,11 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   onClose: () => void;
   open: boolean;
-  transitionDuration?: 75 | 100 | 150 | 200 | 300 | 500 | 700 | 1000;
+  transitionDuration?: 0 | 75 | 100 | 150 | 200 | 300 | 500 | 700 | 1000;
 }
 
 export const Modal = forwardRef<HTMLDivElement, Props>(
-  ({ children, onClose, open, transitionDuration, ...props }, ref) => {
+  ({ children, onClose, open, transitionDuration = 0, ...props }, ref) => {
     return (
       <Backdrop
         onClose={onClose}
