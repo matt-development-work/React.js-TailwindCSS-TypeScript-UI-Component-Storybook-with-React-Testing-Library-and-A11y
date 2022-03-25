@@ -1,4 +1,4 @@
-import React, { forwardRef, HTMLAttributes } from 'react';
+import React, { forwardRef, HTMLAttributes, useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
@@ -52,6 +52,10 @@ export const Checkbox = forwardRef<HTMLSpanElement, Props>(
       }
     };
 
+    const ariaChecked = useMemo<any>(() => {
+      return !indeterminate ? (checked ? 'true' : 'false') : 'mixed';
+    }, [checked, indeterminate]);
+
     return (
       <label className="select-none flex" id={labelID} onClick={handleChange}>
         <span
@@ -67,7 +71,7 @@ export const Checkbox = forwardRef<HTMLSpanElement, Props>(
           data-testid="checkbox"
           onChange={handleChange}
           onKeyDown={(e) => handleKeyDown(e.key)}
-          aria-checked={checked}
+          aria-checked={ariaChecked}
           aria-labelledby={labelID}
           ref={ref}
           role="checkbox"
