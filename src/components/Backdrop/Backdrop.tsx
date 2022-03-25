@@ -66,7 +66,7 @@ export const Backdrop = forwardRef<HTMLDivElement, Props>(
     useEffect(() => {
       !displayOnly &&
         document.addEventListener('keydown', (e) => {
-          e.code === 'Escape' && handleClose();
+          e.key === 'Escape' && handleClose();
         });
     }, [displayOnly]);
 
