@@ -33,6 +33,17 @@ test("When the dialog closes, the user's point of regard is maintained by return
   expect(open).toHaveFocus();
 });
 
+test('Escape key press unmounts the Modal component.', async () => {
+  const component = render(<Default {...Default.args} />);
+  const open = component.getByTestId('open-dialog') as HTMLButtonElement;
+  fireEvent.click(open);
+  const backdrop = component.getByTestId('backdrop') as HTMLDivElement;
+  userEvent.keyboard('{Escape}');
+  await waitFor(() => {
+    expect(backdrop).not.toBeInTheDocument();
+  });
+});
+
 test('Initial focus is set on the first input, which is the first focusable element.', () => {
   const component = render(<Default {...Default.args} />);
   const open = component.getByTestId('open-dialog') as HTMLButtonElement;
