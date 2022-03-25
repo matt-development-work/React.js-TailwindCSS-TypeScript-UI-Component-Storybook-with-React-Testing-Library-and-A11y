@@ -117,3 +117,19 @@ test('Error state component has a red color', () => {
   const redColor: string = 'red-500';
   expect(checkbox).toHaveClass(`bg-${redColor} border-${redColor}`);
 });
+
+test('Checkbox element has a parent HTML label element.', () => {
+  const component = render(<Default {...Default.args} />);
+  const checkbox = component.getByTestId('checkbox') as HTMLSpanElement;
+  const label = checkbox.parentNode as HTMLLabelElement;
+  expect(label.nodeName).toEqual('LABEL');
+});
+
+test("Checkbox element has an aria-labelledby attribute equal to its parent HTML label element's id attribute.", () => {
+  const component = render(<Default {...Default.args} />);
+  const checkbox = component.getByTestId('checkbox') as HTMLSpanElement;
+  const label = checkbox.parentNode as HTMLLabelElement;
+  expect(checkbox.getAttribute('aria-labelledby')).toEqual(
+    label.getAttribute('id')
+  );
+});
