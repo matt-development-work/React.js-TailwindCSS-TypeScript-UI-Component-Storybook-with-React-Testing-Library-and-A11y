@@ -18,42 +18,44 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<Props> = (args) => {
-  return <Button {...args}>Button</Button>;
+  return <Button {...args} />;
 };
 
 export const Text = Template.bind({});
 
 Text.args = {
+  children: 'Text',
   variant: 'text',
 };
 
 export const Contained = Template.bind({});
 
 Contained.args = {
+  children: 'Contained',
   variant: 'contained',
 };
 
 export const Outlined = Template.bind({});
 
 Outlined.args = {
+  children: 'Outlined',
   variant: 'outlined',
 };
 
 const IconTemplate: Story<Props> = (args) => {
-  return (
-    <Button {...args}>
-      <FontAwesomeIcon
-        className="text-white"
-        icon={faArrowDown as IconProp}
-        size="sm"
-      />
-    </Button>
-  );
+  return <Button {...args}></Button>;
 };
 
 export const Icon = IconTemplate.bind({});
 
 Icon.args = {
-  variant: 'contained',
+  children: (
+    <FontAwesomeIcon
+      className="text-white"
+      icon={faArrowDown as IconProp}
+      size="sm"
+    />
+  ),
   round: true,
+  variant: 'contained',
 };
