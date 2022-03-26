@@ -142,7 +142,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
           ),
           children: [
             {
-              value: 'Chip',
+              value: 'Carousel',
               icon: (
                 <FontAwesomeIcon
                   icon={folderIcon}
@@ -152,7 +152,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
               ),
               children: [
                 {
-                  value: 'chip.css',
+                  value: 'carousel.css',
                   icon: (
                     <FontAwesomeIcon
                       icon={cssIcon}
@@ -162,7 +162,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   ),
                 },
                 {
-                  value: 'Chip.stories.tsx',
+                  value: 'Carousel.stories.tsx',
                   icon: (
                     <FontAwesomeIcon
                       icon={fileCodeIcon}
@@ -172,7 +172,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   ),
                 },
                 {
-                  value: 'Chip.test.tsx',
+                  value: 'Carousel.test.tsx',
                   icon: (
                     <FontAwesomeIcon
                       icon={flaskIcon}
@@ -182,7 +182,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   ),
                 },
                 {
-                  value: 'Chip.tsx',
+                  value: 'Carousel.tsx',
                   icon: (
                     <FontAwesomeIcon
                       icon={fileCodeIcon}
@@ -204,7 +204,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
               ],
             },
             {
-              value: 'Drawer',
+              value: 'Listbox',
               icon: (
                 <FontAwesomeIcon
                   icon={folderIcon}
@@ -214,7 +214,17 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
               ),
               children: [
                 {
-                  value: 'drawer.css',
+                  value: 'index.ts',
+                  icon: (
+                    <FontAwesomeIcon
+                      icon={fileCodeIcon}
+                      className={'text-blue-300'}
+                      size="sm"
+                    />
+                  ),
+                },
+                {
+                  value: 'listbox.css',
                   icon: (
                     <FontAwesomeIcon
                       icon={cssIcon}
@@ -224,7 +234,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   ),
                 },
                 {
-                  value: 'Drawer.stories.tsx',
+                  value: 'Listbox.stories.tsx',
                   icon: (
                     <FontAwesomeIcon
                       icon={fileCodeIcon}
@@ -234,7 +244,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   ),
                 },
                 {
-                  value: 'Drawer.test.tsx',
+                  value: 'Listbox.test.tsx',
                   icon: (
                     <FontAwesomeIcon
                       icon={flaskIcon}
@@ -244,22 +254,11 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   ),
                 },
                 {
-                  value: 'Drawer.tsx',
+                  value: 'Listbox.tsx',
                   icon: (
                     <FontAwesomeIcon
                       icon={fileCodeIcon}
                       className={'text-blue-200'}
-                      size="sm"
-                    />
-                  ),
-                },
-
-                {
-                  value: 'index.ts',
-                  icon: (
-                    <FontAwesomeIcon
-                      icon={fileCodeIcon}
-                      className={'text-blue-300'}
                       size="sm"
                     />
                   ),
@@ -329,7 +328,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
               ],
             },
             {
-              value: 'TextField',
+              value: 'Treegrid',
               icon: (
                 <FontAwesomeIcon
                   icon={folderIcon}
@@ -349,7 +348,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   ),
                 },
                 {
-                  value: 'textfield.css',
+                  value: 'treegrid.css',
                   icon: (
                     <FontAwesomeIcon
                       icon={cssIcon}
@@ -359,7 +358,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   ),
                 },
                 {
-                  value: 'TextField.stories.tsx',
+                  value: 'Treegrid.stories.tsx',
                   icon: (
                     <FontAwesomeIcon
                       icon={fileCodeIcon}
@@ -369,7 +368,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   ),
                 },
                 {
-                  value: 'TextField.test.tsx',
+                  value: 'Treegrid.test.tsx',
                   icon: (
                     <FontAwesomeIcon
                       icon={flaskIcon}
@@ -379,7 +378,7 @@ let customTreeNodeData: PreIndexedTreeNode | TreeNode = {
                   ),
                 },
                 {
-                  value: 'TextField.tsx',
+                  value: 'Treegrid.tsx',
                   icon: (
                     <FontAwesomeIcon
                       icon={fileCodeIcon}
