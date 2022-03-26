@@ -103,14 +103,17 @@ const NodeListContextWrapper: FC<{
   /**
    * Handles node element selection on click or keyDown of "Space" or "Enter" keys.
    * @param {TreeNode} node Element to be selected
+   * @param {boolean} canToggle Specifies if the open state of the new selected node changes upon being focused
    * @returns {void}
    */
   const confirmSelection = useCallback(
-    (node: TreeNode = {} as TreeNode): void => {
+    (node: TreeNode = {} as TreeNode, canToggle = true): void => {
       const { id } = node;
       setSelectedNode(node);
       setFocusedNodeId(id);
-      'children' in node && handleSetOpenNodeIds(id, openNodeIds.includes(id));
+      canToggle &&
+        'children' in node &&
+        handleSetOpenNodeIds(id, openNodeIds.includes(id));
     },
     [openNodeIds]
   );
@@ -147,6 +150,64 @@ const NodeListContextWrapper: FC<{
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>): void => {
       const { key } = e;
+      if (['ArrowLeft', 'ArrowRight'].includes(key)) {
+        const focusedNode: TreeNode = getNodeAtSpecifiedId(data, focusedNodeId);
+        const { id } = focusedNode;
+        const open: boolean = openNodeIds.includes(id);
+        /* LeftArrow: 
+            When focus is on an open node, closes the node.
+            When focus is on a child node, moves focus to its parent node.
+          */
+        if (key === 'ArrowLeft') {
+          if (open) {
+            confirmSelection(focusedNode);
+            return;
+          }
+          const {
+            activeElement,
+            focusableNodeElements,
+            focusableNodeElementsIds,
+          } = getNodeElementFocusingUtilities();
+          for (let i = focusableNodeElementsIds.indexOf(id) - 1; i > 0; i--) {
+            if (
+              focusableNodeElements[i].parentElement?.contains(
+                activeElement?.parentElement as HTMLLIElement
+              )
+            ) {
+              const parentID: number = parseInt(
+                (
+                  focusableNodeElements[i].parentElement
+                    ?.firstChild as HTMLSpanElement
+                ).id
+              );
+              const parentNode: TreeNode = getNodeAtSpecifiedId(data, parentID);
+              confirmSelection(parentNode, false);
+              (focusableNodeElements[i] as HTMLElement).focus();
+              return;
+            }
+          }
+        }
+        /* RightArrow: 
+            When focus is on a closed node, opens the node; focus does not move.
+            When focus is on a open node, moves focus to the first child node.
+          */
+        if (key === 'ArrowRight' && 'children' in focusedNode) {
+          if (!open) {
+            confirmSelection(focusedNode);
+          } else {
+            const { focusableNodeElements, focusableNodeElementsIds } =
+              getNodeElementFocusingUtilities();
+            let selectedIndex: number =
+              focusableNodeElementsIds.indexOf(focusedNodeId);
+            const nextFocusableNode: TreeNode = getNodeAtSpecifiedId(
+              focusedNode,
+              focusableNodeElementsIds[selectedIndex + 1]
+            );
+            confirmSelection(nextFocusableNode, false);
+            (focusableNodeElements[selectedIndex + 1] as HTMLElement).focus();
+          }
+        }
+      }
       if (['Enter', 'Space'].includes(key)) {
         const navigatedNode: TreeNode = getNodeAtSpecifiedId(
           data,
