@@ -148,7 +148,10 @@ const NodeListContextWrapper: FC<{
     (e: KeyboardEvent<HTMLDivElement>): void => {
       const { key } = e;
       if (['Enter', 'Space'].includes(key)) {
-        const navigatedNode = getNodeAtSpecifiedId(data, focusedNodeId);
+        const navigatedNode: TreeNode = getNodeAtSpecifiedId(
+          data,
+          focusedNodeId
+        );
         focusedNodeId === selectedNode.id
           ? confirmSelection(navigatedNode)
           : setSelectedNode(navigatedNode);
