@@ -72,6 +72,7 @@ export const Checkbox = forwardRef<HTMLSpanElement, Props>(
           onChange={handleChange}
           onKeyDown={(e) => handleKeyDown(e.key)}
           aria-checked={ariaChecked}
+          aria-invalid={error}
           aria-labelledby={labelID}
           ref={ref}
           role="checkbox"
