@@ -104,6 +104,33 @@ test('Click event does not change the checked state of a checkbox with a disable
   expect(checkbox.getAttribute('aria-checked')).toEqual('false');
 });
 
+test('Checkbox element aria-disabled attribute corresponds to the value of the disabled prop when set to true.', () => {
+  const component = render(
+    <Checkbox
+      disabled
+      label=""
+      onChange={() => {
+        return;
+      }}
+    />
+  );
+  const checkbox = component.getByTestId('checkbox') as HTMLSpanElement;
+  expect(checkbox.getAttribute('aria-disabled')).toEqual('true');
+});
+
+test('Checkbox element aria-disabled attribute corresponds to the value of the disabled prop when set to false.', () => {
+  const component = render(
+    <Checkbox
+      label=""
+      onChange={() => {
+        return;
+      }}
+    />
+  );
+  const checkbox = component.getByTestId('checkbox') as HTMLSpanElement;
+  expect(checkbox.getAttribute('aria-disabled')).toEqual('false');
+});
+
 test('Checkbox element aria-invalid attribute corresponds to the value of the error prop when set to true.', () => {
   const component = render(
     <Checkbox
