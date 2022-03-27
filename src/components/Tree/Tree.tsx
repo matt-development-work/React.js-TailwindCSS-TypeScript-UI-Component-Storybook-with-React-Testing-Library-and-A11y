@@ -4,6 +4,7 @@ import React, {
   Dispatch,
   FC,
   KeyboardEvent,
+  MouseEvent,
   ReactNode,
   SetStateAction,
   useCallback,
@@ -18,23 +19,23 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import './tree.css';
 
 type ContextProps = {
-  confirmSelection: (node: TreeNode) => void;
+  confirmSelection: (node: TreeNode, canFocus?: boolean) => void;
   containerIsFocused: boolean;
   data: TreeNode;
   focusedNodeId: number;
-  handleContainerFocusing: () => void;
+  getNodeAtSpecifiedId: (node: TreeNode, id: number) => TreeNode;
   handleKeyDown: (e: KeyboardEvent<HTMLDivElement>) => void;
   handleSetOpenNodeIds: (id: number, open: boolean) => void;
   mouseEntered: boolean;
   openNodeIds: number[];
   rootListElement: HTMLElement | null;
-  selectedNode: TreeNode;
+  focusedNode: TreeNode;
   setContainerFocusedState: Dispatch<SetStateAction<boolean>>;
   setData: Dispatch<SetStateAction<TreeNode>>;
   setFocusedNodeId: Dispatch<SetStateAction<number>>;
   setMouseEntered: Dispatch<SetStateAction<boolean>>;
   setRootListElement: Dispatch<SetStateAction<HTMLElement | null>>;
-  setSelectedNode: Dispatch<SetStateAction<TreeNode>>;
+  setFocusedNode: Dispatch<SetStateAction<TreeNode>>;
 };
 
 const NodeListContext = createContext<ContextProps>({} as ContextProps);
@@ -50,7 +51,7 @@ const NodeListContextWrapper: FC<{
   const [openNodeIds, setOpenNodeIds] = useState<number[]>([]);
   const [rootListElement, setRootListElement] =
     useState<HTMLElement | null>(null);
-  const [selectedNode, setSelectedNode] = useState<TreeNode>({} as TreeNode);
+  const [focusedNode, setFocusedNode] = useState<TreeNode>({} as TreeNode);
 
   /**
    * Updates the openNodeIds array to correspond with the indexes of the currently-opened node elements when the open state of a node with children is changed.
@@ -102,15 +103,14 @@ const NodeListContextWrapper: FC<{
 
   /**
    * Handles node element selection on click or keyDown of "Space" or "Enter" keys.
-   * @param {TreeNode} node Element to be selected
+   * @param {TreeNode} node React component to be selected
    * @param {boolean} canToggle Specifies if the open state of the new selected node changes upon being focused
    * @returns {void}
    */
   const confirmSelection = useCallback(
     (node: TreeNode = {} as TreeNode, canToggle = true): void => {
       const { id } = node;
-      setSelectedNode(node);
-      setFocusedNodeId(id);
+      setFocusedNode(node);
       canToggle &&
         'children' in node &&
         handleSetOpenNodeIds(id, openNodeIds.includes(id));
@@ -131,7 +131,7 @@ const NodeListContextWrapper: FC<{
   const getNodeElementFocusingUtilities =
     useCallback((): NodeElementFocusingUtilities => {
       const focusableNodeElements: NodeListOf<Element> | [] =
-        rootListElement?.querySelectorAll('div, [tabindex="0"]') ?? [];
+        rootListElement?.querySelectorAll('li') ?? [];
       return {
         activeElement: document.activeElement,
         focusableNodeElements: focusableNodeElements,
@@ -151,7 +151,6 @@ const NodeListContextWrapper: FC<{
     (e: KeyboardEvent<HTMLDivElement>): void => {
       const { key } = e;
       if (['ArrowLeft', 'ArrowRight'].includes(key)) {
-        const focusedNode: TreeNode = getNodeAtSpecifiedId(data, focusedNodeId);
         const { id } = focusedNode;
         const open: boolean = openNodeIds.includes(id);
         /* LeftArrow: 
@@ -168,21 +167,13 @@ const NodeListContextWrapper: FC<{
             focusableNodeElements,
             focusableNodeElementsIds,
           } = getNodeElementFocusingUtilities();
-          for (let i = focusableNodeElementsIds.indexOf(id) - 1; i > 0; i--) {
+          for (let i = focusableNodeElementsIds.indexOf(id) - 1; i > -1; i--) {
             if (
-              focusableNodeElements[i].parentElement?.contains(
-                activeElement?.parentElement as HTMLLIElement
-              )
+              focusableNodeElements[i]?.contains(activeElement as HTMLLIElement)
             ) {
-              const parentID: number = parseInt(
-                (
-                  focusableNodeElements[i].parentElement
-                    ?.firstChild as HTMLSpanElement
-                ).id
-              );
+              const parentID: number = parseInt(focusableNodeElements[i].id);
               const parentNode: TreeNode = getNodeAtSpecifiedId(data, parentID);
               confirmSelection(parentNode, false);
-              (focusableNodeElements[i] as HTMLElement).focus();
               return;
             }
           }
@@ -195,32 +186,29 @@ const NodeListContextWrapper: FC<{
           if (!open) {
             confirmSelection(focusedNode);
           } else {
-            const { focusableNodeElements, focusableNodeElementsIds } =
+            const { focusableNodeElementsIds } =
               getNodeElementFocusingUtilities();
-            let selectedIndex: number =
-              focusableNodeElementsIds.indexOf(focusedNodeId);
+            let selectedIndex: number = focusableNodeElementsIds.indexOf(
+              focusedNode.id
+            );
             const nextFocusableNode: TreeNode = getNodeAtSpecifiedId(
               focusedNode,
               focusableNodeElementsIds[selectedIndex + 1]
             );
             confirmSelection(nextFocusableNode, false);
-            (focusableNodeElements[selectedIndex + 1] as HTMLElement).focus();
           }
         }
       }
       if (['Enter', 'Space'].includes(key)) {
         const navigatedNode: TreeNode = getNodeAtSpecifiedId(
           data,
-          focusedNodeId
+          focusedNode.id
         );
-        focusedNodeId === selectedNode.id
-          ? confirmSelection(navigatedNode)
-          : setSelectedNode(navigatedNode);
+        confirmSelection(navigatedNode);
       } else if (['ArrowUp', 'ArrowDown', 'Tab'].includes(key)) {
-        const { focusableNodeElements, focusableNodeElementsIds } =
-          getNodeElementFocusingUtilities();
+        const { focusableNodeElementsIds } = getNodeElementFocusingUtilities();
         let selectedIndex: number =
-          focusableNodeElementsIds.indexOf(focusedNodeId) ?? 1;
+          focusableNodeElementsIds.indexOf(focusedNode.id) ?? 1;
         switch (key) {
           case 'ArrowUp':
             selectedIndex -= 1;
@@ -237,38 +225,16 @@ const NodeListContextWrapper: FC<{
         /* Return if navigating direction has no subsequent navigable elements.
         (i.e. if attempting to navigate upwards from a currently-selected first element,
         or if attempting to navigate downwards from a currently-selected last element.) */
-        if (!newfocusedNodeId) return;
-        ['ArrowUp', 'ArrowDown'].includes(key) &&
-          (focusableNodeElements[selectedIndex] as HTMLElement).focus();
-        setFocusedNodeId(newfocusedNodeId);
+        if (!newfocusedNodeId && key !== 'Tab') return;
+        const nextFocusableNode: TreeNode = getNodeAtSpecifiedId(
+          data,
+          newfocusedNodeId
+        );
+        confirmSelection(nextFocusableNode, false);
       }
     },
-    [children, document, focusedNodeId, open, openNodeIds, selectedNode, data]
+    [children, document, open, openNodeIds, focusedNode, data]
   );
-
-  /** 
-   * Runs the setFocusedNodeId method with the appropriate activeElementId onFocus of NodeListContainer.
-     This method will handle NodeElement focusing for "Tab" or "Shift+Tab" key input cases where 
-     NodeListContainer is not already focused and therefore ignores the handleKeyDown method.
-     A NodeListContainer focus invocation with "Tab" will focus the NodeElement of the first index,
-     whereas a NodeListContainer focus invocation with "Shift+Tab" will focus the NodeElement of the last index. 
-   * @returns {void}
-   */
-  const handleContainerFocusing = useCallback((): void => {
-    const { activeElement, focusableNodeElementsIds } =
-      getNodeElementFocusingUtilities();
-    const activeElementId: number | null =
-      activeElement && parseInt(activeElement?.id);
-    switch (activeElementId) {
-      case 1:
-        setFocusedNodeId(activeElementId);
-        break;
-      case focusableNodeElementsIds[focusableNodeElementsIds.length - 1]:
-        setFocusedNodeId(activeElementId);
-        break;
-    }
-    setContainerFocusedState(true);
-  }, [data]);
 
   return (
     <NodeListContext.Provider
@@ -277,19 +243,19 @@ const NodeListContextWrapper: FC<{
         containerIsFocused: containerIsFocused,
         data: data,
         focusedNodeId: focusedNodeId,
-        handleContainerFocusing: handleContainerFocusing,
+        getNodeAtSpecifiedId: getNodeAtSpecifiedId,
         handleKeyDown: handleKeyDown,
         handleSetOpenNodeIds: handleSetOpenNodeIds,
         mouseEntered: mouseEntered,
         openNodeIds: openNodeIds,
         rootListElement: rootListElement,
-        selectedNode: selectedNode,
+        focusedNode: focusedNode,
         setContainerFocusedState: setContainerFocusedState,
         setData: setData,
         setFocusedNodeId: setFocusedNodeId,
         setMouseEntered: setMouseEntered,
         setRootListElement: setRootListElement,
-        setSelectedNode: setSelectedNode,
+        setFocusedNode: setFocusedNode,
       }}
     >
       {children}
@@ -311,14 +277,8 @@ type NodeElementProps = {
 };
 
 const NodeElement: FC<NodeElementProps> = ({ node }) => {
-  const {
-    confirmSelection,
-    containerIsFocused,
-    focusedNodeId,
-    mouseEntered,
-    openNodeIds,
-    selectedNode,
-  } = useNodeListContext();
+  const { confirmSelection, mouseEntered, openNodeIds, focusedNode } =
+    useNodeListContext();
   const { id } = node;
   const children = useMemo<boolean>(() => 'children' in node, [node]);
   const icon = useMemo<boolean>(() => 'icon' in node, [node]);
@@ -326,13 +286,9 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
     () => openNodeIds.includes(id),
     [openNodeIds, node]
   );
-  const selected = useMemo<boolean>(
-    () => node === selectedNode,
-    [node, selectedNode]
-  );
   const focused = useMemo<boolean>(
-    () => id === focusedNodeId,
-    [id, focusedNodeId]
+    () => id === focusedNode.id,
+    [id, focusedNode]
   );
   const currentDirectory = useMemo<boolean>(
     () =>
@@ -341,35 +297,33 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
           a. selectedNode has children and is equal to the node prop.
           b. selectedNode does not have children and is a child of the node prop.
       */
-      (!!selectedNode?.children && node === selectedNode) ||
-      (!selectedNode?.children && node.children?.includes(selectedNode)) ||
+      (!!focusedNode?.children && node === focusedNode) ||
+      (!focusedNode?.children && node.children?.includes(focusedNode)) ||
       false,
-    [node, selectedNode]
+    [node, focusedNode]
   );
   return (
     <li
+      aria-expanded={open}
       className={
         'hover:bg-emerald-600 hover:bg-opacity-20 transition ease-in-out duration-150'
       }
+      id={`${id}`}
+      onClick={(e: MouseEvent<HTMLLIElement, globalThis.MouseEvent>): void => {
+        e.stopPropagation();
+      }}
       role="treeitem"
-      aria-expanded={open}
+      tabIndex={-1}
     >
       <span
-        className={`flex px-2 focus:outline-none tree-node-focus-visible z-20 border border-opacity-0 ${
-          !selected &&
-          ` hover:bg-emerald-600 hover:bg-opacity-40 hover:border-amber-400 hover:border-opacity-100`
-        }${
-          selected
-            ? ` bg-emerald-600 bg-opacity-50 border border-opacity-0${
-                containerIsFocused ? ' border-opacity-100 border-lime-400' : ''
-              }`
-            : ''
-        }${focused ? ' bg-emerald-600 bg-opacity-30' : ''}`}
-        id={`${id}`}
+        className={`flex px-2 focus:outline-none z-20 border border-opacity-0 ${
+          !focused
+            ? ` hover:bg-emerald-600 hover:bg-opacity-40 hover:border-amber-400 hover:border-opacity-100`
+            : ` bg-emerald-600 bg-opacity-50 border border-opacity-100 border-lime-400`
+        }`}
         onClick={(): void => {
           confirmSelection(node);
         }}
-        tabIndex={0}
       >
         {children && (
           /* 
@@ -405,7 +359,7 @@ const NodeElement: FC<NodeElementProps> = ({ node }) => {
       </span>
       {children && open && (
         <NodeList
-          /* Displays left vertical rulers as applicable */
+          /* Displays left vertical rulers as applicable. */
           className={`ml-4 border-l transition ease-in-out duration-150${
             currentDirectory
               ? ' border-gray-200'
@@ -448,12 +402,9 @@ const NodeList: FC<TreeProps> = ({ className, data, role = 'tree' }) => {
 
 const NodeListContainer: FC<TreeProps> = (props) => {
   const {
-    containerIsFocused,
-    handleContainerFocusing,
+    focusedNode,
     handleKeyDown,
-    setContainerFocusedState,
     setData,
-    setFocusedNodeId,
     setMouseEntered,
     setRootListElement,
   } = useNodeListContext();
@@ -467,25 +418,40 @@ const NodeListContainer: FC<TreeProps> = (props) => {
   the .current value of the containerRef (the <div/> element) is not recognized the first time. */
   useEffect(() => {
     if (containerRef.current) {
-      const rootListElement = containerRef.current?.querySelector(
+      const rootElement = containerRef.current?.querySelector(
         '#node-list-0'
       ) as HTMLElement;
-      setRootListElement(rootListElement);
+      const firstFocusableElement: HTMLLIElement = rootElement?.querySelector(
+        'li'
+      ) as HTMLLIElement;
+      firstFocusableElement.setAttribute('tabindex', '0');
+      setRootListElement(rootElement);
     }
   }, [containerRef.current]);
-  /* Resets the focusedNodeId to zero when the container loses focus. The selectedNode remains selected, and this only initializes 
-  the focused list item to allow any subsequent "Tab" or "Shift+Tab" key press to focus the first or last item (respectively). 
-  TODO: See if focusedNodeId does not need need to be initialized when the container loses focus. */
+  /* Switches the tabindex to 0 on the element in the process of being focused. */
   useEffect(() => {
-    !containerRef.current?.contains(document.activeElement) &&
-      !containerIsFocused &&
-      setFocusedNodeId(0);
-  }, [containerIsFocused]);
+    const nextFocusableElement = containerRef.current?.querySelector(
+      `[id='${focusedNode.id}']`
+    ) as HTMLLIElement;
+    nextFocusableElement?.setAttribute('tabindex', '0');
+    nextFocusableElement?.focus();
+  }, [focusedNode]);
   return (
     <div
       className="cursor-pointer"
-      onBlur={(): void => setContainerFocusedState(false)}
-      onFocus={handleContainerFocusing}
+      onBlur={(): void => {
+        /* Enables roving tab index behavior when container loses focus. 
+          TODO: Element tabindex should be reset to -1 upon setting a new element tabindex to 0.
+        */
+        const zeroTabIndexNodes = containerRef.current?.querySelectorAll(
+          `[tabindex='0']`
+        ) as NodeListOf<HTMLLIElement>;
+        for (let i = 0; i < zeroTabIndexNodes?.length; i++) {
+          if (zeroTabIndexNodes[i].id !== focusedNode.id.toString()) {
+            zeroTabIndexNodes[i]?.setAttribute('tabindex', '-1');
+          }
+        }
+      }}
       onKeyDown={handleKeyDown}
       onMouseEnter={(): void => setMouseEntered(true)}
       onMouseLeave={(): void => setMouseEntered(false)}
