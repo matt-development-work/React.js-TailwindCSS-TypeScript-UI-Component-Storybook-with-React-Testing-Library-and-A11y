@@ -100,8 +100,8 @@ const NodeListContextWrapper: FC<{
 
   /**
    * Handles node element focusing.
-   * @param {TreeNode} node - Node to be selected.
-   * @param {boolean} canToggle - Specifies if the open state of the new selected node changes upon being focused.
+   * @param {TreeNode} node - Node to be focused.
+   * @param {boolean} canToggle - Specifies if the open state of the new focused node changes upon being focused.
    * @returns {void}
    */
   const confirmFocus = useCallback(
@@ -152,7 +152,7 @@ const NodeListContextWrapper: FC<{
           /* LeftArrow:
             When focus is on an open node, closes the node.
             When focus is on a child node, moves focus to its parent node.
-          */
+           */
           case 'ArrowLeft':
             if (open) {
               confirmFocus(focusedNode);
@@ -186,7 +186,7 @@ const NodeListContextWrapper: FC<{
           /* RightArrow:
             When focus is on a closed node, opens the node; focus does not move.
             When focus is on a open node, moves focus to the first child node.
-          */
+           */
           case 'ArrowRight':
             if ('children' in focusedNode) {
               if (!open) {
@@ -194,12 +194,12 @@ const NodeListContextWrapper: FC<{
               } else {
                 const { focusableNodeElementsIds } =
                   getNodeElementFocusingUtilities();
-                let selectedIndex: number = focusableNodeElementsIds.indexOf(
+                let focusedIndex: number = focusableNodeElementsIds.indexOf(
                   focusedNode.id
                 );
                 const nextFocusableNode: TreeNode = getNodeAtSpecifiedId(
                   focusedNode,
-                  focusableNodeElementsIds[selectedIndex + 1]
+                  focusableNodeElementsIds[focusedIndex + 1]
                 );
                 confirmFocus(nextFocusableNode, false);
               }
@@ -216,24 +216,25 @@ const NodeListContextWrapper: FC<{
         return;
       } else if (['ArrowUp', 'ArrowDown', 'Tab'].includes(key)) {
         const { focusableNodeElementsIds } = getNodeElementFocusingUtilities();
-        let selectedIndex: number =
+        let focusedIndex: number =
           focusableNodeElementsIds.indexOf(focusedNode.id) ?? 1;
         switch (key) {
           case 'ArrowUp':
-            selectedIndex -= 1;
+            focusedIndex -= 1;
             break;
           case 'ArrowDown':
-            selectedIndex += 1;
+            focusedIndex += 1;
             break;
           case 'Tab':
-            selectedIndex = e.shiftKey ? selectedIndex - 1 : selectedIndex + 1;
+            focusedIndex = e.shiftKey ? focusedIndex - 1 : focusedIndex + 1;
             break;
         }
         const nextFocusableNodeId: number =
-          focusableNodeElementsIds[selectedIndex];
+          focusableNodeElementsIds[focusedIndex];
         /* Returns before focusing if navigating direction has no subsequent navigable elements.
-        (i.e. if attempting to navigate upwards from a currently-selected first element,
-        or if attempting to navigate downwards from a currently-selected last element.) */
+          (i.e. if attempting to navigate upwards from a currently-focused first element,
+          or if attempting to navigate downwards from a currently-focused last element.) 
+         */
         if (!nextFocusableNodeId && key !== 'Tab') return;
         const nextFocusableNode: TreeNode = getNodeAtSpecifiedId(
           data,
@@ -300,11 +301,10 @@ const NodeElement = forwardRef<HTMLLIElement, NodeElementProps>(
     );
     const currentDirectory = useMemo<boolean>(
       () =>
-        /*
-        Returns true if either:
-          a. selectedNode has children and is equal to the node prop.
-          b. selectedNode does not have children and is a child of the node prop.
-      */
+        /* Returns true if either:
+          a. focusedNode has children and is equal to the node prop.
+          b. focusedNode does not have children and is a child of the node prop.
+         */
         (!!focusedNode?.children && node === focusedNode) ||
         (!focusedNode?.children && node.children?.includes(focusedNode)) ||
         false,
