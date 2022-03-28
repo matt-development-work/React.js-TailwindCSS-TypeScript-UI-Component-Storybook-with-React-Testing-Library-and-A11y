@@ -51,7 +51,7 @@ const NodeListContextWrapper: FC<{
   const [focusedNode, setFocusedNode] = useState<TreeNode>({} as TreeNode);
 
   /**
-   * Updates the openNodeIds array to correspond with the indexes of the currently-opened node elements when the open state of a node with children is changed.
+   * Updates the openNodeIds array to correspond with the indices of the currently-opened node elements when the open state of a node with children is changed.
    * @param {number} id - Id of the node being toggled.
    * @param {boolean} open - New open state of the toggled node.
    * @returns {void}
@@ -100,7 +100,7 @@ const NodeListContextWrapper: FC<{
 
   /**
    * Handles node element focusing.
-   * @param {TreeNode} node - React component to be selected.
+   * @param {TreeNode} node - Node to be selected.
    * @param {boolean} canToggle - Specifies if the open state of the new selected node changes upon being focused.
    * @returns {void}
    */
@@ -139,7 +139,7 @@ const NodeListContextWrapper: FC<{
 
   /**
    * Handles NodeElement focusing and navigation.
-   * @param {KeyboardEvent} e - Keyboard event.
+   * @param {KeyboardEvent} e
    * @returns {void}
    */
   const handleKeyDown = useCallback(
@@ -148,57 +148,72 @@ const NodeListContextWrapper: FC<{
       if (['ArrowLeft', 'ArrowRight'].includes(key)) {
         const { id } = focusedNode;
         const open: boolean = openNodeIds.includes(id);
-        /* LeftArrow:
+        switch (key) {
+          /* LeftArrow:
             When focus is on an open node, closes the node.
             When focus is on a child node, moves focus to its parent node.
           */
-        if (key === 'ArrowLeft') {
-          if (open) {
-            confirmFocus(focusedNode);
-            return;
-          }
-          const {
-            activeElement,
-            focusableNodeElements,
-            focusableNodeElementsIds,
-          } = getNodeElementFocusingUtilities();
-          for (let i = focusableNodeElementsIds.indexOf(id) - 1; i > -1; i--) {
-            if (
-              focusableNodeElements[i]?.contains(activeElement as HTMLLIElement)
-            ) {
-              const parentID: number = parseInt(focusableNodeElements[i].id);
-              const parentNode: TreeNode = getNodeAtSpecifiedId(data, parentID);
-              confirmFocus(parentNode, false);
+          case 'ArrowLeft':
+            if (open) {
+              confirmFocus(focusedNode);
               return;
             }
-          }
-        }
-        /* RightArrow:
+            const {
+              activeElement,
+              focusableNodeElements,
+              focusableNodeElementsIds,
+            } = getNodeElementFocusingUtilities();
+            for (
+              let i = focusableNodeElementsIds.indexOf(id) - 1;
+              i > -1;
+              i--
+            ) {
+              if (
+                focusableNodeElements[i]?.contains(
+                  activeElement as HTMLLIElement
+                )
+              ) {
+                const parentID: number = parseInt(focusableNodeElements[i].id);
+                const parentNode: TreeNode = getNodeAtSpecifiedId(
+                  data,
+                  parentID
+                );
+                confirmFocus(parentNode, false);
+                return;
+              }
+            }
+            break;
+          /* RightArrow:
             When focus is on a closed node, opens the node; focus does not move.
             When focus is on a open node, moves focus to the first child node.
           */
-        if (key === 'ArrowRight' && 'children' in focusedNode) {
-          if (!open) {
-            confirmFocus(focusedNode);
-          } else {
-            const { focusableNodeElementsIds } =
-              getNodeElementFocusingUtilities();
-            let selectedIndex: number = focusableNodeElementsIds.indexOf(
-              focusedNode.id
-            );
-            const nextFocusableNode: TreeNode = getNodeAtSpecifiedId(
-              focusedNode,
-              focusableNodeElementsIds[selectedIndex + 1]
-            );
-            confirmFocus(nextFocusableNode, false);
-          }
+          case 'ArrowRight':
+            if ('children' in focusedNode) {
+              if (!open) {
+                confirmFocus(focusedNode);
+              } else {
+                const { focusableNodeElementsIds } =
+                  getNodeElementFocusingUtilities();
+                let selectedIndex: number = focusableNodeElementsIds.indexOf(
+                  focusedNode.id
+                );
+                const nextFocusableNode: TreeNode = getNodeAtSpecifiedId(
+                  focusedNode,
+                  focusableNodeElementsIds[selectedIndex + 1]
+                );
+                confirmFocus(nextFocusableNode, false);
+              }
+            }
+            break;
         }
+        return;
       } else if (['Enter'].includes(key)) {
         const navigatedNode: TreeNode = getNodeAtSpecifiedId(
           data,
           focusedNode.id
         );
         confirmFocus(navigatedNode);
+        return;
       } else if (['ArrowUp', 'ArrowDown', 'Tab'].includes(key)) {
         const { focusableNodeElementsIds } = getNodeElementFocusingUtilities();
         let selectedIndex: number =
@@ -225,7 +240,9 @@ const NodeListContextWrapper: FC<{
           nextFocusableNodeId
         );
         confirmFocus(nextFocusableNode, false);
+        return;
       }
+      return;
     },
     [children, document, open, openNodeIds, focusedNode, data]
   );
@@ -305,9 +322,9 @@ const NodeElement = forwardRef<HTMLLIElement, NodeElementProps>(
         ): void => {
           e.stopPropagation();
         }}
+        ref={ref}
         role="treeitem"
         tabIndex={focused ? 0 : -1}
-        ref={ref}
       >
         <span
           className={`flex px-2 focus:outline-none z-20 border border-opacity-0 ${
@@ -441,15 +458,10 @@ const NodeListContainer: FC<TreeProps> = (props) => {
     <div
       className="cursor-pointer"
       onBlur={(): void => {
-        if (!focusedNode.id) {
-          setInitialTabIndex();
-        }
+        !focusedNode.id && setInitialTabIndex();
       }}
       onFocus={(): void => {
-        if (!focusedNode.id) {
-          const defaultFocusedNode: TreeNode = getNodeAtSpecifiedId(data, 1);
-          setFocusedNode(defaultFocusedNode);
-        }
+        !focusedNode.id && setFocusedNode(getNodeAtSpecifiedId(data, 1));
       }}
       onKeyDown={handleKeyDown}
       onMouseEnter={(): void => setMouseEntered(true)}
